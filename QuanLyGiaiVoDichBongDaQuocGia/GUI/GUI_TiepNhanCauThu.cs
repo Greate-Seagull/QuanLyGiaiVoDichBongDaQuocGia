@@ -1,4 +1,5 @@
 ﻿using QuanLyGiaiVoDichBongDaQuocGia.BUS;
+using QuanLyGiaiVoDichBongDaQuocGia.DTO;
 using QuanLyGiaiVoDichBongDaQuocGia.Helper;
 using System;
 using System.Collections.Generic;
@@ -33,14 +34,36 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             this.doiBong = newDoiBong;
             this.maCauThuMoi = maCauThuMoi;
         }
+        public GUI_TiepNhanCauThu(DTO_CauThu cauThu)
+        {
+            InitializeComponent();
+
+            this.cauThu = cauThu;
+        }
 
         private void GUI_TiepNhanCauThu_Load(object sender, EventArgs e)
         {
             //Load data
             //...
-            TaoMaCauThuMoi();
-            LayDanhSachLoaiCauThu();
-            CaiDatNgaySinh();
+            if (cauThu == null)
+            {
+                TaoMaCauThuMoi();
+                LayDanhSachLoaiCauThu();
+                CaiDatNgaySinh();
+            }
+            else
+            {
+                HienThiThongTinCauThu();
+            }
+        }
+
+        private void HienThiThongTinCauThu()
+        {
+            txtMaCauThu.Text = cauThu.MaCauThu;
+            txtTenCauThu.Text = cauThu.TenCauThu;
+            dtpNgaySinh.Value = cauThu.NgaySinh;
+            cbLoaiCauThu.SelectedItem = cauThu.LoaiCauThu;
+            txtGhiChu.Text = cauThu.GhiChu;
         }
 
         private void CaiDatNgaySinh()
@@ -62,9 +85,19 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void btnTiepNhanCauThu_Click(object sender, EventArgs e)
         {
-            cauThu = new DTO.DTO_CauThu(txtMaCauThu.Text, txtTenCauThu.Text,
-                                                          dtpNgaySinh.Value, txtGhiChu.Text,
-                                                          doiBong, (DTO.DTO_LoaiCauThu)cbLoaiCauThu.SelectedItem);
+            if(cauThu == null)
+            {
+                cauThu = new DTO.DTO_CauThu(txtMaCauThu.Text, txtTenCauThu.Text,
+                                            dtpNgaySinh.Value, txtGhiChu.Text,
+                                            doiBong, (DTO.DTO_LoaiCauThu)cbLoaiCauThu.SelectedItem);
+            }
+            else
+            {
+                cauThu.TenCauThu = txtTenCauThu.Text;
+                cauThu.NgaySinh = dtpNgaySinh.Value;
+                cauThu.LoaiCauThu = (DTO.DTO_LoaiCauThu)cbLoaiCauThu.SelectedItem;
+                cauThu.GhiChu = txtGhiChu.Text;
+            }
 
             this.DialogResult = DialogResult.OK;
             this.Close();

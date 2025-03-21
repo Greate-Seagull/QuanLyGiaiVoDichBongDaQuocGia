@@ -30,6 +30,9 @@
         {
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             tableLayoutPanel = new TableLayoutPanel();
+            btnXoaCauThu = new Button();
+            btnCapNhatCauThu = new Button();
+            btnCapNhatDoiBong = new Button();
             btnThemCauThu = new Button();
             lblMaDoiBong = new Label();
             lblTenSanNha = new Label();
@@ -56,40 +59,80 @@
             tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
             tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
             tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel.Controls.Add(btnThemCauThu, 1, 5);
+            tableLayoutPanel.Controls.Add(btnXoaCauThu, 4, 3);
+            tableLayoutPanel.Controls.Add(btnCapNhatCauThu, 3, 3);
+            tableLayoutPanel.Controls.Add(btnCapNhatDoiBong, 1, 3);
+            tableLayoutPanel.Controls.Add(btnThemCauThu, 2, 3);
             tableLayoutPanel.Controls.Add(lblMaDoiBong, 0, 0);
-            tableLayoutPanel.Controls.Add(lblTenSanNha, 0, 2);
+            tableLayoutPanel.Controls.Add(lblTenSanNha, 1, 0);
             tableLayoutPanel.Controls.Add(lblTenDoiBong, 1, 0);
             tableLayoutPanel.Controls.Add(txtMaDoiBong, 0, 1);
             tableLayoutPanel.Controls.Add(txtTenDoiBong, 1, 1);
-            tableLayoutPanel.Controls.Add(txtTenSanNha, 0, 3);
-            tableLayoutPanel.Controls.Add(btnTiepNhanDoiBong, 0, 5);
-            tableLayoutPanel.Controls.Add(btnThoat, 6, 5);
-            tableLayoutPanel.Controls.Add(dgvDanhSachCauThu, 0, 4);
+            tableLayoutPanel.Controls.Add(txtTenSanNha, 1, 1);
+            tableLayoutPanel.Controls.Add(btnTiepNhanDoiBong, 0, 3);
+            tableLayoutPanel.Controls.Add(btnThoat, 8, 3);
+            tableLayoutPanel.Controls.Add(dgvDanhSachCauThu, 0, 2);
             tableLayoutPanel.Dock = DockStyle.Fill;
             tableLayoutPanel.Location = new Point(0, 0);
             tableLayoutPanel.Margin = new Padding(0);
             tableLayoutPanel.Name = "tableLayoutPanel";
             tableLayoutPanel.Padding = new Padding(10);
-            tableLayoutPanel.RowCount = 5;
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 11.8088989F));
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 11.8088961F));
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 11.8088961F));
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 11.8088961F));
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 40.95552F));
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 11.8088961F));
-            tableLayoutPanel.Size = new Size(478, 507);
+            tableLayoutPanel.RowCount = 3;
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel.Size = new Size(1418, 507);
             tableLayoutPanel.TabIndex = 3;
+            // 
+            // btnXoaCauThu
+            // 
+            btnXoaCauThu.Dock = DockStyle.Bottom;
+            btnXoaCauThu.Font = new Font("Segoe UI", 8F);
+            btnXoaCauThu.Location = new Point(716, 456);
+            btnXoaCauThu.Margin = new Padding(10, 10, 10, 0);
+            btnXoaCauThu.Name = "btnXoaCauThu";
+            btnXoaCauThu.Size = new Size(154, 41);
+            btnXoaCauThu.TabIndex = 12;
+            btnXoaCauThu.Text = "Xóa cầu thủ";
+            btnXoaCauThu.UseVisualStyleBackColor = true;
+            btnXoaCauThu.Click += btnXoaCauThu_Click;
+            // 
+            // btnCapNhatCauThu
+            // 
+            btnCapNhatCauThu.Dock = DockStyle.Bottom;
+            btnCapNhatCauThu.Font = new Font("Segoe UI", 8F);
+            btnCapNhatCauThu.Location = new Point(542, 456);
+            btnCapNhatCauThu.Margin = new Padding(10, 10, 10, 0);
+            btnCapNhatCauThu.Name = "btnCapNhatCauThu";
+            btnCapNhatCauThu.Size = new Size(154, 41);
+            btnCapNhatCauThu.TabIndex = 11;
+            btnCapNhatCauThu.Text = "Cập nhật cầu thủ";
+            btnCapNhatCauThu.UseVisualStyleBackColor = true;
+            btnCapNhatCauThu.Click += btnCapNhatCauThu_Click;
+            // 
+            // btnCapNhatDoiBong
+            // 
+            btnCapNhatDoiBong.Dock = DockStyle.Bottom;
+            btnCapNhatDoiBong.Font = new Font("Segoe UI", 8F);
+            btnCapNhatDoiBong.Location = new Point(194, 456);
+            btnCapNhatDoiBong.Margin = new Padding(10, 10, 10, 0);
+            btnCapNhatDoiBong.Name = "btnCapNhatDoiBong";
+            btnCapNhatDoiBong.Size = new Size(154, 41);
+            btnCapNhatDoiBong.TabIndex = 10;
+            btnCapNhatDoiBong.Text = "Cập nhật đội bóng";
+            btnCapNhatDoiBong.UseVisualStyleBackColor = true;
+            btnCapNhatDoiBong.Click += btnCapNhatDoiBong_Click;
             // 
             // btnThemCauThu
             // 
-            tableLayoutPanel.SetColumnSpan(btnThemCauThu, 2);
             btnThemCauThu.Dock = DockStyle.Bottom;
             btnThemCauThu.Font = new Font("Segoe UI", 8F);
-            btnThemCauThu.Location = new Point(134, 447);
+            btnThemCauThu.Location = new Point(368, 456);
             btnThemCauThu.Margin = new Padding(10, 10, 10, 0);
             btnThemCauThu.Name = "btnThemCauThu";
-            btnThemCauThu.Size = new Size(94, 50);
+            btnThemCauThu.Size = new Size(154, 41);
             btnThemCauThu.TabIndex = 8;
             btnThemCauThu.Text = "Thêm cầu thủ";
             btnThemCauThu.UseVisualStyleBackColor = true;
@@ -98,12 +141,11 @@
             // lblMaDoiBong
             // 
             lblMaDoiBong.AutoSize = true;
-            tableLayoutPanel.SetColumnSpan(lblMaDoiBong, 3);
             lblMaDoiBong.Dock = DockStyle.Fill;
             lblMaDoiBong.Location = new Point(20, 20);
             lblMaDoiBong.Margin = new Padding(10);
             lblMaDoiBong.Name = "lblMaDoiBong";
-            lblMaDoiBong.Size = new Size(151, 37);
+            lblMaDoiBong.Size = new Size(154, 28);
             lblMaDoiBong.TabIndex = 0;
             lblMaDoiBong.Text = "Mã đội bóng";
             lblMaDoiBong.TextAlign = ContentAlignment.MiddleLeft;
@@ -111,12 +153,12 @@
             // lblTenSanNha
             // 
             lblTenSanNha.AutoSize = true;
-            tableLayoutPanel.SetColumnSpan(lblTenSanNha, 8);
+            tableLayoutPanel.SetColumnSpan(lblTenSanNha, 2);
             lblTenSanNha.Dock = DockStyle.Fill;
-            lblTenSanNha.Location = new Point(20, 134);
+            lblTenSanNha.Location = new Point(194, 20);
             lblTenSanNha.Margin = new Padding(10);
             lblTenSanNha.Name = "lblTenSanNha";
-            lblTenSanNha.Size = new Size(438, 37);
+            lblTenSanNha.Size = new Size(328, 28);
             lblTenSanNha.TabIndex = 1;
             lblTenSanNha.Text = "Tên sân nhà";
             lblTenSanNha.TextAlign = ContentAlignment.MiddleLeft;
@@ -124,12 +166,12 @@
             // lblTenDoiBong
             // 
             lblTenDoiBong.AutoSize = true;
-            tableLayoutPanel.SetColumnSpan(lblTenDoiBong, 5);
+            tableLayoutPanel.SetColumnSpan(lblTenDoiBong, 2);
             lblTenDoiBong.Dock = DockStyle.Fill;
-            lblTenDoiBong.Location = new Point(191, 20);
+            lblTenDoiBong.Location = new Point(542, 20);
             lblTenDoiBong.Margin = new Padding(10);
             lblTenDoiBong.Name = "lblTenDoiBong";
-            lblTenDoiBong.Size = new Size(267, 37);
+            lblTenDoiBong.Size = new Size(328, 28);
             lblTenDoiBong.TabIndex = 2;
             lblTenDoiBong.Text = "Tên đội bóng";
             lblTenDoiBong.TextAlign = ContentAlignment.MiddleLeft;
@@ -137,46 +179,44 @@
             // txtMaDoiBong
             // 
             txtMaDoiBong.BorderStyle = BorderStyle.FixedSingle;
-            tableLayoutPanel.SetColumnSpan(txtMaDoiBong, 3);
             txtMaDoiBong.Dock = DockStyle.Fill;
-            txtMaDoiBong.Location = new Point(20, 77);
+            txtMaDoiBong.Location = new Point(20, 68);
             txtMaDoiBong.Margin = new Padding(10);
             txtMaDoiBong.Name = "txtMaDoiBong";
             txtMaDoiBong.ReadOnly = true;
-            txtMaDoiBong.Size = new Size(151, 31);
+            txtMaDoiBong.Size = new Size(154, 31);
             txtMaDoiBong.TabIndex = 3;
             // 
             // txtTenDoiBong
             // 
             txtTenDoiBong.BorderStyle = BorderStyle.FixedSingle;
-            tableLayoutPanel.SetColumnSpan(txtTenDoiBong, 5);
+            tableLayoutPanel.SetColumnSpan(txtTenDoiBong, 2);
             txtTenDoiBong.Dock = DockStyle.Fill;
-            txtTenDoiBong.Location = new Point(191, 77);
+            txtTenDoiBong.Location = new Point(194, 68);
             txtTenDoiBong.Margin = new Padding(10);
             txtTenDoiBong.Name = "txtTenDoiBong";
-            txtTenDoiBong.Size = new Size(267, 31);
+            txtTenDoiBong.Size = new Size(328, 31);
             txtTenDoiBong.TabIndex = 4;
             // 
             // txtTenSanNha
             // 
             txtTenSanNha.BorderStyle = BorderStyle.FixedSingle;
-            tableLayoutPanel.SetColumnSpan(txtTenSanNha, 8);
+            tableLayoutPanel.SetColumnSpan(txtTenSanNha, 2);
             txtTenSanNha.Dock = DockStyle.Fill;
-            txtTenSanNha.Location = new Point(20, 191);
+            txtTenSanNha.Location = new Point(542, 68);
             txtTenSanNha.Margin = new Padding(10);
             txtTenSanNha.Name = "txtTenSanNha";
-            txtTenSanNha.Size = new Size(438, 31);
+            txtTenSanNha.Size = new Size(328, 31);
             txtTenSanNha.TabIndex = 5;
             // 
             // btnTiepNhanDoiBong
             // 
-            tableLayoutPanel.SetColumnSpan(btnTiepNhanDoiBong, 2);
             btnTiepNhanDoiBong.Dock = DockStyle.Bottom;
             btnTiepNhanDoiBong.Font = new Font("Segoe UI", 8F);
-            btnTiepNhanDoiBong.Location = new Point(20, 447);
+            btnTiepNhanDoiBong.Location = new Point(20, 456);
             btnTiepNhanDoiBong.Margin = new Padding(10, 10, 10, 0);
             btnTiepNhanDoiBong.Name = "btnTiepNhanDoiBong";
-            btnTiepNhanDoiBong.Size = new Size(94, 50);
+            btnTiepNhanDoiBong.Size = new Size(154, 41);
             btnTiepNhanDoiBong.TabIndex = 6;
             btnTiepNhanDoiBong.Text = "Tiếp nhận đội bóng";
             btnTiepNhanDoiBong.UseVisualStyleBackColor = true;
@@ -184,13 +224,12 @@
             // 
             // btnThoat
             // 
-            tableLayoutPanel.SetColumnSpan(btnThoat, 2);
             btnThoat.Dock = DockStyle.Bottom;
             btnThoat.Font = new Font("Segoe UI", 8F);
-            btnThoat.Location = new Point(362, 447);
+            btnThoat.Location = new Point(1238, 456);
             btnThoat.Margin = new Padding(10, 10, 10, 0);
             btnThoat.Name = "btnThoat";
-            btnThoat.Size = new Size(96, 50);
+            btnThoat.Size = new Size(160, 41);
             btnThoat.TabIndex = 7;
             btnThoat.Text = "Thoát";
             btnThoat.UseVisualStyleBackColor = true;
@@ -207,7 +246,7 @@
             tableLayoutPanel.SetColumnSpan(dgvDanhSachCauThu, 8);
             dgvDanhSachCauThu.Dock = DockStyle.Fill;
             dgvDanhSachCauThu.EnableHeadersVisualStyles = false;
-            dgvDanhSachCauThu.Location = new Point(20, 248);
+            dgvDanhSachCauThu.Location = new Point(20, 116);
             dgvDanhSachCauThu.Margin = new Padding(10);
             dgvDanhSachCauThu.Name = "dgvDanhSachCauThu";
             dgvDanhSachCauThu.ReadOnly = true;
@@ -222,14 +261,14 @@
             dgvDanhSachCauThu.RowHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dgvDanhSachCauThu.RowHeadersVisible = false;
             dgvDanhSachCauThu.RowHeadersWidth = 62;
-            dgvDanhSachCauThu.Size = new Size(438, 179);
+            dgvDanhSachCauThu.Size = new Size(1378, 320);
             dgvDanhSachCauThu.TabIndex = 9;
             // 
             // GUI_TiepNhanDoiBong
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(478, 507);
+            ClientSize = new Size(1418, 507);
             Controls.Add(tableLayoutPanel);
             Name = "GUI_TiepNhanDoiBong";
             Text = "Tiếp nhận hồ sơ đội bóng";
@@ -253,5 +292,8 @@
         private Button btnTiepNhanDoiBong;
         private Button btnThoat;
         private DataGridView dgvDanhSachCauThu;
+        private Button btnCapNhatDoiBong;
+        private Button btnXoaCauThu;
+        private Button btnCapNhatCauThu;
     }
 }

@@ -65,14 +65,14 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
             try
             {
-                if(BUS_doiBong.ThemDoiBongMoi(doiBong, danhSachCauThu, thamSo))
+                if (BUS_doiBong.ThemDoiBongMoi(doiBong, danhSachCauThu, thamSo))
                 {
                     MessageBox.Show("Tiếp nhận đội bóng thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.DialogResult = DialogResult.OK;
                     this.Close();
                 }
             }
-            catch(Exception err)
+            catch (Exception err)
             {
                 MessageBox.Show(err.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
@@ -84,13 +84,13 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
             if (tiepNhanCauThu.ShowDialog() == DialogResult.OK)
             {
-                danhSachCauThu.Add(tiepNhanCauThu.CauThu);                
+                danhSachCauThu.Add(tiepNhanCauThu.CauThu);
 
                 MessageBox.Show("Thêm cầu thủ thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 LayDanhSachCauThu();
                 CapNhatMaCauThuXemTruoc();
-            }            
+            }
         }
 
         private void CapNhatMaCauThuXemTruoc()
@@ -107,6 +107,48 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         private void btnThoat_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void btnCapNhatDoiBong_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnCapNhatCauThu_Click(object sender, EventArgs e)
+        {
+            if (dgvDanhSachCauThu.SelectedCells.Count > 0)
+            {
+                int index = dgvDanhSachCauThu.SelectedCells[0].RowIndex;
+                tiepNhanCauThu = new GUI_TiepNhanCauThu(danhSachCauThu[index]);
+
+                if (tiepNhanCauThu.ShowDialog() == DialogResult.OK)
+                {
+                    MessageBox.Show("Cập nhật cầu thủ thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    LayDanhSachCauThu();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Chọn cầu thủ trong bảng", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void btnXoaCauThu_Click(object sender, EventArgs e)
+        {
+            if (dgvDanhSachCauThu.SelectedCells.Count > 0)
+            {
+                int index = dgvDanhSachCauThu.SelectedCells[0].RowIndex;
+
+                danhSachCauThu.RemoveAt(index);
+
+                //MessageBox.Show("Xóa cầu thủ thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LayDanhSachCauThu();
+            }
+            else
+            {
+                MessageBox.Show("Chọn cầu thủ trong bảng", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
     }
 }

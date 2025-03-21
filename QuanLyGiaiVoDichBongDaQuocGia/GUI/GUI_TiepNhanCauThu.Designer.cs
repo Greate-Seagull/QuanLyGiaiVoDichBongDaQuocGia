@@ -183,7 +183,7 @@
             btnTiepNhanCauThu.Name = "btnTiepNhanCauThu";
             btnTiepNhanCauThu.Size = new Size(94, 58);
             btnTiepNhanCauThu.TabIndex = 6;
-            btnTiepNhanCauThu.Text = "Tiếp nhận cầu thủ";
+            btnTiepNhanCauThu.Text = "Đồng ý";
             btnTiepNhanCauThu.UseVisualStyleBackColor = true;
             btnTiepNhanCauThu.Click += btnTiepNhanCauThu_Click;
             // 
