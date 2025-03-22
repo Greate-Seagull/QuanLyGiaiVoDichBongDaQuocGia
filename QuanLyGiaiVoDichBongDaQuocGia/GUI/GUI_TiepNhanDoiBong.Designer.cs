@@ -64,10 +64,10 @@
             tableLayoutPanel.Controls.Add(btnCapNhatDoiBong, 1, 3);
             tableLayoutPanel.Controls.Add(btnThemCauThu, 2, 3);
             tableLayoutPanel.Controls.Add(lblMaDoiBong, 0, 0);
-            tableLayoutPanel.Controls.Add(lblTenSanNha, 1, 0);
+            tableLayoutPanel.Controls.Add(lblTenSanNha, 2, 0);
             tableLayoutPanel.Controls.Add(lblTenDoiBong, 1, 0);
             tableLayoutPanel.Controls.Add(txtMaDoiBong, 0, 1);
-            tableLayoutPanel.Controls.Add(txtTenDoiBong, 1, 1);
+            tableLayoutPanel.Controls.Add(txtTenDoiBong, 2, 1);
             tableLayoutPanel.Controls.Add(txtTenSanNha, 1, 1);
             tableLayoutPanel.Controls.Add(btnTiepNhanDoiBong, 0, 3);
             tableLayoutPanel.Controls.Add(btnThoat, 8, 3);
@@ -155,7 +155,7 @@
             lblTenSanNha.AutoSize = true;
             tableLayoutPanel.SetColumnSpan(lblTenSanNha, 2);
             lblTenSanNha.Dock = DockStyle.Fill;
-            lblTenSanNha.Location = new Point(194, 20);
+            lblTenSanNha.Location = new Point(542, 20);
             lblTenSanNha.Margin = new Padding(10);
             lblTenSanNha.Name = "lblTenSanNha";
             lblTenSanNha.Size = new Size(328, 28);
@@ -168,7 +168,7 @@
             lblTenDoiBong.AutoSize = true;
             tableLayoutPanel.SetColumnSpan(lblTenDoiBong, 2);
             lblTenDoiBong.Dock = DockStyle.Fill;
-            lblTenDoiBong.Location = new Point(542, 20);
+            lblTenDoiBong.Location = new Point(194, 20);
             lblTenDoiBong.Margin = new Padding(10);
             lblTenDoiBong.Name = "lblTenDoiBong";
             lblTenDoiBong.Size = new Size(328, 28);
@@ -192,7 +192,7 @@
             txtTenDoiBong.BorderStyle = BorderStyle.FixedSingle;
             tableLayoutPanel.SetColumnSpan(txtTenDoiBong, 2);
             txtTenDoiBong.Dock = DockStyle.Fill;
-            txtTenDoiBong.Location = new Point(194, 68);
+            txtTenDoiBong.Location = new Point(542, 68);
             txtTenDoiBong.Margin = new Padding(10);
             txtTenDoiBong.Name = "txtTenDoiBong";
             txtTenDoiBong.Size = new Size(328, 31);
@@ -203,7 +203,7 @@
             txtTenSanNha.BorderStyle = BorderStyle.FixedSingle;
             tableLayoutPanel.SetColumnSpan(txtTenSanNha, 2);
             txtTenSanNha.Dock = DockStyle.Fill;
-            txtTenSanNha.Location = new Point(542, 68);
+            txtTenSanNha.Location = new Point(194, 68);
             txtTenSanNha.Margin = new Padding(10);
             txtTenSanNha.Name = "txtTenSanNha";
             txtTenSanNha.Size = new Size(328, 31);

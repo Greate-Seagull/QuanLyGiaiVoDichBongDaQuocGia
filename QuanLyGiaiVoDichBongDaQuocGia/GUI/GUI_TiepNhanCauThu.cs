@@ -15,43 +15,37 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 {
     public partial class GUI_TiepNhanCauThu : Form
     {        
-        private BUS.BUS_LoaiCauThu BUS_loaiCauThu = new BUS.BUS_LoaiCauThu();
-
+        //Input
         private DTO.DTO_ThamSo thamSo;
         private DTO.DTO_DoiBong doiBong;
-
-        private DTO.DTO_CauThu cauThu;        
-
+        private List<DTO.DTO_LoaiCauThu> danhSachLoaiCauThu;
         private string maCauThuMoi;
+
+        private DTO.DTO_CauThu cauThu;           
 
         public DTO.DTO_CauThu CauThu { get => cauThu; set => cauThu = value; }
 
-        public GUI_TiepNhanCauThu(DTO.DTO_DoiBong newDoiBong, DTO.DTO_ThamSo thamSo, string maCauThuMoi)
+        public GUI_TiepNhanCauThu(DTO.DTO_DoiBong newDoiBong, DTO.DTO_ThamSo thamSo, List<DTO.DTO_LoaiCauThu> danhSachLoaiCauThu, string maCauThuMoi,
+                                  DTO.DTO_CauThu cauThu = null)
         {
             InitializeComponent();
 
             this.thamSo = thamSo;
             this.doiBong = newDoiBong;
+            this.danhSachLoaiCauThu = danhSachLoaiCauThu;
             this.maCauThuMoi = maCauThuMoi;
-        }
-        public GUI_TiepNhanCauThu(DTO_CauThu cauThu)
-        {
-            InitializeComponent();
-
             this.cauThu = cauThu;
         }
-
         private void GUI_TiepNhanCauThu_Load(object sender, EventArgs e)
         {
             //Load data
             //...
-            if (cauThu == null)
-            {
-                TaoMaCauThuMoi();
-                LayDanhSachLoaiCauThu();
-                CaiDatNgaySinh();
-            }
-            else
+
+            TaoMaCauThuMoi();
+            LayDanhSachLoaiCauThu();
+            CaiDatNgaySinh();
+            
+            if (cauThu != null)
             {
                 HienThiThongTinCauThu();
             }
@@ -79,7 +73,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void LayDanhSachLoaiCauThu()
         {
-            cbLoaiCauThu.DataSource = BUS_loaiCauThu.LayDanhSachLoaiCauThu();
+            cbLoaiCauThu.DataSource = danhSachLoaiCauThu;
             cbLoaiCauThu.DisplayMember = "TenLoaiCauThu";
         }
 

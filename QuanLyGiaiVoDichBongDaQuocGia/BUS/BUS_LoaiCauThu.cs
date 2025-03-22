@@ -22,21 +22,21 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             Dictionary<DTO_LoaiCauThu, int> counter = new Dictionary<DTO_LoaiCauThu, int>();
 
             foreach(DTO_CauThu cauThu in danhSachCauThu)
-            {
+            {                
                 if (counter.ContainsKey(cauThu.LoaiCauThu))
                 {
-                    counter[cauThu.LoaiCauThu]++;
+                    counter[cauThu.LoaiCauThu]++;                    
                 }
                 else
                 {
                     counter.Add(cauThu.LoaiCauThu, 1);
-                }                    
+                }
             }
 
             foreach(DTO_LoaiCauThu loaiCauThu in counter.Keys)
-            {
+            {                
                 if (counter[loaiCauThu] > loaiCauThu.SoLuongCauThuToiDaTheoLoaiCauThu)
-                    throw new Exception("Vi phạm qui định số lượng cầu thủ tối đa theo loại cầu thủ");
+                    throw new Exception($"Vi phạm qui định số lượng cầu thủ tối đa theo loại cầu thủ {loaiCauThu.TenLoaiCauThu}");
             }
         }
     }

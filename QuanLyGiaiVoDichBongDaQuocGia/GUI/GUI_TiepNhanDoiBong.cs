@@ -17,12 +17,14 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         BUS.BUS_ThamSo BUS_thamSo = new BUS.BUS_ThamSo();
         BUS.BUS_DoiBong BUS_doiBong = new BUS.BUS_DoiBong();
         BUS.BUS_CauThu BUS_cauThu = new BUS.BUS_CauThu();
+        BUS.BUS_LoaiCauThu BUS_loaiCauThu = new BUS.BUS_LoaiCauThu();
 
         GUI_TiepNhanCauThu tiepNhanCauThu;
 
         DTO_ThamSo thamSo;
         DTO_DoiBong doiBong;
         List<DTO_CauThu> danhSachCauThu;
+        List<DTO.DTO_LoaiCauThu> danhSachLoaiCauThu;
 
         string maCauThuMoi;
         public GUI_TiepNhanDoiBong()
@@ -37,10 +39,15 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             LayThamSo();
             LayMaDoiBongMoi();
             LayMaCauThuMoi();
-            thamSo.SoLuongCauThuToiThieu = 0;
+            LayDanhLoaiCauThu();
 
             doiBong = new DTO_DoiBong(txtMaDoiBong.Text, null, null);
             danhSachCauThu = new List<DTO_CauThu>();
+        }
+
+        private void LayDanhLoaiCauThu()
+        {
+            danhSachLoaiCauThu = BUS_loaiCauThu.LayDanhSachLoaiCauThu();
         }
 
         private void LayMaCauThuMoi()
@@ -69,7 +76,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
                 {
                     MessageBox.Show("Tiếp nhận đội bóng thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.DialogResult = DialogResult.OK;
-                    this.Close();
                 }
             }
             catch (Exception err)
@@ -80,7 +86,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void btnThemCauThu_Click(object sender, EventArgs e)
         {
-            tiepNhanCauThu = new GUI_TiepNhanCauThu(doiBong, thamSo, maCauThuMoi);
+            tiepNhanCauThu = new GUI_TiepNhanCauThu(doiBong, thamSo, danhSachLoaiCauThu, maCauThuMoi);
 
             if (tiepNhanCauThu.ShowDialog() == DialogResult.OK)
             {
@@ -119,7 +125,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             if (dgvDanhSachCauThu.SelectedCells.Count > 0)
             {
                 int index = dgvDanhSachCauThu.SelectedCells[0].RowIndex;
-                tiepNhanCauThu = new GUI_TiepNhanCauThu(danhSachCauThu[index]);
+                tiepNhanCauThu = new GUI_TiepNhanCauThu(doiBong, thamSo, danhSachLoaiCauThu, maCauThuMoi, danhSachCauThu[index]);
 
                 if (tiepNhanCauThu.ShowDialog() == DialogResult.OK)
                 {

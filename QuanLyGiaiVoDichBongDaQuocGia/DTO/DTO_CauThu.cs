@@ -28,8 +28,9 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
         public string MaCauThu { get => maCauThu; set => maCauThu = value; }
         public string TenCauThu { get => tenCauThu; set => tenCauThu = value; }
         public DateTime NgaySinh { get => ngaySinh; set => ngaySinh = value; }
+        public string MaLoaiCauThu { get => loaiCauThu.MaLoaiCauThu; }
         public string GhiChu { get => ghiChu; set => ghiChu = value; }
         internal DTO_DoiBong DoiBong { get => doiBong; set => doiBong = value; }
-        internal DTO_LoaiCauThu LoaiCauThu { get => loaiCauThu; set => loaiCauThu = value; }
+        internal DTO_LoaiCauThu LoaiCauThu { get => loaiCauThu; set => loaiCauThu = value; }        
     }
 }
