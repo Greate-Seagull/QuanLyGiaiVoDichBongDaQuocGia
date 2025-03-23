@@ -16,14 +16,13 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
         BUS_CauThu BUS_cauThu = new BUS_CauThu();
         BUS_LoaiCauThu BUS_loaiCauThu = new BUS_LoaiCauThu();
-        BUS_ThamSo BUS_thamSo = new BUS_ThamSo();
 
         public string LayMaDoiBongMoi()
         {
             return DAL_doiBong.LayMaDoiBongMoi();
         }
 
-        public bool ThemDoiBongMoi(DTO_DoiBong doiBong, List<DTO_CauThu> danhSachCauThu, DTO_ThamSo thamSo)
+        public bool TiepNhanDoiBongMoi(DTO_DoiBong doiBong, Manager.Manager<DTO.DTO_CauThu> danhSachCauThu, DTO_ThamSo thamSo)
         {
             this.KiemTraNhapLieu(doiBong);
 
@@ -33,27 +32,27 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
             using (var transaction = new TransactionScope())
             {
-                DAL_doiBong.ThemDoiBongMoi(doiBong);
-                
-                foreach(DTO_CauThu cauThu in danhSachCauThu)
-                {
-                    BUS_cauThu.ThemCauThuMoi(cauThu);
-                }
-
+                this.LuuDoiBong(doiBong);
+                BUS_cauThu.LuuCauThu(danhSachCauThu);
                 transaction.Complete();
                 return true;
-            }
+            }            
         }
 
-        private void KiemTraSoLuongCauThuToiDa(List<DTO_CauThu> danhSachCauThu, DTO_ThamSo thamSo)
+        private void LuuDoiBong(DTO_DoiBong doiBong)
         {
-            if (danhSachCauThu.Count > thamSo.SoLuongCauThuToiDa)
+            DAL_doiBong.LuuDoiBong(doiBong);
+        }
+
+        private void KiemTraSoLuongCauThuToiDa(Manager.Manager<DTO.DTO_CauThu> danhSachCauThu, DTO_ThamSo thamSo)
+        {
+            if (danhSachCauThu.Data.Count > thamSo.SoLuongCauThuToiDa)
                 throw new Exception("Vi phạm số lượng cầu thủ tối đa");
         }
 
-        private void KiemTraSoLuongCauThuToiThieu(List<DTO_CauThu> danhSachCauThu, DTO_ThamSo thamSo)
+        private void KiemTraSoLuongCauThuToiThieu(Manager.Manager<DTO.DTO_CauThu> danhSachCauThu, DTO_ThamSo thamSo)
         {
-            if (danhSachCauThu.Count < thamSo.SoLuongCauThuToiThieu)
+            if (danhSachCauThu.Data.Count < thamSo.SoLuongCauThuToiThieu)
                 throw new Exception("Vi phạm số lượng cầu thủ tối thiểu");
         }
 

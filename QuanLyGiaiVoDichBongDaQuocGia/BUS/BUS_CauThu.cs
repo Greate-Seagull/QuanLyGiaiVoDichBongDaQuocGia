@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 {
@@ -16,17 +17,46 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             return DAL_cauThu.LayMaCauThuMoi();
         }
 
-        public bool ThemCauThuMoi(DTO_CauThu cauThu)
+        public bool LuuCauThu(DTO_CauThu cauThu)
         {
             this.KiemTraNhapLieu(cauThu);
 
-            return DAL_cauThu.ThemCauThuMoi(cauThu);
+            return DAL_cauThu.LuuCauThu(cauThu);
         }
 
         private void KiemTraNhapLieu(DTO_CauThu cauThu)
         {
             if (string.IsNullOrEmpty(cauThu.TenCauThu))
                 throw new Exception("Tên cầu thủ không được bỏ trống");                      
+        }
+
+        public bool LuuCauThu(Manager.Manager<DTO.DTO_CauThu> danhSachCauThu)
+        {
+            DTO.DTO_CauThu cauThu;
+            List<DTO.DTO_CauThu> upsertList = new List<DTO_CauThu>();
+            List<DTO.DTO_CauThu> deleteList = new List<DTO_CauThu>();
+
+            for (int i = 0; i < danhSachCauThu.Count; i++)
+            {
+                cauThu = danhSachCauThu.Data[i];
+
+                this.KiemTraNhapLieu(cauThu);
+
+                switch (danhSachCauThu.Operation[i])
+                {
+                    case Manager.OperationType.Upsert:
+                        upsertList.Add(cauThu);
+                        break;
+                    case Manager.OperationType.Delete:
+                        deleteList.Add(cauThu);
+                        break;
+                }
+            }
+
+            if (upsertList.Count > 0) DAL_cauThu.LuuDanhSachCauThuMoi(upsertList);
+            if (deleteList.Count > 0) DAL_cauThu.XoaDanhSachCauThu(deleteList);
+
+            return true;
         }
     }
 }

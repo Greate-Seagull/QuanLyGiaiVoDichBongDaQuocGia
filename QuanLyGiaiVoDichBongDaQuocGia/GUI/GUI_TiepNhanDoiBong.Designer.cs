@@ -32,7 +32,6 @@
             tableLayoutPanel = new TableLayoutPanel();
             btnXoaCauThu = new Button();
             btnCapNhatCauThu = new Button();
-            btnCapNhatDoiBong = new Button();
             btnThemCauThu = new Button();
             lblMaDoiBong = new Label();
             lblTenSanNha = new Label();
@@ -59,10 +58,9 @@
             tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
             tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
             tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel.Controls.Add(btnXoaCauThu, 4, 3);
-            tableLayoutPanel.Controls.Add(btnCapNhatCauThu, 3, 3);
-            tableLayoutPanel.Controls.Add(btnCapNhatDoiBong, 1, 3);
-            tableLayoutPanel.Controls.Add(btnThemCauThu, 2, 3);
+            tableLayoutPanel.Controls.Add(btnXoaCauThu, 3, 3);
+            tableLayoutPanel.Controls.Add(btnCapNhatCauThu, 2, 3);
+            tableLayoutPanel.Controls.Add(btnThemCauThu, 1, 3);
             tableLayoutPanel.Controls.Add(lblMaDoiBong, 0, 0);
             tableLayoutPanel.Controls.Add(lblTenSanNha, 2, 0);
             tableLayoutPanel.Controls.Add(lblTenDoiBong, 1, 0);
@@ -90,7 +88,7 @@
             // 
             btnXoaCauThu.Dock = DockStyle.Bottom;
             btnXoaCauThu.Font = new Font("Segoe UI", 8F);
-            btnXoaCauThu.Location = new Point(716, 456);
+            btnXoaCauThu.Location = new Point(542, 456);
             btnXoaCauThu.Margin = new Padding(10, 10, 10, 0);
             btnXoaCauThu.Name = "btnXoaCauThu";
             btnXoaCauThu.Size = new Size(154, 41);
@@ -103,7 +101,7 @@
             // 
             btnCapNhatCauThu.Dock = DockStyle.Bottom;
             btnCapNhatCauThu.Font = new Font("Segoe UI", 8F);
-            btnCapNhatCauThu.Location = new Point(542, 456);
+            btnCapNhatCauThu.Location = new Point(368, 456);
             btnCapNhatCauThu.Margin = new Padding(10, 10, 10, 0);
             btnCapNhatCauThu.Name = "btnCapNhatCauThu";
             btnCapNhatCauThu.Size = new Size(154, 41);
@@ -112,24 +110,11 @@
             btnCapNhatCauThu.UseVisualStyleBackColor = true;
             btnCapNhatCauThu.Click += btnCapNhatCauThu_Click;
             // 
-            // btnCapNhatDoiBong
-            // 
-            btnCapNhatDoiBong.Dock = DockStyle.Bottom;
-            btnCapNhatDoiBong.Font = new Font("Segoe UI", 8F);
-            btnCapNhatDoiBong.Location = new Point(194, 456);
-            btnCapNhatDoiBong.Margin = new Padding(10, 10, 10, 0);
-            btnCapNhatDoiBong.Name = "btnCapNhatDoiBong";
-            btnCapNhatDoiBong.Size = new Size(154, 41);
-            btnCapNhatDoiBong.TabIndex = 10;
-            btnCapNhatDoiBong.Text = "Cập nhật đội bóng";
-            btnCapNhatDoiBong.UseVisualStyleBackColor = true;
-            btnCapNhatDoiBong.Click += btnCapNhatDoiBong_Click;
-            // 
             // btnThemCauThu
             // 
             btnThemCauThu.Dock = DockStyle.Bottom;
             btnThemCauThu.Font = new Font("Segoe UI", 8F);
-            btnThemCauThu.Location = new Point(368, 456);
+            btnThemCauThu.Location = new Point(194, 456);
             btnThemCauThu.Margin = new Padding(10, 10, 10, 0);
             btnThemCauThu.Name = "btnThemCauThu";
             btnThemCauThu.Size = new Size(154, 41);
@@ -292,7 +277,6 @@
         private Button btnTiepNhanDoiBong;
         private Button btnThoat;
         private DataGridView dgvDanhSachCauThu;
-        private Button btnCapNhatDoiBong;
         private Button btnXoaCauThu;
         private Button btnCapNhatCauThu;
     }

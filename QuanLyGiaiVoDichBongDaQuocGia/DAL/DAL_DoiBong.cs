@@ -28,10 +28,13 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             return "DB" + soMoi.ToString("D3");
         }
 
-        public bool ThemDoiBongMoi(DTO_DoiBong doiBong)
+        public bool LuuDoiBong(DTO_DoiBong doiBong)
         {
             string query = "INSERT INTO DOIBONG (MaDoiBong, TenDoiBong, TenSanNha) " +
-                          $"VALUES ('{doiBong.MaDoiBong}', '{doiBong.TenDoiBong}', '{doiBong.TenSanNha}')";
+                          $"VALUES ('{doiBong.MaDoiBong}', '{doiBong.TenDoiBong}', '{doiBong.TenSanNha}') " +
+                           "ON DUPLICATE KEY UPDATE " +
+                           "TenDoiBong = VALUES(TenDoiBong), " +
+                           "TenSanNha = VALUES(TenSanNha); ";
             
             return databaseHelper.ExecuteNonQuery(query) > 0;
         }

@@ -28,10 +28,56 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             return "CT" + soMoi.ToString("D3");
         }
 
-        internal bool ThemCauThuMoi(DTO_CauThu cauThu)
+        internal bool LuuCauThu(DTO_CauThu cauThu)
         {
             string query = "INSERT INTO CAUTHU (MaCauThu, TenCauThu, NgaySinh, GhiChu, MaDoiBong, MaLoaiCauThu) " +
-                          $"VALUES ('{cauThu.MaCauThu}', '{cauThu.TenCauThu}', '{cauThu.NgaySinh.Date.ToString("yyyy/MM/dd")}', '{cauThu.GhiChu}', '{cauThu.DoiBong.MaDoiBong}', '{cauThu.LoaiCauThu.MaLoaiCauThu}')";
+                          $"VALUES ('{cauThu.MaCauThu}', '{cauThu.TenCauThu}', '{cauThu.NgaySinh.Date.ToString(DataFormat.DataFormat.DateFormat)}', '{cauThu.GhiChu}', '{cauThu.DoiBong.MaDoiBong}', '{cauThu.MaLoaiCauThu}') " +
+                           "ON DUPLICATE KEY UPDATE " +
+                           "TenCauThu = VALUES(TenCauThu)," +
+                           "NgaySinh = VALUES(NgaySinh)," +
+                           "GhiChu = VALUES(GhiChu)," +
+                           "MaLoaiCauThu = VALUES(MaLoaiCauThu); ";
+
+            return databaseHelper.ExecuteNonQuery(query) > 0;
+        }
+
+        public bool XoaCauThu(DTO_CauThu cauThu)
+        {
+            string query = "UPDATE CAUTHU " +
+                          $"SET Deleted = 1 " +
+                          $"WHERE MaCauThu = '{cauThu.MaCauThu}'";
+
+            return databaseHelper.ExecuteNonQuery(query) > 0;
+        }
+
+        public bool LuuDanhSachCauThuMoi(List<DTO_CauThu> insertList)
+        {
+            string query = "";
+            
+            foreach(DTO.DTO_CauThu cauThu in insertList)
+            {
+                query += "INSERT INTO CAUTHU (MaCauThu, TenCauThu, NgaySinh, GhiChu, MaDoiBong, MaLoaiCauThu) " +
+                        $"VALUES ('{cauThu.MaCauThu}', '{cauThu.TenCauThu}', '{cauThu.NgaySinh.Date.ToString(DataFormat.DataFormat.DateFormat)}', '{cauThu.GhiChu}', '{cauThu.DoiBong.MaDoiBong}', '{cauThu.MaLoaiCauThu}') " +
+                        "ON DUPLICATE KEY UPDATE " +
+                        "TenCauThu = VALUES(TenCauThu)," +
+                        "NgaySinh = VALUES(NgaySinh)," +
+                        "GhiChu = VALUES(GhiChu)," +
+                        "MaLoaiCauThu = VALUES(MaLoaiCauThu); ";
+            }
+
+            return databaseHelper.ExecuteNonQuery(query) > 0;
+        }
+
+        public bool XoaDanhSachCauThu(List<DTO_CauThu> deleteList)
+        {
+            string query = "";
+
+            foreach (DTO.DTO_CauThu cauThu in deleteList)
+            {
+                query += "UPDATE CAUTHU " +
+                        $"SET Deleted = 1 " +
+                        $"WHERE MaCauThu = '{cauThu.MaCauThu}' ";
+            }
 
             return databaseHelper.ExecuteNonQuery(query) > 0;
         }

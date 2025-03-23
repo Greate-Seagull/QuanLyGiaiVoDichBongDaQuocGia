@@ -17,11 +17,11 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             return DAL_loaiCauThu.LayDanhSachLoaiCauThu();
         }
 
-        public void KiemTraSoLuongCauThuToiDa(List<DTO_CauThu> danhSachCauThu)
+        public void KiemTraSoLuongCauThuToiDa(Manager.Manager<DTO.DTO_CauThu> danhSachCauThu)
         {
             Dictionary<DTO_LoaiCauThu, int> counter = new Dictionary<DTO_LoaiCauThu, int>();
 
-            foreach(DTO_CauThu cauThu in danhSachCauThu)
+            foreach(DTO_CauThu cauThu in danhSachCauThu.Data)
             {                
                 if (counter.ContainsKey(cauThu.LoaiCauThu))
                 {
