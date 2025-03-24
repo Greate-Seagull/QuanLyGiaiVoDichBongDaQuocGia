@@ -36,13 +36,13 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             List<DTO.DTO_CauThu> upsertList = new List<DTO_CauThu>();
             List<DTO.DTO_CauThu> deleteList = new List<DTO_CauThu>();
 
-            for (int i = 0; i < danhSachCauThu.Count; i++)
+            foreach (var item in danhSachCauThu.Items.Values)
             {
-                cauThu = danhSachCauThu.Data[i];
+                cauThu = item.Data;
 
                 this.KiemTraNhapLieu(cauThu);
 
-                switch (danhSachCauThu.Operation[i])
+                switch (item.Operation)
                 {
                     case Manager.OperationType.Upsert:
                         upsertList.Add(cauThu);

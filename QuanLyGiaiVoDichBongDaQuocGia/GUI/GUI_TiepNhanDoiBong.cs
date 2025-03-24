@@ -91,7 +91,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
             if (tiepNhanCauThu.ShowDialog() == DialogResult.OK)
             {
-                danhSachCauThu.Add(tiepNhanCauThu.CauThu);
+                danhSachCauThu.Add(tiepNhanCauThu.CauThu.MaCauThu, tiepNhanCauThu.CauThu);
 
                 MessageBox.Show("Thêm cầu thủ thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -119,8 +119,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         {
             if (dgvDanhSachCauThu.SelectedCells.Count > 0)
             {
+                List<DTO_CauThu> danhSachCauThuHienTai = dgvDanhSachCauThu.DataSource as List<DTO_CauThu>;
                 int index = dgvDanhSachCauThu.SelectedCells[0].RowIndex;
-                tiepNhanCauThu = new GUI_TiepNhanCauThu(doiBong, thamSo, danhSachLoaiCauThu, maCauThuMoi, danhSachCauThu.Data[index]);
+
+                tiepNhanCauThu = new GUI_TiepNhanCauThu(doiBong, thamSo, danhSachLoaiCauThu, maCauThuMoi, danhSachCauThuHienTai[index]);
 
                 if (tiepNhanCauThu.ShowDialog() == DialogResult.OK)
                 {
@@ -139,9 +141,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         {
             if (dgvDanhSachCauThu.SelectedCells.Count > 0)
             {
+                List<DTO_CauThu> danhSachCauThuHienTai = dgvDanhSachCauThu.DataSource as List<DTO_CauThu>;
                 int index = dgvDanhSachCauThu.SelectedCells[0].RowIndex;
 
-                danhSachCauThu.RemoveAt(index);
+                danhSachCauThu.Delete(danhSachCauThuHienTai[index].MaCauThu);
 
                 //MessageBox.Show("Xóa cầu thủ thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LayDanhSachCauThu();

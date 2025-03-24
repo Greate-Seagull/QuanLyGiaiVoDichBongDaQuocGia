@@ -76,7 +76,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             {
                 query += "UPDATE CAUTHU " +
                         $"SET Deleted = 1 " +
-                        $"WHERE MaCauThu = '{cauThu.MaCauThu}' ";
+                        $"WHERE MaCauThu = '{cauThu.MaCauThu}'; ";
             }
 
             return databaseHelper.ExecuteNonQuery(query) > 0;

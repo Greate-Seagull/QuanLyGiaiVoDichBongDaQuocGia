@@ -25,7 +25,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
         public bool TiepNhanDoiBongMoi(DTO_DoiBong doiBong, Manager.Manager<DTO.DTO_CauThu> danhSachCauThu, DTO_ThamSo thamSo)
         {
             this.KiemTraNhapLieu(doiBong);
-
             this.KiemTraSoLuongCauThuToiThieu(danhSachCauThu, thamSo);
             this.KiemTraSoLuongCauThuToiDa(danhSachCauThu, thamSo);
             BUS_loaiCauThu.KiemTraSoLuongCauThuToiDa(danhSachCauThu);
@@ -46,13 +45,13 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
         private void KiemTraSoLuongCauThuToiDa(Manager.Manager<DTO.DTO_CauThu> danhSachCauThu, DTO_ThamSo thamSo)
         {
-            if (danhSachCauThu.Data.Count > thamSo.SoLuongCauThuToiDa)
+            if (danhSachCauThu.Items.Count > thamSo.SoLuongCauThuToiDa)
                 throw new Exception("Vi phạm số lượng cầu thủ tối đa");
         }
 
         private void KiemTraSoLuongCauThuToiThieu(Manager.Manager<DTO.DTO_CauThu> danhSachCauThu, DTO_ThamSo thamSo)
         {
-            if (danhSachCauThu.Data.Count < thamSo.SoLuongCauThuToiThieu)
+            if (danhSachCauThu.Items.Count < thamSo.SoLuongCauThuToiThieu)
                 throw new Exception("Vi phạm số lượng cầu thủ tối thiểu");
         }
 

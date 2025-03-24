@@ -21,11 +21,13 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
         {
             Dictionary<DTO_LoaiCauThu, int> counter = new Dictionary<DTO_LoaiCauThu, int>();
 
-            foreach(DTO_CauThu cauThu in danhSachCauThu.Data)
-            {                
+            foreach(var item in danhSachCauThu.Items.Values)
+            {
+                var cauThu = item.Data;
+
                 if (counter.ContainsKey(cauThu.LoaiCauThu))
                 {
-                    counter[cauThu.LoaiCauThu]++;                    
+                    counter[cauThu.LoaiCauThu]++;
                 }
                 else
                 {
