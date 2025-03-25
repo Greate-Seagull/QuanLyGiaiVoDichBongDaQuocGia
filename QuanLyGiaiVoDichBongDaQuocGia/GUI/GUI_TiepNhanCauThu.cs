@@ -21,7 +21,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         private List<DTO.DTO_LoaiCauThu> danhSachLoaiCauThu;
         private string maCauThuMoi;
 
-        private DTO.DTO_CauThu cauThu;           
+        private DTO.DTO_CauThu cauThu;
 
         public DTO.DTO_CauThu CauThu { get => cauThu; set => cauThu = value; }
 

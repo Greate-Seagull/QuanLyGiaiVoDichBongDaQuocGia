@@ -28,10 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             tableLayoutPanel = new TableLayoutPanel();
-            btnXoaCauThu = new Button();
-            btnCapNhatCauThu = new Button();
             btnThemCauThu = new Button();
             lblMaDoiBong = new Label();
             lblTenSanNha = new Label();
@@ -41,14 +38,12 @@
             txtTenSanNha = new TextBox();
             btnTiepNhanDoiBong = new Button();
             btnThoat = new Button();
-            dgvDanhSachCauThu = new DataGridView();
+            pDanhSachCauThu = new Panel();
             tableLayoutPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvDanhSachCauThu).BeginInit();
             SuspendLayout();
             // 
             // tableLayoutPanel
             // 
-            tableLayoutPanel.AutoSize = true;
             tableLayoutPanel.ColumnCount = 8;
             tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
             tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
@@ -58,18 +53,16 @@
             tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
             tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
             tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel.Controls.Add(btnXoaCauThu, 3, 3);
-            tableLayoutPanel.Controls.Add(btnCapNhatCauThu, 2, 3);
             tableLayoutPanel.Controls.Add(btnThemCauThu, 1, 3);
             tableLayoutPanel.Controls.Add(lblMaDoiBong, 0, 0);
             tableLayoutPanel.Controls.Add(lblTenSanNha, 2, 0);
             tableLayoutPanel.Controls.Add(lblTenDoiBong, 1, 0);
             tableLayoutPanel.Controls.Add(txtMaDoiBong, 0, 1);
-            tableLayoutPanel.Controls.Add(txtTenDoiBong, 2, 1);
-            tableLayoutPanel.Controls.Add(txtTenSanNha, 1, 1);
+            tableLayoutPanel.Controls.Add(txtTenDoiBong, 1, 1);
+            tableLayoutPanel.Controls.Add(txtTenSanNha, 2, 1);
             tableLayoutPanel.Controls.Add(btnTiepNhanDoiBong, 0, 3);
             tableLayoutPanel.Controls.Add(btnThoat, 8, 3);
-            tableLayoutPanel.Controls.Add(dgvDanhSachCauThu, 0, 2);
+            tableLayoutPanel.Controls.Add(pDanhSachCauThu, 0, 2);
             tableLayoutPanel.Dock = DockStyle.Fill;
             tableLayoutPanel.Location = new Point(0, 0);
             tableLayoutPanel.Margin = new Padding(0);
@@ -83,32 +76,6 @@
             tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanel.Size = new Size(1418, 507);
             tableLayoutPanel.TabIndex = 3;
-            // 
-            // btnXoaCauThu
-            // 
-            btnXoaCauThu.Dock = DockStyle.Bottom;
-            btnXoaCauThu.Font = new Font("Segoe UI", 8F);
-            btnXoaCauThu.Location = new Point(542, 456);
-            btnXoaCauThu.Margin = new Padding(10, 10, 10, 0);
-            btnXoaCauThu.Name = "btnXoaCauThu";
-            btnXoaCauThu.Size = new Size(154, 41);
-            btnXoaCauThu.TabIndex = 12;
-            btnXoaCauThu.Text = "Xóa cầu thủ";
-            btnXoaCauThu.UseVisualStyleBackColor = true;
-            btnXoaCauThu.Click += btnXoaCauThu_Click;
-            // 
-            // btnCapNhatCauThu
-            // 
-            btnCapNhatCauThu.Dock = DockStyle.Bottom;
-            btnCapNhatCauThu.Font = new Font("Segoe UI", 8F);
-            btnCapNhatCauThu.Location = new Point(368, 456);
-            btnCapNhatCauThu.Margin = new Padding(10, 10, 10, 0);
-            btnCapNhatCauThu.Name = "btnCapNhatCauThu";
-            btnCapNhatCauThu.Size = new Size(154, 41);
-            btnCapNhatCauThu.TabIndex = 11;
-            btnCapNhatCauThu.Text = "Cập nhật cầu thủ";
-            btnCapNhatCauThu.UseVisualStyleBackColor = true;
-            btnCapNhatCauThu.Click += btnCapNhatCauThu_Click;
             // 
             // btnThemCauThu
             // 
@@ -177,7 +144,7 @@
             txtTenDoiBong.BorderStyle = BorderStyle.FixedSingle;
             tableLayoutPanel.SetColumnSpan(txtTenDoiBong, 2);
             txtTenDoiBong.Dock = DockStyle.Fill;
-            txtTenDoiBong.Location = new Point(542, 68);
+            txtTenDoiBong.Location = new Point(194, 68);
             txtTenDoiBong.Margin = new Padding(10);
             txtTenDoiBong.Name = "txtTenDoiBong";
             txtTenDoiBong.Size = new Size(328, 31);
@@ -188,7 +155,7 @@
             txtTenSanNha.BorderStyle = BorderStyle.FixedSingle;
             tableLayoutPanel.SetColumnSpan(txtTenSanNha, 2);
             txtTenSanNha.Dock = DockStyle.Fill;
-            txtTenSanNha.Location = new Point(194, 68);
+            txtTenSanNha.Location = new Point(542, 68);
             txtTenSanNha.Margin = new Padding(10);
             txtTenSanNha.Name = "txtTenSanNha";
             txtTenSanNha.Size = new Size(328, 31);
@@ -220,34 +187,19 @@
             btnThoat.UseVisualStyleBackColor = true;
             btnThoat.Click += btnThoat_Click;
             // 
-            // dgvDanhSachCauThu
+            // pDanhSachCauThu
             // 
-            dgvDanhSachCauThu.AllowUserToAddRows = false;
-            dgvDanhSachCauThu.AllowUserToDeleteRows = false;
-            dgvDanhSachCauThu.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvDanhSachCauThu.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dgvDanhSachCauThu.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgvDanhSachCauThu.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            tableLayoutPanel.SetColumnSpan(dgvDanhSachCauThu, 8);
-            dgvDanhSachCauThu.Dock = DockStyle.Fill;
-            dgvDanhSachCauThu.EnableHeadersVisualStyles = false;
-            dgvDanhSachCauThu.Location = new Point(20, 116);
-            dgvDanhSachCauThu.Margin = new Padding(10);
-            dgvDanhSachCauThu.Name = "dgvDanhSachCauThu";
-            dgvDanhSachCauThu.ReadOnly = true;
-            dgvDanhSachCauThu.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Control;
-            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
-            dgvDanhSachCauThu.RowHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            dgvDanhSachCauThu.RowHeadersVisible = false;
-            dgvDanhSachCauThu.RowHeadersWidth = 62;
-            dgvDanhSachCauThu.Size = new Size(1378, 320);
-            dgvDanhSachCauThu.TabIndex = 9;
+            pDanhSachCauThu.AutoScroll = true;
+            pDanhSachCauThu.BackColor = Color.White;
+            pDanhSachCauThu.BorderStyle = BorderStyle.FixedSingle;
+            tableLayoutPanel.SetColumnSpan(pDanhSachCauThu, 8);
+            pDanhSachCauThu.Dock = DockStyle.Fill;
+            pDanhSachCauThu.Location = new Point(20, 116);
+            pDanhSachCauThu.Margin = new Padding(10);
+            pDanhSachCauThu.Name = "pDanhSachCauThu";
+            pDanhSachCauThu.Padding = new Padding(10);
+            pDanhSachCauThu.Size = new Size(1378, 320);
+            pDanhSachCauThu.TabIndex = 9;
             // 
             // GUI_TiepNhanDoiBong
             // 
@@ -260,9 +212,7 @@
             Load += GUI_TiepNhanDoiBong_Load;
             tableLayoutPanel.ResumeLayout(false);
             tableLayoutPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvDanhSachCauThu).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -276,8 +226,6 @@
         private TextBox txtTenSanNha;
         private Button btnTiepNhanDoiBong;
         private Button btnThoat;
-        private DataGridView dgvDanhSachCauThu;
-        private Button btnXoaCauThu;
-        private Button btnCapNhatCauThu;
+        private Panel pDanhSachCauThu;
     }
 }

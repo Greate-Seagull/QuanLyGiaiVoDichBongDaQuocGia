@@ -7,6 +7,9 @@
     <Compile Update="GUI\GUI_TiepNhanCauThu.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="GUI\GUI_TiepNhanCauThu_RowVersion.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="GUI\GUI_TiepNhanDoiBong.cs">
       <SubType>Form</SubType>
     </Compile>

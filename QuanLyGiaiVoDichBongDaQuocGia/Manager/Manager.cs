@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
@@ -28,10 +29,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
     }
     public class Manager<T>
     {
-        Dictionary<string, ManagedItem<T>> items = new Dictionary<string, ManagedItem<T>>();
+        ConcurrentDictionary<string, ManagedItem<T>> items = new ConcurrentDictionary<string, ManagedItem<T>>();
 
-        public Dictionary<string, ManagedItem<T>> Items { get => items; set => items = value; }
-        public int Count { get => items.Count; }        
+        public ConcurrentDictionary<string, ManagedItem<T>> Items { get => items; set => items = value; }
+        public int Count { get => items.Count; }
         public List<T> ViewData 
         {
             get
@@ -47,13 +48,16 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
         }        
 
         public void Add(string key, T value)
-        {
-            this.Items.Add(key, new ManagedItem<T>(value));
+        {      
+           this.Items.TryAdd(key, new ManagedItem<T>(value));
         }
 
         public void Delete(string key)
         {
-            this.Items[key].Operation = OperationType.Delete;
+            if (this.Items.ContainsKey(key))
+            {
+                this.Items[key].Operation = OperationType.Delete;
+            }            
         }
     }
 }
