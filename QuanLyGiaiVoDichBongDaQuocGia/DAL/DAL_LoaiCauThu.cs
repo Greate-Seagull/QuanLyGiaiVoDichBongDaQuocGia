@@ -14,7 +14,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 
         public List<DTO.DTO_LoaiCauThu> LayDanhSachLoaiCauThu()
         {
-            string query = "SELECT * FROM LOAICAUTHU";
+            string query = "SELECT MaLoaiCauThu, TenLoaiCauThu, SoLuongCauThuToiDaTheoLoaiCauThu FROM LOAICAUTHU";
             DataTable result = databaseHelper.ExecuteQuery(query);
 
             List<DTO.DTO_LoaiCauThu> danhSachLoaiCauThu = new List<DTO.DTO_LoaiCauThu>();

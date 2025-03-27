@@ -28,6 +28,19 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             return "CT" + soMoi.ToString("D3");
         }
 
+        public string LayMaCauThuHienTai()
+        {
+            string query = "SELECT MaCauThu FROM CAUTHU ORDER BY MaCauThu DESC LIMIT 1";
+            DataTable result = databaseHelper.ExecuteQuery(query);
+
+            if(result.Rows.Count == 0)
+            {
+                return "CT000";
+            }
+
+            return result.Rows[0]["MaCauThu"].ToString();
+        }
+
         internal bool LuuCauThu(DTO_CauThu cauThu)
         {
             string query = "INSERT INTO CAUTHU (MaCauThu, TenCauThu, NgaySinh, GhiChu, MaDoiBong, MaLoaiCauThu) " +
@@ -52,18 +65,19 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 
         public bool LuuDanhSachCauThuMoi(List<DTO_CauThu> insertList)
         {
-            string query = "";
-            
-            foreach(DTO.DTO_CauThu cauThu in insertList)
-            {
-                query += "INSERT INTO CAUTHU (MaCauThu, TenCauThu, NgaySinh, GhiChu, MaDoiBong, MaLoaiCauThu) " +
-                        $"VALUES ('{cauThu.MaCauThu}', '{cauThu.TenCauThu}', '{cauThu.NgaySinh.Date.ToString(DataFormat.DataFormat.DateFormat)}', '{cauThu.GhiChu}', '{cauThu.DoiBong.MaDoiBong}', '{cauThu.MaLoaiCauThu}') " +
-                        "ON DUPLICATE KEY UPDATE " +
-                        "TenCauThu = VALUES(TenCauThu)," +
-                        "NgaySinh = VALUES(NgaySinh)," +
-                        "GhiChu = VALUES(GhiChu)," +
-                        "MaLoaiCauThu = VALUES(MaLoaiCauThu); ";
-            }
+            string query = "INSERT INTO CAUTHU (MaCauThu, TenCauThu, NgaySinh, GhiChu, MaDoiBong, MaLoaiCauThu) " +
+                           "VALUES ";
+
+            query += string.Join(", ", insertList.Select(cauThu =>
+                                $"('{cauThu.MaCauThu}', '{cauThu.TenCauThu}', '{cauThu.NgaySinh.Date.ToString(DataFormat.DataFormat.DateFormat)}', " +
+                                $"'{cauThu.GhiChu}', '{cauThu.DoiBong.MaDoiBong}', '{cauThu.MaLoaiCauThu}')"
+                            ));
+
+            query += "ON DUPLICATE KEY UPDATE " +
+                    "TenCauThu = VALUES(TenCauThu)," +
+                    "NgaySinh = VALUES(NgaySinh)," +
+                    "GhiChu = VALUES(GhiChu)," +
+                    "MaLoaiCauThu = VALUES(MaLoaiCauThu); ";
 
             return databaseHelper.ExecuteNonQuery(query) > 0;
         }
@@ -81,5 +95,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 
             return databaseHelper.ExecuteNonQuery(query) > 0;
         }
+
     }
 }

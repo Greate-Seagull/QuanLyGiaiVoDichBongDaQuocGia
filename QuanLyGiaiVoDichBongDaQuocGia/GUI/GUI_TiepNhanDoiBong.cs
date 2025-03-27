@@ -20,18 +20,17 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         BUS.BUS_CauThu BUS_cauThu = new BUS.BUS_CauThu();
         BUS.BUS_LoaiCauThu BUS_loaiCauThu = new BUS.BUS_LoaiCauThu();
 
-        //GUI_TiepNhanCauThu tiepNhanCauThu;
-
         DTO_ThamSo thamSo;
         DTO_DoiBong doiBong;
-        Manager.Manager<DTO.DTO_CauThu> danhSachCauThu;
+        Manager.Manager<DTO.DTO_CauThu> danhSachCauThuDaTiepNhan;
         List<DTO.DTO_LoaiCauThu> danhSachLoaiCauThu;
 
         string maCauThu;
+        int soLuongCauThuMoi;
 
         public DTO_ThamSo ThamSo { get => thamSo; }
         public DTO_DoiBong DoiBong { get => doiBong; }
-        public Manager<DTO_CauThu> DanhSachCauThu { get => danhSachCauThu; }
+        public Manager<DTO_CauThu> DanhSachCauThu { get => danhSachCauThuDaTiepNhan; }
         public List<DTO_LoaiCauThu> DanhSachLoaiCauThu { get => danhSachLoaiCauThu; }
         public string MaCauThu { get => maCauThu; }
 
@@ -46,22 +45,22 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             //...
             LayThamSo();
             LayMaDoiBongMoi();
-            LayMaCauThuMoi();
+            LayMaCauThuHienTai();
             LayDanhLoaiCauThu();
-            ThamSo.SoLuongCauThuToiThieu = 0;
+            CapNhatSoLuongCauThuMoi();
 
             doiBong = new DTO_DoiBong(txtMaDoiBong.Text, null, null);
-            danhSachCauThu = new Manager.Manager<DTO.DTO_CauThu>();
+            danhSachCauThuDaTiepNhan = new Manager.Manager<DTO.DTO_CauThu>();            
+        }
+
+        private void LayMaCauThuHienTai()
+        {
+            maCauThu = BUS_cauThu.LayMaCauThuHienTai();
         }
 
         private void LayDanhLoaiCauThu()
         {
             danhSachLoaiCauThu = BUS_loaiCauThu.LayDanhSachLoaiCauThu();
-        }
-
-        private void LayMaCauThuMoi()
-        {
-            maCauThu = BUS_cauThu.LayMaCauThuMoi();
         }
 
         private void LayThamSo()
@@ -83,7 +82,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             {
                 if (BUS_doiBong.TiepNhanDoiBongMoi(DoiBong, DanhSachCauThu, ThamSo))
                 {
-                    MessageBox.Show("Tiếp nhận đội bóng thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CapNhatThaoTacDanhSachCauThu();
+                    CapNhatMauSacChoDong();
+                    CapNhatSoLuongCauThuMoi();
+                    MessageBox.Show("Tiếp nhận đội bóng thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);                    
                     this.DialogResult = DialogResult.OK;
                 }
             }
@@ -91,16 +93,44 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             {
                 MessageBox.Show(err.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+
+        }
+
+        private void CapNhatMauSacChoDong()
+        {
+            foreach(GUI_TiepNhanCauThu_RowVersion row in pDanhSachCauThu.Controls)
+            {
+                row.CapNhatMauSac();
+            }
+        }
+
+        private void CapNhatSoLuongCauThuMoi()
+        {
+            soLuongCauThuMoi = 0;
+        }
+
+        private void CapNhatThaoTacDanhSachCauThu()
+        {
+            foreach (var cauThu in danhSachCauThuDaTiepNhan.Items.Values)
+            {
+                if (cauThu.Operation == OperationType.Delete)
+                {
+                    danhSachCauThuDaTiepNhan.Delete(cauThu.Data.MaCauThu, true);
+                }
+                else
+                {
+                    cauThu.Operation = OperationType.None;
+                }
+            }
         }
 
         private void LayDanhSachThongTinCauThu()
         {
-            DTO_CauThu cauThu;
-
             foreach (GUI_TiepNhanCauThu_RowVersion cauThuRow in pDanhSachCauThu.Controls)
             {
-                cauThu = cauThuRow.LayThongTinCauThu();
-                DanhSachCauThu.Add(cauThu.MaCauThu, cauThu);
+                cauThuRow.CapNhatThongTinCauThu();
+
+                DanhSachCauThu.Add(cauThuRow.CauThu.MaCauThu, cauThuRow.Output);                
             }
         }
 
@@ -112,20 +142,18 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void btnThemCauThu_Click(object sender, EventArgs e)
         {
-            GUI_TiepNhanCauThu_RowVersion newRow = new GUI_TiepNhanCauThu_RowVersion(this);
+            if(pDanhSachCauThu.Controls.Count < thamSo.SoLuongCauThuToiDa)
+            {
+                GUI_TiepNhanCauThu_RowVersion newRow = new GUI_TiepNhanCauThu_RowVersion(this);
 
-            pDanhSachCauThu.Controls.Add(newRow);
+                pDanhSachCauThu.Controls.Add(newRow);
+                soLuongCauThuMoi++;
 
-            newRow.CapNhatSTT(pDanhSachCauThu.Controls.Count);
-
-            CapNhatMaCauThuXemTruoc();
+                newRow.CapNhatSTT(pDanhSachCauThu.Controls.Count);
+                newRow.CapNhatMaCauThu(CauThuHelper.TaoMaCauThu(MaCauThu, danhSachCauThuDaTiepNhan.Count + soLuongCauThuMoi));
+            }            
         }
 
-        private void CapNhatMaCauThuXemTruoc()
-        {
-            maCauThu = CauThuHelper.XemTruocMaCauThu(MaCauThu);
-        }
-        
         private void btnThoat_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -133,14 +161,36 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         internal void XoaCauThu(GUI_TiepNhanCauThu_RowVersion GUI_tiepNhanCauThu_RowVersion)
         {
-            danhSachCauThu.Delete(GUI_tiepNhanCauThu_RowVersion.CauThu.MaCauThu);
-            pDanhSachCauThu.Controls.Remove(GUI_tiepNhanCauThu_RowVersion);
-            CaiDatSTT();
+            danhSachCauThuDaTiepNhan.Delete(GUI_tiepNhanCauThu_RowVersion.CauThu.MaCauThu);
+
+            int index = pDanhSachCauThu.Controls.IndexOf(GUI_tiepNhanCauThu_RowVersion);
+            pDanhSachCauThu.Controls.RemoveAt(index);
+
+            CaiDatSTT(index);
+
+            if (GUI_tiepNhanCauThu_RowVersion.Operation == OperationType.Insert)
+            {
+                soLuongCauThuMoi--;
+                CaiDatMaCauThu();
+            }
         }
 
-        private void CaiDatSTT()
-        {            
-            for(int i = 0; i < pDanhSachCauThu.Controls.Count; i++)
+        private void CaiDatMaCauThu()
+        {
+            int soLuongCauThuChuaTiepNhan = 0;
+            foreach(GUI_TiepNhanCauThu_RowVersion row in pDanhSachCauThu.Controls)
+            {
+                if(row.Operation == OperationType.Insert)
+                {
+                    soLuongCauThuChuaTiepNhan++;
+                    row.CapNhatMaCauThu(CauThuHelper.TaoMaCauThu(MaCauThu, danhSachCauThuDaTiepNhan.Count + soLuongCauThuChuaTiepNhan));
+                }
+            }
+        }
+
+        private void CaiDatSTT(int index = 0)
+        {
+            for (int i = index; i < pDanhSachCauThu.Controls.Count; i++)
             {
                 if (pDanhSachCauThu.Controls[i] is GUI_TiepNhanCauThu_RowVersion row)
                 {
@@ -148,45 +198,5 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
                 }
             }
         }
-
-        //private void btnCapNhatCauThu_Click(object sender, EventArgs e)
-        //{
-        //    if (dgvDanhSachCauThu.SelectedCells.Count > 0)
-        //    {
-        //        List<DTO_CauThu> danhSachCauThuHienTai = dgvDanhSachCauThu.DataSource as List<DTO_CauThu>;
-        //        int index = dgvDanhSachCauThu.SelectedCells[0].RowIndex;
-
-        //        tiepNhanCauThu = new GUI_TiepNhanCauThu(doiBong, thamSo, danhSachLoaiCauThu, maCauThuMoi, danhSachCauThuHienTai[index]);
-
-        //        if (tiepNhanCauThu.ShowDialog() == DialogResult.OK)
-        //        {
-        //            MessageBox.Show("Cập nhật cầu thủ thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-        //            LayDanhSachCauThu();
-        //        }
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("Chọn cầu thủ trong bảng", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //    }
-        //}
-
-        //private void btnXoaCauThu_Click(object sender, EventArgs e)
-        //{
-        //    if (dgvDanhSachCauThu.SelectedCells.Count > 0)
-        //    {
-        //        List<DTO_CauThu> danhSachCauThuHienTai = dgvDanhSachCauThu.DataSource as List<DTO_CauThu>;
-        //        int index = dgvDanhSachCauThu.SelectedCells[0].RowIndex;
-
-        //        danhSachCauThu.Delete(danhSachCauThuHienTai[index].MaCauThu);
-
-        //        //MessageBox.Show("Xóa cầu thủ thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        //        LayDanhSachCauThu();
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("Chọn cầu thủ trong bảng", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //    }
-        //}        
     }
 }

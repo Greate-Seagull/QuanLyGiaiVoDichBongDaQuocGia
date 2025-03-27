@@ -10,15 +10,17 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
 {
     public enum OperationType
     {
-        Upsert = 0,
-        Delete = 1
+        None = 0,
+        Insert = 1,
+        Update = 2,
+        Delete = 3
     }
     public class ManagedItem<T>
     {
         T data;
         OperationType operation;
 
-        public ManagedItem(T data, OperationType operation = OperationType.Upsert)
+        public ManagedItem(T data, OperationType operation = OperationType.Insert)
         {
             this.Data = data;
             this.Operation = operation;
@@ -33,31 +35,47 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
 
         public ConcurrentDictionary<string, ManagedItem<T>> Items { get => items; set => items = value; }
         public int Count { get => items.Count; }
-        public List<T> ViewData 
+        public int CountActive
         {
             get
             {
-                List<T> viewData = new List<T>();
-                foreach (ManagedItem<T> value in items.Values)
+                int count = 0;
+                foreach (ManagedItem<T> item in items.Values)
                 {
-                    if (value.Operation == OperationType.Upsert)
-                        viewData.Add(value.Data);
+                    if (item.Operation != OperationType.Delete)
+                    {
+                        count++;
+                    }
                 }
-                return viewData;
-            }
-        }        
 
-        public void Add(string key, T value)
+                return count;
+            }
+        }       
+
+        public bool Add(string key, ManagedItem<T> value)
         {      
-           this.Items.TryAdd(key, new ManagedItem<T>(value));
+           return this.Items.TryAdd(key, value);
         }
 
-        public void Delete(string key)
+        public bool Delete(string key, bool hard = false)
         {
             if (this.Items.ContainsKey(key))
             {
-                this.Items[key].Operation = OperationType.Delete;
-            }            
+                if (hard)
+                {
+                    this.Items.TryRemove(key, out _);
+                }
+                else
+                {
+                    this.Items[key].Operation = OperationType.Delete;
+                }
+                
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

@@ -44,7 +44,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
                 switch (item.Operation)
                 {
-                    case Manager.OperationType.Upsert:
+                    case Manager.OperationType.Insert:
+                        upsertList.Add(cauThu);
+                        break;
+                    case Manager.OperationType.Update:
                         upsertList.Add(cauThu);
                         break;
                     case Manager.OperationType.Delete:
@@ -57,6 +60,11 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             if (deleteList.Count > 0) DAL_cauThu.XoaDanhSachCauThu(deleteList);
 
             return true;
+        }
+
+        public string LayMaCauThuHienTai()
+        {
+            return DAL_cauThu.LayMaCauThuHienTai();
         }
     }
 }

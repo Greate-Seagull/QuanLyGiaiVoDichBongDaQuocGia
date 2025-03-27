@@ -15,7 +15,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 
         public DTO_ThamSo LayThamSo()
         {
-            string query = "SELECT * FROM THAMSO LIMIT 1";
+            string query = "SELECT TuoiCauThuToiThieu, TuoiCauThuToiDa, SoLuongCauThuToiThieu, SoLuongCauThuToiDa FROM THAMSO LIMIT 1";
             DataTable result = databaseHelper.ExecuteQuery(query);
 
             if(result.Rows.Count == 0)

@@ -9,26 +9,24 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
 using MySql.Data.MySqlClient;
+using QuanLyGiaiVoDichBongDaQuocGia.Manager;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 {
     public partial class GUI_TiepNhanCauThu_RowVersion : UserControl
     {
         //Input
-        //private DTO.DTO_ThamSo thamSo;
-        //private DTO.DTO_DoiBong doiBong;
-        //private List<DTO.DTO_LoaiCauThu> danhSachLoaiCauThu;
-        //private string maCauThuMoi;
         GUI_TiepNhanDoiBong hoSoDoiBong;
 
         //Output
-        private DTO.DTO_CauThu cauThu;
+        ManagedItem<DTO.DTO_CauThu> output;
 
-        public DTO.DTO_CauThu CauThu { get => cauThu; set => cauThu = value; }
-        public string MaCauThu { get; set; }
+        public DTO.DTO_CauThu CauThu { get => Output.Data; }
+        public OperationType Operation { get => Output.Operation; set => Output.Operation = value; }
+        public ManagedItem<DTO_CauThu> Output { get => output; }
 
         public GUI_TiepNhanCauThu_RowVersion(GUI_TiepNhanDoiBong hoSoDoiBong)
-        {
+        {                        
             InitializeComponent();
 
             this.hoSoDoiBong = hoSoDoiBong;
@@ -37,10 +35,9 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         }
         public void Load()
         {
-            CapNhatMaCauThu();
+            TaoCauThuMoi();
             CapNhatDanhSachLoaiCauThu();
             CaiDatNgaySinh();
-            TaoCauThuMoi();
 
             UI_Load();
         }
@@ -53,15 +50,16 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         private void UI_Load()
         {
             this.Dock = DockStyle.Top;
-
-            this.Parent?.Controls.SetChildIndex(this, this.Parent.Controls.Count - 1);
         }
 
         private void TaoCauThuMoi()
         {
-            this.cauThu = new DTO_CauThu(txtMaCauThu.Text, txtTenCauThu.Text,
+
+            DTO.DTO_CauThu cauThu = new DTO_CauThu(txtMaCauThu.Text, txtTenCauThu.Text,
                                         dtpNgaySinh.Value, txtGhiChu.Text, hoSoDoiBong.DoiBong,
                                         (DTO.DTO_LoaiCauThu)cbLoaiCauThu.SelectedItem);
+
+            output = new ManagedItem<DTO_CauThu>(cauThu);
         }
 
         private void CaiDatNgaySinh()
@@ -73,30 +71,80 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         private void CapNhatDanhSachLoaiCauThu()
         {
             cbLoaiCauThu.DataSource = hoSoDoiBong.DanhSachLoaiCauThu;
-            cbLoaiCauThu.DisplayMember = "TenLoaiCauThu";            
+            cbLoaiCauThu.DisplayMember = "TenLoaiCauThu";
         }
 
-        public void CapNhatMaCauThu()
+        public void CapNhatThongTinCauThu()
         {
-            txtMaCauThu.Text = hoSoDoiBong.MaCauThu;
-        }
-
-        public DTO_CauThu LayThongTinCauThu()
-        {
-            cauThu.MaCauThu = txtMaCauThu.Text;
-            cauThu.TenCauThu = txtTenCauThu.Text;
-            cauThu.NgaySinh = dtpNgaySinh.Value;
-            cauThu.GhiChu = txtGhiChu.Text;
-            cauThu.LoaiCauThu = cbLoaiCauThu.SelectedItem as DTO.DTO_LoaiCauThu;
-            cauThu.DoiBong = hoSoDoiBong.DoiBong;
-
-            return cauThu;
+            if (Operation == OperationType.Update || Operation == OperationType.Insert)
+            {
+                CauThu.MaCauThu = txtMaCauThu.Text;
+                CauThu.TenCauThu = txtTenCauThu.Text;
+                CauThu.NgaySinh = dtpNgaySinh.Value;
+                CauThu.GhiChu = txtGhiChu.Text;
+                CauThu.LoaiCauThu = cbLoaiCauThu.SelectedItem as DTO.DTO_LoaiCauThu;
+                CauThu.DoiBong = hoSoDoiBong.DoiBong;
+            }
         }
 
         private void btnXoa_Click(object sender, EventArgs e)
         {
             hoSoDoiBong.XoaCauThu(this);
             this.Dispose();
+            GC.Collect();
+        }
+
+        public void CapNhatMaCauThu(string maCauThu)
+        {
+            txtMaCauThu.Text = maCauThu;
+        }
+
+        private void txtTenCauThu_TextChanged(object sender, EventArgs e)
+        {
+            if (Operation != OperationType.Insert)
+            {
+                Operation = OperationType.Update;
+            }
+        }
+
+        private void cbLoaiCauThu_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Operation != OperationType.Insert)
+            {
+                Operation = OperationType.Update;
+            }
+        }
+
+        private void dtpNgaySinh_ValueChanged(object sender, EventArgs e)
+        {
+            if (Operation != OperationType.Insert)
+            {
+                Operation = OperationType.Update;
+            }
+        }
+
+        private void txtGhiChu_TextChanged(object sender, EventArgs e)
+        {
+            if (Operation != OperationType.Insert)
+            {
+                Operation = OperationType.Update;
+            }
+        }
+
+        public void CapNhatMauSac()
+        {
+            switch(Operation)
+            {
+                case OperationType.Insert:
+                    this.BackColor = SystemColors.ControlLightLight;
+                    break;
+                case OperationType.Update:
+                    this.BackColor = SystemColors.ControlLight;
+                    break;
+                case OperationType.None:
+                    this.BackColor = SystemColors.Control;
+                    break;
+            }
         }
     }
 }

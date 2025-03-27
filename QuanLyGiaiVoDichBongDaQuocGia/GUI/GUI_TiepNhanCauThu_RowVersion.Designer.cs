@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            tableLayoutPanel1 = new TableLayoutPanel();
+            tlpThongTinCauThu = new TableLayoutPanel();
             txtMaCauThu = new TextBox();
             txtGhiChu = new TextBox();
             dtpNgaySinh = new DateTimePicker();
@@ -36,46 +36,47 @@
             txtTenCauThu = new TextBox();
             lblSTT = new Label();
             btnXoa = new Button();
-            tableLayoutPanel1.SuspendLayout();
+            tlpThongTinCauThu.SuspendLayout();
             SuspendLayout();
             // 
-            // tableLayoutPanel1
+            // tlpThongTinCauThu
             // 
-            tableLayoutPanel1.AutoScroll = true;
-            tableLayoutPanel1.ColumnCount = 7;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.596054F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10.3842163F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 31.15265F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10.3842163F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10.3842163F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 31.15265F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 3.946002F));
-            tableLayoutPanel1.Controls.Add(txtMaCauThu, 1, 0);
-            tableLayoutPanel1.Controls.Add(txtGhiChu, 5, 0);
-            tableLayoutPanel1.Controls.Add(dtpNgaySinh, 4, 0);
-            tableLayoutPanel1.Controls.Add(cbLoaiCauThu, 3, 0);
-            tableLayoutPanel1.Controls.Add(txtTenCauThu, 2, 0);
-            tableLayoutPanel1.Controls.Add(lblSTT, 0, 0);
-            tableLayoutPanel1.Controls.Add(btnXoa, 6, 0);
-            tableLayoutPanel1.Dock = DockStyle.Fill;
-            tableLayoutPanel1.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
-            tableLayoutPanel1.Location = new Point(0, 0);
-            tableLayoutPanel1.Margin = new Padding(0);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 1;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(1390, 50);
-            tableLayoutPanel1.TabIndex = 0;
+            tlpThongTinCauThu.AutoScroll = true;
+            tlpThongTinCauThu.BackColor = Color.Transparent;
+            tlpThongTinCauThu.ColumnCount = 7;
+            tlpThongTinCauThu.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 4.172662F));
+            tlpThongTinCauThu.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 9.784173F));
+            tlpThongTinCauThu.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 28.6330929F));
+            tlpThongTinCauThu.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 11.8705034F));
+            tlpThongTinCauThu.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10.2877693F));
+            tlpThongTinCauThu.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 31.2230225F));
+            tlpThongTinCauThu.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 3.946002F));
+            tlpThongTinCauThu.Controls.Add(txtMaCauThu, 1, 0);
+            tlpThongTinCauThu.Controls.Add(txtGhiChu, 5, 0);
+            tlpThongTinCauThu.Controls.Add(dtpNgaySinh, 4, 0);
+            tlpThongTinCauThu.Controls.Add(cbLoaiCauThu, 3, 0);
+            tlpThongTinCauThu.Controls.Add(txtTenCauThu, 2, 0);
+            tlpThongTinCauThu.Controls.Add(lblSTT, 0, 0);
+            tlpThongTinCauThu.Controls.Add(btnXoa, 6, 0);
+            tlpThongTinCauThu.Dock = DockStyle.Fill;
+            tlpThongTinCauThu.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
+            tlpThongTinCauThu.Location = new Point(0, 0);
+            tlpThongTinCauThu.Margin = new Padding(0);
+            tlpThongTinCauThu.Name = "tlpThongTinCauThu";
+            tlpThongTinCauThu.RowCount = 1;
+            tlpThongTinCauThu.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tlpThongTinCauThu.Size = new Size(1390, 50);
+            tlpThongTinCauThu.TabIndex = 0;
             // 
             // txtMaCauThu
             // 
             txtMaCauThu.BorderStyle = BorderStyle.FixedSingle;
             txtMaCauThu.Dock = DockStyle.Fill;
-            txtMaCauThu.Location = new Point(46, 10);
+            txtMaCauThu.Location = new Point(68, 10);
             txtMaCauThu.Margin = new Padding(10);
             txtMaCauThu.Name = "txtMaCauThu";
             txtMaCauThu.ReadOnly = true;
-            txtMaCauThu.Size = new Size(124, 31);
+            txtMaCauThu.Size = new Size(116, 31);
             txtMaCauThu.TabIndex = 17;
             txtMaCauThu.TextAlign = HorizontalAlignment.Center;
             // 
@@ -83,11 +84,12 @@
             // 
             txtGhiChu.BorderStyle = BorderStyle.FixedSingle;
             txtGhiChu.Dock = DockStyle.Fill;
-            txtGhiChu.Location = new Point(911, 10);
+            txtGhiChu.Location = new Point(910, 10);
             txtGhiChu.Margin = new Padding(10);
             txtGhiChu.Name = "txtGhiChu";
-            txtGhiChu.Size = new Size(413, 31);
+            txtGhiChu.Size = new Size(414, 31);
             txtGhiChu.TabIndex = 16;
+            txtGhiChu.TextChanged += txtGhiChu_TextChanged;
             // 
             // dtpNgaySinh
             // 
@@ -97,29 +99,32 @@
             dtpNgaySinh.Location = new Point(767, 10);
             dtpNgaySinh.Margin = new Padding(10);
             dtpNgaySinh.Name = "dtpNgaySinh";
-            dtpNgaySinh.Size = new Size(124, 31);
+            dtpNgaySinh.Size = new Size(123, 31);
             dtpNgaySinh.TabIndex = 15;
+            dtpNgaySinh.ValueChanged += dtpNgaySinh_ValueChanged;
             // 
             // cbLoaiCauThu
             // 
             cbLoaiCauThu.Dock = DockStyle.Fill;
             cbLoaiCauThu.DropDownStyle = ComboBoxStyle.DropDownList;
             cbLoaiCauThu.FormattingEnabled = true;
-            cbLoaiCauThu.Location = new Point(623, 10);
+            cbLoaiCauThu.Location = new Point(602, 10);
             cbLoaiCauThu.Margin = new Padding(10);
             cbLoaiCauThu.Name = "cbLoaiCauThu";
-            cbLoaiCauThu.Size = new Size(124, 33);
+            cbLoaiCauThu.Size = new Size(145, 33);
             cbLoaiCauThu.TabIndex = 14;
+            cbLoaiCauThu.SelectedIndexChanged += cbLoaiCauThu_SelectedIndexChanged;
             // 
             // txtTenCauThu
             // 
             txtTenCauThu.BorderStyle = BorderStyle.FixedSingle;
             txtTenCauThu.Dock = DockStyle.Fill;
-            txtTenCauThu.Location = new Point(190, 10);
+            txtTenCauThu.Location = new Point(204, 10);
             txtTenCauThu.Margin = new Padding(10);
             txtTenCauThu.Name = "txtTenCauThu";
-            txtTenCauThu.Size = new Size(413, 31);
+            txtTenCauThu.Size = new Size(378, 31);
             txtTenCauThu.TabIndex = 6;
+            txtTenCauThu.TextChanged += txtTenCauThu_TextChanged;
             // 
             // lblSTT
             // 
@@ -128,7 +133,7 @@
             lblSTT.Location = new Point(10, 10);
             lblSTT.Margin = new Padding(10);
             lblSTT.Name = "lblSTT";
-            lblSTT.Size = new Size(16, 30);
+            lblSTT.Size = new Size(38, 30);
             lblSTT.TabIndex = 18;
             lblSTT.Text = "0";
             lblSTT.TextAlign = ContentAlignment.MiddleCenter;
@@ -137,31 +142,33 @@
             // 
             btnXoa.Dock = DockStyle.Fill;
             btnXoa.FlatStyle = FlatStyle.System;
+            btnXoa.Font = new Font("Segoe UI", 8F);
             btnXoa.Location = new Point(1344, 10);
             btnXoa.Margin = new Padding(10);
             btnXoa.Name = "btnXoa";
             btnXoa.Size = new Size(36, 30);
             btnXoa.TabIndex = 19;
-            btnXoa.Text = "X";
+            btnXoa.Text = "Xóa";
             btnXoa.UseVisualStyleBackColor = true;
             btnXoa.Click += btnXoa_Click;
             // 
             // GUI_TiepNhanCauThu_RowVersion
             // 
             AutoScaleMode = AutoScaleMode.Inherit;
+            BackColor = SystemColors.ControlLightLight;
             BorderStyle = BorderStyle.FixedSingle;
-            Controls.Add(tableLayoutPanel1);
+            Controls.Add(tlpThongTinCauThu);
             Margin = new Padding(10);
             Name = "GUI_TiepNhanCauThu_RowVersion";
             Size = new Size(1390, 50);
-            tableLayoutPanel1.ResumeLayout(false);
-            tableLayoutPanel1.PerformLayout();
+            tlpThongTinCauThu.ResumeLayout(false);
+            tlpThongTinCauThu.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private TableLayoutPanel tableLayoutPanel1;
+        private TableLayoutPanel tlpThongTinCauThu;
         private TextBox txtTenCauThu;
         private ComboBox cbLoaiCauThu;
         private DateTimePicker dtpNgaySinh;
