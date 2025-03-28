@@ -21,7 +21,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
         {
             Dictionary<DTO_LoaiCauThu, int> counter = new Dictionary<DTO_LoaiCauThu, int>();
 
-            foreach(var item in danhSachCauThu.Items.Values)
+            foreach(var item in danhSachCauThu.ActiveData)
             {
                 var cauThu = item.Data;
 

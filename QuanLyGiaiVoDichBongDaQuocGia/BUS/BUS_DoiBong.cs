@@ -46,13 +46,13 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
         private void KiemTraSoLuongCauThuToiDa(Manager.Manager<DTO.DTO_CauThu> danhSachCauThu, DTO_ThamSo thamSo)
         {
             if (danhSachCauThu.CountActive > thamSo.SoLuongCauThuToiDa)
-                throw new Exception("Vi phạm số lượng cầu thủ tối đa");
+                throw new Exception($"Vi phạm số lượng cầu thủ tối đa {danhSachCauThu.CountActive} > {thamSo.SoLuongCauThuToiDa}");
         }
 
         private void KiemTraSoLuongCauThuToiThieu(Manager.Manager<DTO.DTO_CauThu> danhSachCauThu, DTO_ThamSo thamSo)
         {
             if (danhSachCauThu.CountActive < thamSo.SoLuongCauThuToiThieu)
-                throw new Exception("Vi phạm số lượng cầu thủ tối thiểu");
+                throw new Exception($"Vi phạm số lượng cầu thủ tối thiểu {danhSachCauThu.CountActive} < {thamSo.SoLuongCauThuToiThieu}");
         }
 
         private void KiemTraNhapLieu(DTO_DoiBong doiBong)

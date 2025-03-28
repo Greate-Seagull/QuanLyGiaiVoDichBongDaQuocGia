@@ -8,73 +8,93 @@ using System.Threading.Tasks;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
 {
-    public enum OperationType
+    public enum DataState
     {
-        None = 0,
-        Insert = 1,
-        Update = 2,
-        Delete = 3
+        New = 0,
+        Modified = 1,
+        Unmodified = 2,                
+        Deleting = 3,
+        Deleted = 4,
+        Failed = 5
     }
     public class ManagedItem<T>
     {
         T data;
-        OperationType operation;
+        DataState state;
 
-        public ManagedItem(T data, OperationType operation = OperationType.Insert)
+        public ManagedItem(T data, DataState state = DataState.New)
         {
             this.Data = data;
-            this.Operation = operation;
+            this.State = state;
         }
 
         public T Data { get => data; set => data = value; }
-        public OperationType Operation { get => operation; set => operation = value; }
+        public DataState State { get => state; set => state = value; }
     }
     public class Manager<T>
     {
-        ConcurrentDictionary<string, ManagedItem<T>> items = new ConcurrentDictionary<string, ManagedItem<T>>();
+        HashSet<ManagedItem<T>> data;
 
-        public ConcurrentDictionary<string, ManagedItem<T>> Items { get => items; set => items = value; }
-        public int Count { get => items.Count; }
-        public int CountActive
+        public Manager()
         {
-            get
-            {
-                int count = 0;
-                foreach (ManagedItem<T> item in items.Values)
-                {
-                    if (item.Operation != OperationType.Delete)
-                    {
-                        count++;
-                    }
-                }
-
-                return count;
-            }
-        }       
-
-        public bool Add(string key, ManagedItem<T> value)
-        {      
-           return this.Items.TryAdd(key, value);
+            data = new HashSet<ManagedItem<T>>();
         }
 
-        public bool Delete(string key, bool hard = false)
+        public int Count { get => data.Count; }
+        public List<ManagedItem<T>> ProcessingData =>
+            data.Where(item => item.State == DataState.New ||
+                               item.State == DataState.Modified ||
+                               item.State == DataState.Deleting).ToList();
+        public List<ManagedItem<T>> ActiveData =>
+            data.Where(item => item.State <= DataState.Unmodified).ToList();
+        public int CountActive => data.Count(item => item.State <= DataState.Unmodified);
+
+        public bool Add(ManagedItem<T> newData)
         {
-            if (this.Items.ContainsKey(key))
+            return this.data.Add(newData);
+        }
+
+        public bool Delete(ManagedItem<T> newData)
+        {
+            if (data.Contains(newData) == false)
             {
-                if (hard)
-                {
-                    this.Items.TryRemove(key, out _);
-                }
-                else
-                {
-                    this.Items[key].Operation = OperationType.Delete;
-                }
-                
-                return true;
+                return false;
+            }
+            else if (newData.State == DataState.New || newData.State == DataState.Failed)
+            {
+                data.Remove(newData);
             }
             else
             {
-                return false;
+                newData.State = DataState.Deleting;
+            }
+
+            return true;
+        }
+
+        internal void CapNhatDuLieuLoi()
+        {
+            foreach (var item in data)
+            {
+                if (item.State == DataState.New)
+                {
+                    item.State = DataState.Failed;
+                }
+            }
+        }
+
+        internal void CapNhatTrangThaiDuLieu()
+        {
+            foreach(var item in data)
+            {
+                if(item.State <= DataState.Modified) // New, Modified
+                {
+                    item.State = DataState.Unmodified;
+                }
+                else if(item.State == DataState.Deleting)
+                {
+                    item.State = DataState.Deleted;
+                }
             }
         }
     }

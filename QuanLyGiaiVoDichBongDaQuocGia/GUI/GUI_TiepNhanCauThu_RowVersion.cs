@@ -22,7 +22,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         ManagedItem<DTO.DTO_CauThu> output;
 
         public DTO.DTO_CauThu CauThu { get => Output.Data; }
-        public OperationType Operation { get => Output.Operation; set => Output.Operation = value; }
+        public DataState State { get => Output.State; set => Output.State = value; }
         public ManagedItem<DTO_CauThu> Output { get => output; }
 
         public GUI_TiepNhanCauThu_RowVersion(GUI_TiepNhanDoiBong hoSoDoiBong)
@@ -30,12 +30,12 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             InitializeComponent();
 
             this.hoSoDoiBong = hoSoDoiBong;
+            TaoCauThuMoi();
 
             Load();
         }
         public void Load()
-        {
-            TaoCauThuMoi();
+        {            
             CapNhatDanhSachLoaiCauThu();
             CaiDatNgaySinh();
 
@@ -76,7 +76,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         public void CapNhatThongTinCauThu()
         {
-            if (Operation == OperationType.Update || Operation == OperationType.Insert)
+            if (State == DataState.Modified || State == DataState.New)
             {
                 CauThu.MaCauThu = txtMaCauThu.Text;
                 CauThu.TenCauThu = txtTenCauThu.Text;
@@ -91,7 +91,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         {
             hoSoDoiBong.XoaCauThu(this);
             this.Dispose();
-            GC.Collect();
         }
 
         public void CapNhatMaCauThu(string maCauThu)
@@ -99,52 +98,66 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             txtMaCauThu.Text = maCauThu;
         }
 
+        public string LayMaCauThu()
+        {
+            return txtMaCauThu.Text;
+        }
+
         private void txtTenCauThu_TextChanged(object sender, EventArgs e)
         {
-            if (Operation != OperationType.Insert)
+            if (State == DataState.Unmodified)
             {
-                Operation = OperationType.Update;
+                State = DataState.Modified;
+                CapNhatMauSac();
             }
         }
 
         private void cbLoaiCauThu_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Operation != OperationType.Insert)
+            if (State == DataState.Unmodified)
             {
-                Operation = OperationType.Update;
+                State = DataState.Modified;
+                CapNhatMauSac();
             }
         }
 
         private void dtpNgaySinh_ValueChanged(object sender, EventArgs e)
         {
-            if (Operation != OperationType.Insert)
+            if (State == DataState.Unmodified)
             {
-                Operation = OperationType.Update;
+                State = DataState.Modified;
+                CapNhatMauSac();
             }
         }
 
         private void txtGhiChu_TextChanged(object sender, EventArgs e)
         {
-            if (Operation != OperationType.Insert)
+            if (State == DataState.Unmodified)
             {
-                Operation = OperationType.Update;
+                State = DataState.Modified;
+                CapNhatMauSac();
             }
         }
 
         public void CapNhatMauSac()
         {
-            switch(Operation)
+            switch(State)
             {
-                case OperationType.Insert:
+                case DataState.New:
                     this.BackColor = SystemColors.ControlLightLight;
                     break;
-                case OperationType.Update:
+                case DataState.Modified:
                     this.BackColor = SystemColors.ControlLight;
                     break;
-                case OperationType.None:
+                case DataState.Unmodified:
                     this.BackColor = SystemColors.Control;
                     break;
             }
+        }
+
+        internal int LaySTT()
+        {
+            return int.Parse(lblSTT.Text);
         }
     }
 }
