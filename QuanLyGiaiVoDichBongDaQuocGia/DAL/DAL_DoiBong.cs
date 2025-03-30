@@ -38,5 +38,27 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             
             return databaseHelper.ExecuteNonQuery(query) > 0;
         }
+
+        public List<DTO_DoiBong> LayDanhSachDoiBong()
+        {
+            string query = "SELECT MaDoiBong, TenDoiBong, TenSanNha " +
+                           "FROM DOIBONG " +
+                           "WHERE Deleted = 0 ";
+
+            DataTable result = databaseHelper.ExecuteQuery(query);
+
+            List<DTO_DoiBong> danhSachDoiBong = new List<DTO_DoiBong>();
+
+            foreach(DataRow row in result.Rows)
+            {
+                string maDoiBong = row["MaDoiBong"].ToString();
+                string tenDoiBong = row["TenDoiBong"].ToString();
+                string tenSan = row["TenSanNha"].ToString();
+
+                danhSachDoiBong.Add(new DTO_DoiBong(maDoiBong, tenDoiBong, tenSan));
+            }
+
+            return danhSachDoiBong;
+        }
     }
 }

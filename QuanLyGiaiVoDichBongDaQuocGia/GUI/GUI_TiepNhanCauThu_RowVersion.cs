@@ -26,15 +26,14 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         public ManagedItem<DTO_CauThu> Output { get => output; }
 
         public GUI_TiepNhanCauThu_RowVersion(GUI_TiepNhanDoiBong hoSoDoiBong)
-        {                        
+        {
             InitializeComponent();
 
             this.hoSoDoiBong = hoSoDoiBong;
             TaoCauThuMoi();
-
-            Load();
         }
-        public void Load()
+
+        private void GUI_TiepNhanCauThu_RowVersion_Load(object sender, EventArgs e)
         {            
             CapNhatDanhSachLoaiCauThu();
             CaiDatNgaySinh();
@@ -70,8 +69,9 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void CapNhatDanhSachLoaiCauThu()
         {
+            cbLoaiCauThu.BindingContext = new BindingContext();
             cbLoaiCauThu.DataSource = hoSoDoiBong.DanhSachLoaiCauThu;
-            cbLoaiCauThu.DisplayMember = "TenLoaiCauThu";
+            cbLoaiCauThu.DisplayMember = "TenLoaiCauThu";            
         }
 
         public void CapNhatThongTinCauThu()
@@ -105,7 +105,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void txtTenCauThu_TextChanged(object sender, EventArgs e)
         {
-            if (State == DataState.Unmodified)
+            if (State == DataState.Unchanged)
             {
                 State = DataState.Modified;
                 CapNhatMauSac();
@@ -114,7 +114,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void cbLoaiCauThu_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (State == DataState.Unmodified)
+            if (State == DataState.Unchanged)
             {
                 State = DataState.Modified;
                 CapNhatMauSac();
@@ -123,7 +123,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void dtpNgaySinh_ValueChanged(object sender, EventArgs e)
         {
-            if (State == DataState.Unmodified)
+            if (State == DataState.Unchanged)
             {
                 State = DataState.Modified;
                 CapNhatMauSac();
@@ -132,7 +132,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void txtGhiChu_TextChanged(object sender, EventArgs e)
         {
-            if (State == DataState.Unmodified)
+            if (State == DataState.Unchanged)
             {
                 State = DataState.Modified;
                 CapNhatMauSac();
@@ -141,7 +141,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         public void CapNhatMauSac()
         {
-            switch(State)
+            switch (State)
             {
                 case DataState.New:
                     this.BackColor = SystemColors.ControlLightLight;
@@ -149,7 +149,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
                 case DataState.Modified:
                     this.BackColor = SystemColors.ControlLight;
                     break;
-                case DataState.Unmodified:
+                case DataState.Unchanged:
                     this.BackColor = SystemColors.Control;
                     break;
             }
@@ -158,6 +158,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         internal int LaySTT()
         {
             return int.Parse(lblSTT.Text);
-        }
+        }        
     }
 }

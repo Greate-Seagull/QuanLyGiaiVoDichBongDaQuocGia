@@ -22,5 +22,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
         public string MaLoaiCauThu { get => maLoaiCauThu; set => maLoaiCauThu = value; }
         public string TenLoaiCauThu { get => tenLoaiCauThu; set => tenLoaiCauThu = value; }
         public int SoLuongCauThuToiDaTheoLoaiCauThu { get => soLuongCauThuToiDaTheoLoaiCauThu; set => soLuongCauThuToiDaTheoLoaiCauThu = value; }
+
+        public override string ToString()
+        {
+            return TenLoaiCauThu;
+        }
     }
 }

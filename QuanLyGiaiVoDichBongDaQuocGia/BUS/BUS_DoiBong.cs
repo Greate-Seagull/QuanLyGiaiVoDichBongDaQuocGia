@@ -62,5 +62,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             if (string.IsNullOrEmpty(doiBong.TenSanNha))
                 throw new Exception("Tên sân nhà không được để trống");
         }
+
+        internal List<DTO_DoiBong> LayDanhSachDoiBong()
+        {
+            return DAL_doiBong.LayDanhSachDoiBong();
+        }
     }
 }

@@ -12,10 +12,11 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
     {
         New = 0,
         Modified = 1,
-        Unmodified = 2,                
+        Unchanged = 2,                
         Deleting = 3,
         Deleted = 4,
-        Failed = 5
+        Error = 5,
+        Using = 6
     }
     public class ManagedItem<T>
     {
@@ -30,24 +31,90 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
 
         public T Data { get => data; set => data = value; }
         public DataState State { get => state; set => state = value; }
+
+        public override string ToString()
+        {
+            return data.ToString();
+        }
     }
     public class Manager<T>
     {
-        HashSet<ManagedItem<T>> data;
+        HashSet<ManagedItem<T>> data = new HashSet<ManagedItem<T>>();
 
+        //Insert to database
         public Manager()
+        {}
+
+        //Select from database
+        public Manager(List<T> input)
         {
             data = new HashSet<ManagedItem<T>>();
+
+            foreach(T item in input)
+            {
+                data.Add(new ManagedItem<T>(item, DataState.Unchanged));
+            }
         }
 
         public int Count { get => data.Count; }
-        public List<ManagedItem<T>> ProcessingData =>
-            data.Where(item => item.State == DataState.New ||
-                               item.State == DataState.Modified ||
-                               item.State == DataState.Deleting).ToList();
-        public List<ManagedItem<T>> ActiveData =>
-            data.Where(item => item.State <= DataState.Unmodified).ToList();
-        public int CountActive => data.Count(item => item.State <= DataState.Unmodified);
+
+        public List<ManagedItem<T>> ProcessingData
+        {
+            get
+            {
+                List<ManagedItem<T>> items = new List<ManagedItem<T>>();
+
+                foreach(var item in data)
+                {
+                    if(item.State == DataState.New ||
+                       item.State == DataState.Modified ||
+                       item.State == DataState.Deleting)
+                    {
+                        items.Add(item);
+                    }
+                }
+
+                return items;
+            }
+        }
+
+        public List<ManagedItem<T>> ActiveData
+        {
+            get
+            {
+                List<ManagedItem<T>> items = new List<ManagedItem<T>>();
+
+                foreach (var item in data)
+                {
+                    if (item.State <= DataState.Unchanged)
+                    {
+                        items.Add(item);
+                    }
+                }
+
+                return items;
+            }
+        }
+
+        public List<ManagedItem<T>> UnusedData
+        {
+            get
+            {
+                List<ManagedItem<T>> items = new List<ManagedItem<T>>();
+
+                foreach (var item in data)
+                {
+                    if (item.State != DataState.Using)
+                    {
+                        items.Add(item);
+                    }
+                }
+
+                return items;
+            }
+        }
+
+        public int CountActive => data.Count(item => item.State <= DataState.Unchanged);
 
         public bool Add(ManagedItem<T> newData)
         {
@@ -60,7 +127,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
             {
                 return false;
             }
-            else if (newData.State == DataState.New || newData.State == DataState.Failed)
+            else if (newData.State == DataState.New || newData.State == DataState.Error)
             {
                 data.Remove(newData);
             }
@@ -78,7 +145,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
             {
                 if (item.State == DataState.New)
                 {
-                    item.State = DataState.Failed;
+                    item.State = DataState.Error;
                 }
             }
         }
@@ -89,7 +156,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
             {
                 if(item.State <= DataState.Modified) // New, Modified
                 {
-                    item.State = DataState.Unmodified;
+                    item.State = DataState.Unchanged;
                 }
                 else if(item.State == DataState.Deleting)
                 {

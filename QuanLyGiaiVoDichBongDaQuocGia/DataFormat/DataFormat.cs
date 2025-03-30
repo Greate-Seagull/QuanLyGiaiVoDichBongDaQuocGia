@@ -10,5 +10,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DataFormat
     static public class DataFormat
     {
         static public string DateFormat { get => "yyyy-MM-dd"; }
+        static public string DateTimeFormat { get => "yyyy-MM-dd hh:mm:ss"; }
     }
 }

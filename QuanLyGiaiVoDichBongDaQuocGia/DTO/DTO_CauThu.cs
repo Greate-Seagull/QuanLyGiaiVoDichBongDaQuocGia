@@ -31,6 +31,11 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
         public string MaLoaiCauThu { get => loaiCauThu.MaLoaiCauThu; }
         public string GhiChu { get => ghiChu; set => ghiChu = value; }
         internal DTO_DoiBong DoiBong { get => doiBong; set => doiBong = value; }
-        internal DTO_LoaiCauThu LoaiCauThu { get => loaiCauThu; set => loaiCauThu = value; }        
+        internal DTO_LoaiCauThu LoaiCauThu { get => loaiCauThu; set => loaiCauThu = value; }
+
+        public override string ToString()
+        {
+            return TenCauThu;
+        }
     }
 }
