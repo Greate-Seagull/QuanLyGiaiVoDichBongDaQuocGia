@@ -12,6 +12,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
     public class ManagedOwner<O>
     {
         HashSet<O> owners;
+        HashSet<O> blacklist;
         int capacity;
 
         public ManagedOwner(int capacity = 1)
@@ -23,11 +24,11 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
         public HashSet<O> Owners { get => owners; set => owners = value; }
         public int Capacity { get => capacity; set => capacity = value; }
 
-        public bool Add(O owner)
+        public bool AddOwner(O owner)
         {
             if(owners.Count < capacity)
             {
-                if (this.IsFull() == false)
+                if (this.IsOwnerFull() == false)
                     return owners.Add(owner);
                 else
                     return false;
@@ -38,32 +39,42 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
             }
         }
 
-        internal void Add(List<O> owners)
+        internal void AddOwner(List<O> owners)
         {
             foreach(O owner in owners)
             {
-                if (this.IsFull())
+                if (this.IsOwnerFull())
                     return;
 
                 this.owners.Add(owner);
             }
         }
 
-        internal bool IsFull()
+        internal bool IsOwnerFull()
         {
             if (owners.Count < this.Capacity)
                 return false;
             return true;
         }
 
-        internal bool Contain(O? owner)
+        internal bool ContainOwner(O? owner)
         {
             return owners.Contains(owner);
         }
 
-        internal bool Remove(O? owner)
+        internal bool RemoveOwner(O? owner)
         {
             return owners.Remove(owner);
+        }
+
+        internal bool AddToBlackList(O? owner)
+        {
+            return blacklist.Add(owner);
+        }
+
+        internal bool RemoveFromBlacklist(O? owner)
+        {
+            return blacklist.Remove(owner);
         }
     }
     public class OwnerManager<D, O>
@@ -104,7 +115,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
         {
             if (dict.ContainsKey(data))
             {
-                return dict[data].Add(owner);
+                return dict[data].AddOwner(owner);
             }            
             else
             {
@@ -116,7 +127,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
         {
             if (dict.ContainsKey(data))
             {
-                dict[data].Add(owners);
+                dict[data].AddOwner(owners);
                 return true;
             }
             else
@@ -134,7 +145,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
         {
             if(dict.ContainsKey(data))
             {                
-                return dict[data].Remove(owner);
+                return dict[data].RemoveOwner(owner);
             }
             else
             {
@@ -148,7 +159,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
 
             foreach(var key in dict.Keys)
             {
-                result |= dict[key].Remove(owner);
+                result |= dict[key].RemoveOwner(owner);
             }
 
             return result;
@@ -160,14 +171,64 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
 
             foreach(D key in dict.Keys)
             {
-                if (dict[key].IsFull() == false ||
-                    dict[key].Contain(owner))
+                if (dict[key].IsOwnerFull() == false ||
+                    dict[key].ContainOwner(owner))
                 {
                     ownableData.Add(key);
                 }
             }
 
             return ownableData;
+        }
+
+        public bool AddToBlacklist(D data, O owner)
+        {
+            if(dict.ContainsKey(data))
+            {
+                return dict[data].AddToBlackList(owner);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool AddToBlacklist(List<D> datas, O owner)
+        {
+            bool result = false;
+            foreach(var data in datas)
+            {
+                if (dict.ContainsKey(data))
+                {
+                    result |= dict[data].AddToBlackList(owner);
+                }
+            }
+            return result;
+        }
+
+        public bool RemoveFromBlacklist(D data, O owner)
+        {
+            if (dict.ContainsKey(data))
+            {
+                return dict[data].RemoveFromBlacklist(owner);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool RemoveFromBlackList(List<D> datas, O owner)
+        {
+            bool result = false;
+            foreach (var data in datas)
+            {
+                if (dict.ContainsKey(data))
+                {
+                    result |= dict[data].RemoveFromBlacklist(owner);
+                }
+            }
+            return result;
         }
     }
 }
