@@ -19,10 +19,12 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
         {
             this.capacity = capacity;
             owners = new HashSet<O>(capacity);
+            blacklist = new HashSet<O>();
         }
 
         public HashSet<O> Owners { get => owners; set => owners = value; }
         public int Capacity { get => capacity; set => capacity = value; }
+        public HashSet<O> Blacklist { get => blacklist; set => blacklist = value; }
 
         public bool AddOwner(O owner)
         {
@@ -69,12 +71,17 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
 
         internal bool AddToBlackList(O? owner)
         {
-            return blacklist.Add(owner);
+            return Blacklist.Add(owner);
         }
 
         internal bool RemoveFromBlacklist(O? owner)
         {
-            return blacklist.Remove(owner);
+            return Blacklist.Remove(owner);
+        }
+
+        internal bool ContainBlaclist(O? owner)
+        {
+            return Blacklist.Contains(owner);
         }
     }
     public class OwnerManager<D, O>
@@ -93,6 +100,16 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
             foreach (var duLieu in danhSachDuLieu)
             {
                 this.AddData(duLieu);
+            }
+        }
+
+        public OwnerManager(DataManager<D> danhSachDuLieu)
+        {
+            dict = new Dictionary<D, ManagedOwner<O>>();
+
+            foreach(var duLieu in danhSachDuLieu.ActiveData)
+            {
+                this.AddData(duLieu.Data);
             }
         }
 
@@ -171,6 +188,9 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
 
             foreach(D key in dict.Keys)
             {
+                if (dict[key].ContainBlaclist(owner))
+                    continue;
+
                 if (dict[key].IsOwnerFull() == false ||
                     dict[key].ContainOwner(owner))
                 {
@@ -227,6 +247,16 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
                 {
                     result |= dict[data].RemoveFromBlacklist(owner);
                 }
+            }
+            return result;
+        }
+
+        public bool RemoveFromBlacklist(O owner)
+        {
+            bool result = false;
+            foreach(var key in dict.Keys)
+            {
+                result |= dict[key].RemoveFromBlacklist(owner);
             }
             return result;
         }

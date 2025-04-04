@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="MySql.Data" Version="9.2.0" />
+    <PackageReference Include="System.Runtime.Caching" Version="9.0.3" />
   </ItemGroup>
 
 </Project>

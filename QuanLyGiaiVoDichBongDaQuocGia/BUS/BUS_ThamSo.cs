@@ -1,4 +1,5 @@
 ﻿using QuanLyGiaiVoDichBongDaQuocGia.DTO;
+using QuanLyGiaiVoDichBongDaQuocGia.Manager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,11 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
     {
         DAL.DAL_ThamSo DAL_thamSo = new DAL.DAL_ThamSo();
 
+        private readonly string THAMSO = "THAMSO";
+
         public DTO_ThamSo LayThamSo()
         {
-            return DAL_thamSo.LayThamSo();
+            return CacheManager.GetOrLoad(THAMSO, () => DAL_thamSo.LayThamSo());
         }
     }
 }

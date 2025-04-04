@@ -1,4 +1,5 @@
 ﻿using QuanLyGiaiVoDichBongDaQuocGia.DTO;
+using QuanLyGiaiVoDichBongDaQuocGia.Manager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,26 +13,38 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
     {
         DAL.DAL_CauThu DAL_cauThu = new DAL.DAL_CauThu();
 
-        public string LayMaCauThuMoi()
+        BUS_ThamSo BUS_thamSo = new BUS_ThamSo();
+
+        private readonly string READ_CAUTHU = "READ_CAUTHU";
+        private readonly string WRITE_CAUTHU = "WRITE_CAUTHU";
+
+        internal DataManager<DTO_CauThu> LayDanhSachNhap()
         {
-            return DAL_cauThu.LayMaCauThuMoi();
+            DataManager<DTO_CauThu> danhSachNhapCauThu = CacheManager.Get<DataManager<DTO_CauThu>>(WRITE_CAUTHU);
+
+            if (danhSachNhapCauThu == null)
+            {
+                danhSachNhapCauThu = new Manager.DataManager<DTO_CauThu>();
+                Manager.CacheManager.Add(WRITE_CAUTHU, danhSachNhapCauThu);
+            }
+
+            return danhSachNhapCauThu;
         }
 
-        public bool LuuCauThu(DTO_CauThu cauThu)
+        public string LayMaCauThuHienTai()
         {
-            this.KiemTraNhapLieu(cauThu);
-
-            return DAL_cauThu.LuuCauThu(cauThu);
+            return DAL_cauThu.LayMaCauThuHienTai();
         }
 
-        private void KiemTraNhapLieu(DTO_CauThu cauThu)
+        public bool TiepNhanCauThu()
         {
-            if (string.IsNullOrEmpty(cauThu.TenCauThu))
-                throw new Exception("Tên cầu thủ không được bỏ trống");                      
+            this.KiemTraNhapLieu();
+            return LuuCauThu();
         }
 
-        public bool LuuCauThu(Manager.Manager<DTO.DTO_CauThu> danhSachCauThu)
+        public bool LuuCauThu()
         {
+            DataManager<DTO_CauThu> danhSachCauThu = this.LayDanhSachNhap();
             DTO.DTO_CauThu cauThu;
             List<DTO.DTO_CauThu> upsertList = new List<DTO_CauThu>();
             List<DTO.DTO_CauThu> deleteList = new List<DTO_CauThu>();
@@ -39,8 +52,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             foreach (var item in danhSachCauThu.ProcessingData)
             {
                 cauThu = item.Data;
-
-                this.KiemTraNhapLieu(cauThu);
 
                 switch (item.State)
                 {
@@ -62,9 +73,31 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             return true;
         }
 
-        public string LayMaCauThuHienTai()
+        private void KiemTraNhapLieu()
         {
-            return DAL_cauThu.LayMaCauThuHienTai();
+            DataManager<DTO_CauThu> danhSachCauThu = this.LayDanhSachNhap();
+            foreach(var item in danhSachCauThu.ActiveData)
+            {
+                DTO_CauThu cauThu = item.Data;
+                if (string.IsNullOrEmpty(cauThu.TenCauThu))
+                    throw new Exception("Tên cầu thủ không được bỏ trống");
+            }
         }
+
+        internal void KiemTraSoLuongCauThuToiThieu()
+        {
+            DataManager<DTO_CauThu> danhSachCauThu = this.LayDanhSachNhap();
+            DTO_ThamSo thamSo = BUS_thamSo.LayThamSo();
+            if (danhSachCauThu.CountActive > thamSo.SoLuongCauThuToiDa)
+                throw new Exception($"Vi phạm số lượng cầu thủ tối đa {danhSachCauThu.CountActive} > {thamSo.SoLuongCauThuToiDa}");
+        }
+
+        internal void KiemTraSoLuongCauThuToiDa()
+        {
+            DataManager<DTO_CauThu> danhSachCauThu = this.LayDanhSachNhap();
+            DTO_ThamSo thamSo = BUS_thamSo.LayThamSo();
+            if (danhSachCauThu.CountActive < thamSo.SoLuongCauThuToiThieu)
+                throw new Exception($"Vi phạm số lượng cầu thủ tối thiểu {danhSachCauThu.CountActive} < {thamSo.SoLuongCauThuToiThieu}");
+        }      
     }
 }

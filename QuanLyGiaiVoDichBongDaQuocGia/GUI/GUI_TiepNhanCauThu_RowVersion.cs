@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
 using MySql.Data.MySqlClient;
 using QuanLyGiaiVoDichBongDaQuocGia.Manager;
+using QuanLyGiaiVoDichBongDaQuocGia.BUS;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 {
@@ -19,31 +20,54 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         GUI_TiepNhanDoiBong hoSoDoiBong;
 
         //Output
-        ManagedItem<DTO.DTO_CauThu> output;
+        ManagedItem<DTO_CauThu> output;
 
-        public DTO.DTO_CauThu CauThu { get => Output.Data; }
+        //Quan ly
+        ID stt;
+        ID maCauThu;
+
+        public DTO_CauThu CauThu { get => Output.Data; }
         public DataState State { get => Output.State; set => Output.State = value; }
         public ManagedItem<DTO_CauThu> Output { get => output; }
 
         public GUI_TiepNhanCauThu_RowVersion(GUI_TiepNhanDoiBong hoSoDoiBong)
         {
             InitializeComponent();
+            cbLoaiCauThu.BindingContext = new BindingContext();
 
             this.hoSoDoiBong = hoSoDoiBong;
-            TaoCauThuMoi();
         }
 
         private void GUI_TiepNhanCauThu_RowVersion_Load(object sender, EventArgs e)
-        {            
+        {                        
+            TaoSTT();
+            CapNhatSTT();            
+            TaoMaCauThu();
+            CapNhatMaCauThu();
+            TaoCauThuMoi();
             CapNhatDanhSachLoaiCauThu();
             CaiDatNgaySinh();
 
             UI_Load();
         }
-
-        public void CapNhatSTT(int STT)
+        public void CapNhatMaCauThu()
         {
-            lblSTT.Text = STT.ToString();
+            txtMaCauThu.Text = maCauThu.ToString();
+        }
+
+        private void TaoMaCauThu()
+        {
+            maCauThu = hoSoDoiBong.MaCauThu.LayID();
+        }
+
+        private void TaoSTT()
+        {
+            stt = hoSoDoiBong.STT.LayID();
+        }
+
+        public void CapNhatSTT()
+        {
+            lblSTT.Text = stt.ToString();
         }
 
         private void UI_Load()
@@ -53,10 +77,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void TaoCauThuMoi()
         {
-
-            DTO.DTO_CauThu cauThu = new DTO_CauThu(txtMaCauThu.Text, txtTenCauThu.Text,
-                                        dtpNgaySinh.Value, txtGhiChu.Text, hoSoDoiBong.DoiBong,
-                                        (DTO.DTO_LoaiCauThu)cbLoaiCauThu.SelectedItem);
+            //local
+            DTO_CauThu cauThu = new DTO_CauThu(maCauThu.ToString(), txtTenCauThu.Text,
+                                    dtpNgaySinh.Value, txtGhiChu.Text, hoSoDoiBong.DoiBong,
+                                    (DTO_LoaiCauThu)cbLoaiCauThu.SelectedItem);
 
             output = new ManagedItem<DTO_CauThu>(cauThu);
         }
@@ -68,8 +92,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         }
 
         private void CapNhatDanhSachLoaiCauThu()
-        {
-            cbLoaiCauThu.BindingContext = new BindingContext();
+        {            
             cbLoaiCauThu.DataSource = hoSoDoiBong.DanhSachLoaiCauThu;
             cbLoaiCauThu.DisplayMember = "TenLoaiCauThu";            
         }
@@ -89,54 +112,30 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void btnXoa_Click(object sender, EventArgs e)
         {
+            hoSoDoiBong.STT.HuyID(stt);
+            hoSoDoiBong.MaCauThu.HuyID(maCauThu);
             hoSoDoiBong.XoaCauThu(this);
             this.Dispose();
         }
 
-        public void CapNhatMaCauThu(string maCauThu)
-        {
-            txtMaCauThu.Text = maCauThu;
-        }
-
-        public string LayMaCauThu()
-        {
-            return txtMaCauThu.Text;
-        }
-
         private void txtTenCauThu_TextChanged(object sender, EventArgs e)
         {
-            if (State == DataState.Unchanged)
-            {
-                State = DataState.Modified;
-                CapNhatMauSac();
-            }
+            output.Modify();
         }
 
         private void cbLoaiCauThu_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (State == DataState.Unchanged)
-            {
-                State = DataState.Modified;
-                CapNhatMauSac();
-            }
+            output.Modify();
         }
 
         private void dtpNgaySinh_ValueChanged(object sender, EventArgs e)
         {
-            if (State == DataState.Unchanged)
-            {
-                State = DataState.Modified;
-                CapNhatMauSac();
-            }
+            output.Modify();
         }
 
         private void txtGhiChu_TextChanged(object sender, EventArgs e)
         {
-            if (State == DataState.Unchanged)
-            {
-                State = DataState.Modified;
-                CapNhatMauSac();
-            }
+            output.Modify();
         }
 
         public void CapNhatMauSac()
@@ -153,11 +152,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
                     this.BackColor = SystemColors.Control;
                     break;
             }
-        }
-
-        internal int LaySTT()
-        {
-            return int.Parse(lblSTT.Text);
-        }        
+        }  
     }
 }

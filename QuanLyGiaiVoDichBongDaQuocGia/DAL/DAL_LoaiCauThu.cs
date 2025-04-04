@@ -1,4 +1,5 @@
 ﻿using QuanLyDaiLy.DAL;
+using QuanLyGiaiVoDichBongDaQuocGia.DTO;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -17,12 +18,12 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             string query = "SELECT MaLoaiCauThu, TenLoaiCauThu, SoLuongCauThuToiDaTheoLoaiCauThu FROM LOAICAUTHU";
             DataTable result = databaseHelper.ExecuteQuery(query);
 
-            List<DTO.DTO_LoaiCauThu> danhSachLoaiCauThu = new List<DTO.DTO_LoaiCauThu>();
+            List<DTO_LoaiCauThu> danhSachLoaiCauThu = new List<DTO_LoaiCauThu>();
             foreach (DataRow row in result.Rows)
             {
-                danhSachLoaiCauThu.Add(new DTO.DTO_LoaiCauThu(row["MaLoaiCauThu"].ToString(), row["TenLoaiCauThu"].ToString(),
-                                                              int.Parse(row["SoLuongCauThuToiDaTheoLoaiCauThu"].ToString())
-                                                              )
+                danhSachLoaiCauThu.Add(new DTO_LoaiCauThu(row["MaLoaiCauThu"].ToString(), row["TenLoaiCauThu"].ToString(),
+                                                          int.Parse(row["SoLuongCauThuToiDaTheoLoaiCauThu"].ToString())
+                                                          )
                                        );
             }
 

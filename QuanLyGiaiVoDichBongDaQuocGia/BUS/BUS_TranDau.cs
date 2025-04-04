@@ -14,31 +14,53 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
     {
         DAL_TranDau DAL_tranDau = new DAL_TranDau();
 
+        private readonly string READ_TRANDAU = "READ_TRANDAU";
+        private readonly string WRITE_TRANDAU = "WRITE_TRANDAU";
+
+        public DataManager<DTO_TranDau> LayDanhSachNhap()
+        {
+            DataManager<DTO_TranDau> danhSachNhapTranDau = CacheManager.Get<DataManager<DTO_TranDau>>(WRITE_TRANDAU);
+
+            if (danhSachNhapTranDau == null)
+            {
+                danhSachNhapTranDau = new Manager.DataManager<DTO_TranDau>();
+                Manager.CacheManager.Add(WRITE_TRANDAU, danhSachNhapTranDau);
+            }
+
+            return danhSachNhapTranDau;
+        }
+
+        public DataManager<DTO_TranDau> LayDanhSachCapDauLoaiTru(DTO_VongDau vongDauXuLy)
+        {
+            return CacheManager.GetOrLoad(READ_TRANDAU,
+                                          () => new DataManager<DTO_TranDau>(DAL_tranDau.LayDanhSachCapDauLoaiTru(vongDauXuLy),
+                                                                             tranDau => tranDau.MaTranDau
+                                                                             )
+                                          );
+        }
+
         public string LayMaTranDauHienTai()
         {
             return DAL_tranDau.LayMaTranDauHienTai();
         }
 
-        public bool LapTranDau(Manager<DTO_TranDau> danhSachTranDau)
+        public bool LapTranDau()
         {
-            List<ManagedItem<DTO_TranDau>> danhSachTranDauXuLy = danhSachTranDau.ProcessingData;
+            KiemTraNhapLieu();
+            return LuuThongTin();
+        }
 
-            if(danhSachTranDauXuLy.Count == 0)
-            {
-                return false;
-            }
-
-            this.KiemTraCapDauDaTonTai(danhSachTranDauXuLy);
+        public bool LuuThongTin()
+        {
+            DataManager<DTO_TranDau> danhSachTranDau = this.LayDanhSachNhap();
 
             DTO_TranDau tranDau;
             List<DTO_TranDau> upsert = new List<DTO_TranDau>();
             List<DTO_TranDau> delete = new List<DTO_TranDau>();
 
-            foreach(var item in danhSachTranDauXuLy)
+            foreach(var item in danhSachTranDau.ProcessingData)
             {
                 tranDau = item.Data;
-
-                this.KiemTraNhapLieu(tranDau);
 
                 switch(item.State)
                 {
@@ -60,44 +82,26 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             return true;
         }
 
-        private void KiemTraNhapLieu(DTO_TranDau tranDau)
+        private void KiemTraNhapLieu()
         {
-            if (string.IsNullOrEmpty(tranDau.DoiBong1.MaDoiBong))
-                throw new Exception($"Đội bóng 1 chưa được chọn cho trận đấu {tranDau.MaTranDau}");
-            if (string.IsNullOrEmpty(tranDau.DoiBong2.MaDoiBong))
-                throw new Exception($"Đội bóng 2 chưa được chọn cho trận đấu {tranDau.MaTranDau}");
-        }
+            DataManager<DTO_TranDau> danhSachTranDau = this.LayDanhSachNhap();
 
-        private void KiemTraCapDauDaTonTai(List<ManagedItem<DTO_TranDau>> danhSachTranDau)
-        {
-            var comparer = EqualityComparer<DTO_TranDau>.Create((x, y) =>
-                x.DoiBong1.MaDoiBong == y.DoiBong1.MaDoiBong &&
-                x.DoiBong2.MaDoiBong == y.DoiBong2.MaDoiBong,
-                obj => HashCode.Combine(obj.DoiBong1.MaDoiBong, obj.DoiBong2.MaDoiBong)
-            );
-
-            DTO_VongDau vongDauXuLy = danhSachTranDau[0].Data.VongDau;
-            HashSet<DTO_TranDau> danhSachTranDauDaLuu = new HashSet<DTO_TranDau>(this.LayDanhSachCapDauLoaiTru(vongDauXuLy), comparer);
-
-            foreach (var item in danhSachTranDau)
-            {                
-                DTO_TranDau tranDauMoi = item.Data;
-
-                if (danhSachTranDauDaLuu.Contains(tranDauMoi))
-                {
-                    throw new Exception($"Vi phạm quy định mỗi cặp đấu chỉ thi đấu đúng 2 lần trong cả giải: {tranDauMoi.MaTranDau}");
-                }
+            foreach (var item in danhSachTranDau.ActiveData)
+            {
+                DTO_TranDau tranDau = item.Data;
+                if (string.IsNullOrEmpty(tranDau.DoiBong1.MaDoiBong))
+                    throw new Exception($"Đội bóng 1 chưa được chọn cho trận đấu {tranDau.MaTranDau}");
+                if (string.IsNullOrEmpty(tranDau.DoiBong2.MaDoiBong))
+                    throw new Exception($"Đội bóng 2 chưa được chọn cho trận đấu {tranDau.MaTranDau}");
             }
         }
 
-        private List<DTO_TranDau> LayDanhSachCapDauLoaiTru(DTO_VongDau vongDauXuLy)
+        internal void KiemTraSoLuongTranDauToiThieu()
         {
-            return DAL_tranDau.LayDanhSachCapDauLoaiTru(vongDauXuLy);
-        }
+            DataManager<DTO_TranDau> danhSachTranDau = this.LayDanhSachNhap();
 
-        public List<DTO_TranDau> LayDanhSachCapDau()
-        {
-            return DAL_tranDau.LayDanhSachCapDau();
+            if (danhSachTranDau.CountActive < 1)
+                throw new Exception($"Vi phạm số trận đấu tối thiểu {danhSachTranDau.CountActive} < 1");
         }
     }
 }

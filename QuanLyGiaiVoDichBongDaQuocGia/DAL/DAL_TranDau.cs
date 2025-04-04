@@ -1,4 +1,5 @@
 ﻿using QuanLyDaiLy.DAL;
+using QuanLyGiaiVoDichBongDaQuocGia.BUS;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,32 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             }
 
             return result.Rows[0]["MaTranDau"].ToString();
+        }
+
+        internal List<DTO_TranDau> LayDanhSachCapDauLoaiTru(DTO_VongDau vongDauXuLy)
+        {
+            //Load from database
+            string query = "SELECT MaTranDau, MaDoi1, MaDoi2 " +
+                           "FROM TRANDAU " +
+                           "WHERE Deleted = 0 AND " +
+                                $"MaVongDau != '{vongDauXuLy.MaVongDau}'; ";
+            DataTable result = databaseHelper.ExecuteQuery(query);
+
+            //Load from cache
+            BUS_DoiBong BUS_doiBong = new BUS_DoiBong();
+            Manager.DataManager<DTO_DoiBong> danhSachDoiBong = BUS_doiBong.LayDanhSachDoiBong();
+            List<DTO_TranDau> danhSachCapDau = new List<DTO_TranDau>();
+            foreach (DataRow row in result.Rows)
+            {
+                danhSachCapDau.Add(new DTO_TranDau(row["MaTranDau"].ToString(),
+                                                   danhSachDoiBong.GetReadData(row["MaDoi1"].ToString()),
+                                                   danhSachDoiBong.GetReadData(row["MaDoi2"].ToString()),
+                                                   default, default
+                                                   )
+                                   );
+            }
+
+            return danhSachCapDau;
         }
 
         public bool LuuDanhSachTranDau(List<DTO_TranDau> upsert)
@@ -54,51 +81,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             }
 
             return databaseHelper.ExecuteNonQuery(query) > 0;
-        }
-
-        internal List<DTO_TranDau> LayDanhSachCapDau()
-        {
-            string query = "SELECT MaDoi1, MaDoi2 " +
-                           "FROM TRANDAU " +
-                           "WHERE Deleted = 0; ";
-
-            DataTable result = databaseHelper.ExecuteQuery(query);
-
-            List<DTO_TranDau> danhSachCapDau = new List<DTO_TranDau>();            
-            foreach(DataRow row in result.Rows)
-            {
-                danhSachCapDau.Add(new DTO_TranDau(default, 
-                                                   new DTO_DoiBong(row["MaDoi1"].ToString(), default, default), 
-                                                   new DTO_DoiBong(row["MaDoi2"].ToString(), default, default),
-                                                   default, default
-                                                   )
-                                   );
-            }
-
-            return danhSachCapDau;
-        }
-
-        internal List<DTO_TranDau> LayDanhSachCapDauLoaiTru(DTO_VongDau vongDauXuLy)
-        {
-            string query = "SELECT MaDoi1, MaDoi2 " +
-                           "FROM TRANDAU " +
-                           "WHERE Deleted = 0 AND " +
-                                $"MaVongDau != '{vongDauXuLy.MaVongDau}'; ";
-
-            DataTable result = databaseHelper.ExecuteQuery(query);
-
-            List<DTO_TranDau> danhSachCapDau = new List<DTO_TranDau>();
-            foreach (DataRow row in result.Rows)
-            {
-                danhSachCapDau.Add(new DTO_TranDau(default,
-                                                   new DTO_DoiBong(row["MaDoi1"].ToString(), default, default),
-                                                   new DTO_DoiBong(row["MaDoi2"].ToString(), default, default),
-                                                   default, default
-                                                   )
-                                   );
-            }
-
-            return danhSachCapDau;
-        }
+        }        
     }
 }

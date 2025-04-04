@@ -20,6 +20,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         //Output
         ManagedItem<DTO_TranDau> output;
 
+        //Quan ly
+        ID stt;
+        ID maTranDau;
+
         public ManagedItem<DTO_TranDau> Output { get => output; }
         public DTO_TranDau TranDau { get => output.Data; }
         public DataState State { get => output.State; }
@@ -40,27 +44,50 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             cbTenDoi2_oldSelectedItem = lichThiDau.cbTenDoi_DefaultItem;
 
             //Data
-            this.lichThiDau = lichThiDau;
+            this.lichThiDau = lichThiDau;            
+        }
 
+        private void GUI_LapTranDau_RowVersion_Load(object sender, EventArgs e)
+        {
+            TaoSTT();
+            CapNhatSTT();
+            CapNhatDanhSachDoiBong();
+            TaoMaTranDau();
+            CapNhatMaTranDau();
             TaoTranDau();
+
+            UI_Load();
+        }
+
+        public void CapNhatSTT()
+        {
+            lblSTT.Text = stt.ToString();
+        }
+
+        private void TaoSTT()
+        {
+            stt = lichThiDau.STT.LayID();
+        }
+
+        public void CapNhatMaTranDau()
+        {
+            txtMaTranDau.Text = maTranDau.ToString();
+        }
+
+        private void TaoMaTranDau()
+        {
+            maTranDau = lichThiDau.MaTranDau.LayID();
         }
 
         private void TaoTranDau()
         {
-            DTO_TranDau tranDau = new DTO_TranDau(txtMaTranDau.Text,
+            DTO_TranDau tranDau = new DTO_TranDau(maTranDau.ToString(),
                                                   (DTO_DoiBong)cbTenDoi1.SelectedItem,
                                                   (DTO_DoiBong)cbTenDoi2.SelectedItem,
                                                   lichThiDau.VongDau,
                                                   dtpNgay.Value.Date + dtpGio.Value.TimeOfDay);
 
             output = new ManagedItem<DTO_TranDau>(tranDau);
-        }
-
-        private void GUI_LapTranDau_RowVersion_Load(object sender, EventArgs e)
-        {
-            CapNhatDanhSachDoiBong();
-
-            UI_Load();
         }
 
         private void UI_Load()
@@ -96,41 +123,28 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             TranDau.VongDau = lichThiDau.VongDau;
         }
 
-        public void CapNhatSTT(int stt)
-        {
-            lblSTT.Text = stt.ToString();
-        }
-
-        public void CapNhatMaTranDau(string v)
-        {
-            txtMaTranDau.Text = v;
-        }
-
         private void btnXoa_Click(object sender, EventArgs e)
         {
-            lichThiDau.XoaTranDau(this);
+            //Huy STT
+            lichThiDau.STT.HuyID(stt);            
+
+            //Huy ma tran dau
+            lichThiDau.MaTranDau.HuyID(maTranDau);
 
             //Remove Owner from Owner manager
             lichThiDau.DanhSachDoiBong.RemoveOwner(cbTenDoi1_oldSelectedItem, cbTenDoi1);
             lichThiDau.DanhSachDoiBong.RemoveOwner(cbTenDoi2_oldSelectedItem, cbTenDoi2);
-
+            
             if(cbTenDoi1_oldSelectedItem != lichThiDau.cbTenDoi_DefaultItem ||
                cbTenDoi2_oldSelectedItem != lichThiDau.cbTenDoi_DefaultItem)
             {
                 lichThiDau.CapNhatCacDoiThamGiaThiDau();
             }
 
+            //Xoa quan ly
+            lichThiDau.XoaTranDau(this);
+
             this.Dispose();
-        }
-
-        public int LaySTT()
-        {
-            return int.Parse(lblSTT.Text);
-        }
-
-        public string LayMaTranDau()
-        {
-            return txtMaTranDau.Text;
         }
 
         private void cbTenDoi1_SelectedIndexChanged(object sender, EventArgs e)
@@ -141,10 +155,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             if (cbTenDoi1_oldSelectedItem != doi1)
             {
                 //Cap nhat trang thai du lieu
-                if (Output.State == DataState.Unchanged)
-                {
-                    Output.State = DataState.Modified;
-                }
+                output.Modify();
 
                 //Condition: San nha phai la san cua Doi 1
                 txtTenSan.Text = doi1.TenSanNha;
@@ -153,10 +164,25 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
                 //recover va selected dam bao moi combobox chi su dung 1 doi bong
                 lichThiDau.DanhSachDoiBong.RemoveOwner(cbTenDoi1_oldSelectedItem, cb); //recover
                 lichThiDau.DanhSachDoiBong.AddOwner(doi1, cb); //mark selected
-
                 cbTenDoi1_oldSelectedItem = doi1;
 
+                //Condition: Moi cap dau chi gap nhau dung 2 lan trong ca giai
+                lichThiDau.DanhSachDoiBong.RemoveFromBlacklist(cbTenDoi2);
+                LoaiBoLuaChonCombobox2();
+
                 lichThiDau.CapNhatCacDoiThamGiaThiDau(); //Cap nhat cho cac tran
+            }
+        }
+
+        private void LoaiBoLuaChonCombobox2()
+        {
+            DTO_DoiBong doiBongDaChon = cbTenDoi1.SelectedItem as DTO_DoiBong;
+            foreach(var capDau in lichThiDau.DanhSachCapDau)
+            {
+                if(doiBongDaChon == capDau.DoiBong1)
+                {
+                    lichThiDau.DanhSachDoiBong.AddToBlacklist(capDau.DoiBong2, cbTenDoi2);
+                }
             }
         }
 
@@ -167,36 +193,42 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
             if (cbTenDoi2_oldSelectedItem != doi2)
             {
-                if (Output.State == DataState.Unchanged)
-                {
-                    Output.State = DataState.Modified;
-                }
+                output.Modify();
 
                 //Condition: Moi doi bong chi xuat hien dung 1 lan
                 lichThiDau.DanhSachDoiBong.RemoveOwner(cbTenDoi2_oldSelectedItem, cb);
                 lichThiDau.DanhSachDoiBong.AddOwner(doi2, cb);
-
                 cbTenDoi2_oldSelectedItem = doi2;
+
+                //Condition: Moi cap dau chi gap nhau dung 2 lan trong ca giai
+                lichThiDau.DanhSachDoiBong.RemoveFromBlacklist(cbTenDoi1);
+                LoaiBoLuaChonCombobox1();
 
                 lichThiDau.CapNhatCacDoiThamGiaThiDau();
             }
 
         }
 
+        private void LoaiBoLuaChonCombobox1()
+        {
+            DTO_DoiBong doiBongDaChon = cbTenDoi2.SelectedItem as DTO_DoiBong;
+            foreach (var capDau in lichThiDau.DanhSachCapDau)
+            {
+                if (doiBongDaChon == capDau.DoiBong2)
+                {
+                    lichThiDau.DanhSachDoiBong.AddToBlacklist(capDau.DoiBong1, cbTenDoi1);
+                }
+            }
+        }
+
         private void dtpNgay_ValueChanged(object sender, EventArgs e)
         {
-            if(Output.State == DataState.Unchanged)
-            {
-                Output.State = DataState.Modified;
-            }
+            output.Modify();
         }
 
         private void dtpGio_ValueChanged(object sender, EventArgs e)
         {
-            if (Output.State == DataState.Unchanged)
-            {
-                Output.State = DataState.Modified;
-            }
+            output.Modify();
         }
     }
 }

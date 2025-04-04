@@ -1,5 +1,6 @@
 ﻿using QuanLyGiaiVoDichBongDaQuocGia.DAL;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
+using QuanLyGiaiVoDichBongDaQuocGia.Manager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +13,20 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
     {
         DAL_LoaiCauThu DAL_loaiCauThu = new DAL_LoaiCauThu();
 
-        public List<DTO.DTO_LoaiCauThu> LayDanhSachLoaiCauThu()
+        BUS_CauThu BUS_cauThu = new BUS_CauThu();
+
+        public Manager.DataManager<DTO_LoaiCauThu> LayDanhSachLoaiCauThu()
         {
-            return DAL_loaiCauThu.LayDanhSachLoaiCauThu();
+            return Manager.CacheManager.GetOrLoad("LOAICAUTHU",
+                                                  () => new Manager.DataManager<DTO_LoaiCauThu>(DAL_loaiCauThu.LayDanhSachLoaiCauThu(),
+                                                                                                loaiCauThu => loaiCauThu.MaLoaiCauThu)
+                                                 );
+                
         }
 
-        public void KiemTraSoLuongCauThuToiDa(Manager.Manager<DTO.DTO_CauThu> danhSachCauThu)
+        public void KiemTraSoLuongCauThuToiDa()
         {
+            DataManager<DTO_CauThu> danhSachCauThu = BUS_cauThu.LayDanhSachNhap();
             Dictionary<DTO_LoaiCauThu, int> counter = new Dictionary<DTO_LoaiCauThu, int>();
 
             foreach(var item in danhSachCauThu.ActiveData)

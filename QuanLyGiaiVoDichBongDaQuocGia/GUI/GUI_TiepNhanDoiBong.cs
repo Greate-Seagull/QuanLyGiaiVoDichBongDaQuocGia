@@ -1,4 +1,5 @@
-﻿using QuanLyGiaiVoDichBongDaQuocGia.DTO;
+﻿using QuanLyGiaiVoDichBongDaQuocGia.BUS;
+using QuanLyGiaiVoDichBongDaQuocGia.DTO;
 using QuanLyGiaiVoDichBongDaQuocGia.Manager;
 using System;
 using System.Collections.Generic;
@@ -14,22 +15,29 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 {
     public partial class GUI_TiepNhanDoiBong : Form
     {
-        BUS.BUS_ThamSo BUS_thamSo = new BUS.BUS_ThamSo();
-        BUS.BUS_DoiBong BUS_doiBong = new BUS.BUS_DoiBong();
-        BUS.BUS_CauThu BUS_cauThu = new BUS.BUS_CauThu();
-        BUS.BUS_LoaiCauThu BUS_loaiCauThu = new BUS.BUS_LoaiCauThu();
+        BUS_ThamSo busThamSo = new BUS_ThamSo();
+        BUS_DoiBong busDoiBong = new BUS_DoiBong();
+        BUS_CauThu busCauThu = new BUS_CauThu();
+        BUS_LoaiCauThu busLoaiCauThu = new BUS_LoaiCauThu();
 
-        DTO_ThamSo thamSo;
+        //Xu ly
         DTO_DoiBong doiBong;
-        Manager.Manager<DTO.DTO_CauThu> danhSachCauThuDaTiepNhan;
-        List<DTO.DTO_LoaiCauThu> danhSachLoaiCauThu;
+        DataManager<DTO_CauThu> danhSachCauThu;
 
-        Manager.IDManager maCauThu;
+        //Hien thi
+        DTO_ThamSo thamSo;
+        List<DTO_LoaiCauThu> danhSachLoaiCauThu;
 
-        public DTO_ThamSo ThamSo { get => thamSo; }
+        //Quan ly
+        IDManager stt;
+        IDManager maCauThu;
+
+        public DTO_ThamSo ThamSo { get => thamSo; set => thamSo = value; }
         public DTO_DoiBong DoiBong { get => doiBong; }
-        public Manager<DTO_CauThu> DanhSachCauThu { get => danhSachCauThuDaTiepNhan; }
         public List<DTO_LoaiCauThu> DanhSachLoaiCauThu { get => danhSachLoaiCauThu; }
+        internal BUS_CauThu BusCauThu { get => busCauThu; set => busCauThu = value; }
+        public IDManager STT { get => stt; set => stt = value; }
+        public IDManager MaCauThu { get => maCauThu; set => maCauThu = value; }
 
         public GUI_TiepNhanDoiBong()
         {
@@ -38,35 +46,51 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void GUI_TiepNhanDoiBong_Load(object sender, EventArgs e)
         {
-            //Load data
-            //...
             LayThamSo();
             LayMaDoiBongMoi();
-            LayMaCauThuHienTai();
-            LayDanhLoaiCauThu();
-
-            doiBong = new DTO_DoiBong(txtMaDoiBong.Text, null, null);
-            danhSachCauThuDaTiepNhan = new Manager.Manager<DTO.DTO_CauThu>();            
+            TaoSTT();            
+            TaoMaCauThu();
+            TaoDoiBong();
+            TaoDanhSachCauThu();
+            LayDanhSachLoaiCauThu();
         }
 
-        private void LayMaCauThuHienTai()
+        private void TaoSTT()
         {
-            maCauThu = new IDManager(BUS_cauThu.LayMaCauThuHienTai());
-        }
-
-        private void LayDanhLoaiCauThu()
-        {
-            danhSachLoaiCauThu = BUS_loaiCauThu.LayDanhSachLoaiCauThu();
+            stt = new IDManager("0");
         }
 
         private void LayThamSo()
         {
-            thamSo = BUS_thamSo.LayThamSo();
+            ThamSo = busThamSo.LayThamSo();
+        }
+
+        private void TaoDanhSachCauThu()
+        {
+            danhSachCauThu = BusCauThu.LayDanhSachNhap();
+        }
+
+        private void TaoDoiBong()
+        {
+            doiBong = new DTO_DoiBong(txtMaDoiBong.Text, txtTenDoiBong.Text, txtTenSanNha.Text);
+
+            DataManager<DTO_DoiBong> danhSachDoiBong = busDoiBong.LayDanhSachDoiBong();
+            danhSachDoiBong.Add(doiBong.MaDoiBong, doiBong);
+        }
+
+        private void TaoMaCauThu()
+        {
+            maCauThu = new IDManager(BusCauThu.LayMaCauThuHienTai());
+        }
+
+        private void LayDanhSachLoaiCauThu()
+        {
+            danhSachLoaiCauThu = busLoaiCauThu.LayDanhSachLoaiCauThu().GetReadData();
         }
 
         private void LayMaDoiBongMoi()
         {
-            txtMaDoiBong.Text = BUS_doiBong.LayMaDoiBongMoi();
+            txtMaDoiBong.Text = busDoiBong.LayMaDoiBongMoi();
         }
 
         private void btnTiepNhanDoiBong_Click(object sender, EventArgs e)
@@ -76,10 +100,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
             try
             {
-                if (BUS_doiBong.TiepNhanDoiBongMoi(DoiBong, DanhSachCauThu, ThamSo))
+                if (busDoiBong.TiepNhanDoiBong())
                 {
-                    maCauThu.XacNhanMaDaSuDung();
-                    danhSachCauThuDaTiepNhan.CapNhatTrangThaiDuLieu();                    
+                    maCauThu.XacNhan();
+                    danhSachCauThu.CapNhatTrangThaiDuLieu();                    
                     CapNhatMauSacDong();
 
                     MessageBox.Show("Tiếp nhận đội bóng thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -108,27 +132,23 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             foreach (GUI_TiepNhanCauThu_RowVersion cauThuRow in pDanhSachCauThu.Controls)
             {
                 cauThuRow.CapNhatThongTinCauThu();
+                danhSachCauThu.AddOrUpdate(cauThuRow.CauThu.MaCauThu, cauThuRow.Output);
             }
         }
 
         private void LayThongTinDoiBong()
         {
-            DoiBong.TenDoiBong = txtTenDoiBong.Text;
-            DoiBong.TenSanNha = txtTenSanNha.Text;
+            doiBong.MaDoiBong = txtMaDoiBong.Text;
+            doiBong.TenDoiBong = txtTenDoiBong.Text;
+            doiBong.TenSanNha = txtTenSanNha.Text;
         }
 
         private void btnThemCauThu_Click(object sender, EventArgs e)
         {
-            if(pDanhSachCauThu.Controls.Count < thamSo.SoLuongCauThuToiDa)
+            if(pDanhSachCauThu.Controls.Count < ThamSo.SoLuongCauThuToiDa)
             {
                 GUI_TiepNhanCauThu_RowVersion newRow = new GUI_TiepNhanCauThu_RowVersion(this);
-
-                pDanhSachCauThu.Controls.Add(newRow);
-                danhSachCauThuDaTiepNhan.Add(newRow.Output);
-                maCauThu.TangDonViDem();
-
-                newRow.CapNhatSTT(pDanhSachCauThu.Controls.Count);
-                newRow.CapNhatMaCauThu(maCauThu.LayID());
+                pDanhSachCauThu.Controls.Add(newRow);                
             }            
         }
 
@@ -138,43 +158,33 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             this.Close();
         }
 
-        internal void XoaCauThu(GUI_TiepNhanCauThu_RowVersion GUI_tiepNhanCauThu_RowVersion)
+        internal void XoaCauThu(GUI_TiepNhanCauThu_RowVersion row)
         {
-            //Xoa cau thu
-            danhSachCauThuDaTiepNhan.Delete(GUI_tiepNhanCauThu_RowVersion.Output);
-
-            //Xoa dong            
-            int index = pDanhSachCauThu.Controls.IndexOf(GUI_tiepNhanCauThu_RowVersion);
-            CaiDatSTT(index);            
-
-            if (GUI_tiepNhanCauThu_RowVersion.State == DataState.New)
-            {
-                maCauThu.GiamDonViDem();
-                CaiDatMaCauThu(index);
-            }
-
-            pDanhSachCauThu.Controls.RemoveAt(index);
+            danhSachCauThu.Delete(row.CauThu.MaCauThu);
+            pDanhSachCauThu.Controls.Remove(row);
+            CapNhatSTT();
+            CapNhatMaCauThu();
         }
 
-        private void CaiDatMaCauThu(int index)
+        private void CapNhatSTT()
         {
-            for(int i = pDanhSachCauThu.Controls.Count - 1; i > index; i--)
+            foreach(var row in pDanhSachCauThu.Controls)
             {
-                GUI_TiepNhanCauThu_RowVersion row = pDanhSachCauThu.Controls[i] as GUI_TiepNhanCauThu_RowVersion;
-                GUI_TiepNhanCauThu_RowVersion rowTruoc = pDanhSachCauThu.Controls[i - 1] as GUI_TiepNhanCauThu_RowVersion;
-
-                row.CapNhatMaCauThu(rowTruoc.LayMaCauThu());
+                if(row is GUI_TiepNhanCauThu_RowVersion cauThu)
+                {
+                    cauThu.CapNhatSTT();
+                }
             }
         }
 
-        private void CaiDatSTT(int index = 0)
+        private void CapNhatMaCauThu()
         {
-            for (int i = pDanhSachCauThu.Controls.Count - 1; i > index; i--)
+            foreach (var row in pDanhSachCauThu.Controls)
             {
-                GUI_TiepNhanCauThu_RowVersion row = pDanhSachCauThu.Controls[i] as GUI_TiepNhanCauThu_RowVersion;
-                GUI_TiepNhanCauThu_RowVersion rowTruoc = pDanhSachCauThu.Controls[i - 1] as GUI_TiepNhanCauThu_RowVersion;
-
-                row.CapNhatSTT(rowTruoc.LaySTT());
+                if (row is GUI_TiepNhanCauThu_RowVersion cauThu)
+                {
+                    cauThu.CapNhatMaCauThu();
+                }
             }
         }
     }

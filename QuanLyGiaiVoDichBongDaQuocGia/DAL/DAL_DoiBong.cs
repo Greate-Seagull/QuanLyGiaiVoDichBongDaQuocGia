@@ -28,27 +28,14 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             return "DB" + soMoi.ToString("D3");
         }
 
-        public bool LuuDoiBong(DTO_DoiBong doiBong)
-        {
-            string query = "INSERT INTO DOIBONG (MaDoiBong, TenDoiBong, TenSanNha) " +
-                          $"VALUES ('{doiBong.MaDoiBong}', '{doiBong.TenDoiBong}', '{doiBong.TenSanNha}') " +
-                           "ON DUPLICATE KEY UPDATE " +
-                           "TenDoiBong = VALUES(TenDoiBong), " +
-                           "TenSanNha = VALUES(TenSanNha); ";
-            
-            return databaseHelper.ExecuteNonQuery(query) > 0;
-        }
-
         public List<DTO_DoiBong> LayDanhSachDoiBong()
         {
             string query = "SELECT MaDoiBong, TenDoiBong, TenSanNha " +
                            "FROM DOIBONG " +
                            "WHERE Deleted = 0 ";
-
             DataTable result = databaseHelper.ExecuteQuery(query);
 
             List<DTO_DoiBong> danhSachDoiBong = new List<DTO_DoiBong>();
-
             foreach(DataRow row in result.Rows)
             {
                 string maDoiBong = row["MaDoiBong"].ToString();
@@ -59,6 +46,35 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             }
 
             return danhSachDoiBong;
+        }
+
+        internal bool LuuDanhSachTranDau(List<DTO_DoiBong> upsert)
+        {
+            string query = "INSERT INTO VONGDAU (MaDoiBong, TenDoiBong, TenSanNha) VALUES ";
+
+            query += string.Join(", ", upsert.Select(doiBong =>
+                                $"('{doiBong.MaDoiBong}', '{doiBong.TenDoiBong}', '{doiBong.TenSanNha}')"
+                                ));
+
+            query += $"ON DUPLICATE KEY UPDATE " +
+                     $"TenDoiBong = VALUES(TenDoiBong), " +
+                     $"TenSanNha = VALUES(TenSanNha); ";
+
+            return databaseHelper.ExecuteNonQuery(query) > 0;
+        }
+
+        internal bool XoaDanhSachTranDau(List<DTO_DoiBong> delete)
+        {
+            string query = "";
+
+            foreach (var doiBong in delete)
+            {
+                query += "UPDATE DOIBONG " +
+                        $"SET Deleted = 1 " +
+                        $"WHERE MaDoiBong = '{doiBong.MaDoiBong}'; ";
+            }
+
+            return databaseHelper.ExecuteNonQuery(query) > 0;
         }
     }
 }
