@@ -10,6 +10,16 @@ using System.Threading.Tasks;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 {
+    public enum TranDauColumn
+    {
+        //MaTranDau,
+        MaVongDau,
+        MaDoi1,
+        MaDoi2,
+        NgayGio,
+        TiSoDoi1,
+        TiSoDoi2
+    }
     class BUS_TranDau
     {
         DAL_TranDau DAL_tranDau = new DAL_TranDau();
@@ -23,8 +33,8 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
             if (danhSachNhapTranDau == null)
             {
-                danhSachNhapTranDau = new Manager.DataManager<DTO_TranDau>();
-                Manager.CacheManager.Add(WRITE_TRANDAU, danhSachNhapTranDau);
+                danhSachNhapTranDau = new DataManager<DTO_TranDau>();
+                CacheManager.Add(WRITE_TRANDAU, danhSachNhapTranDau);
             }
 
             return danhSachNhapTranDau;
@@ -34,6 +44,15 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
         {
             return CacheManager.GetOrLoad(READ_TRANDAU,
                                           () => new DataManager<DTO_TranDau>(DAL_tranDau.LayDanhSachCapDauLoaiTru(vongDauXuLy),
+                                                                             tranDau => tranDau.MaTranDau
+                                                                             )
+                                          );
+        }
+
+        public DataManager<DTO_TranDau> LayDanhSachTranDau(params TranDauColumn[] columns)
+        {
+            return CacheManager.GetOrLoad(READ_TRANDAU,
+                                          () => new DataManager<DTO_TranDau>(DAL_tranDau.LayDanhSachTranDau(columns.Select(col => col.ToString()).ToHashSet()),
                                                                              tranDau => tranDau.MaTranDau
                                                                              )
                                           );

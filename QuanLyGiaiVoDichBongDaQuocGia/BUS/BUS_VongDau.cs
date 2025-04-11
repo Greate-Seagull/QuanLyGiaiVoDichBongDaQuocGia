@@ -31,7 +31,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             return danhSachNhapVongDau;
         }
 
-        public DataManager<DTO_VongDau> LayDanhSachDaLuu()
+        public DataManager<DTO_VongDau> LayDanhSachVongDau()
         {
             DataManager<DTO_VongDau> danhSachNhapVongDau = CacheManager.GetOrLoad(READ_VONGDAU,
                                                                                   () => new DataManager<DTO_VongDau>(DAL_vongDau.LayDanhSachVongDau(),

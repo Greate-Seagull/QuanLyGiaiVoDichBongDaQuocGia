@@ -58,6 +58,5 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 
             return databaseHelper.ExecuteNonQuery(query) > 0;
         }
-
     }
 }

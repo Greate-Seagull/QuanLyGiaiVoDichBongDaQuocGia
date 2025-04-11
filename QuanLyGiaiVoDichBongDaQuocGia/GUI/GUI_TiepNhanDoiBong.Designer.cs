@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            tableLayoutPanel = new TableLayoutPanel();
+            tlpFrame = new TableLayoutPanel();
             btnThemCauThu = new Button();
             lblMaDoiBong = new Label();
             lblTenSanNha = new Label();
@@ -39,42 +39,42 @@
             btnTiepNhanDoiBong = new Button();
             btnThoat = new Button();
             pDanhSachCauThu = new Panel();
-            tableLayoutPanel.SuspendLayout();
+            tlpFrame.SuspendLayout();
             SuspendLayout();
             // 
-            // tableLayoutPanel
+            // tlpFrame
             // 
-            tableLayoutPanel.ColumnCount = 8;
-            tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel.Controls.Add(btnThemCauThu, 1, 3);
-            tableLayoutPanel.Controls.Add(lblMaDoiBong, 0, 0);
-            tableLayoutPanel.Controls.Add(lblTenSanNha, 2, 0);
-            tableLayoutPanel.Controls.Add(lblTenDoiBong, 1, 0);
-            tableLayoutPanel.Controls.Add(txtMaDoiBong, 0, 1);
-            tableLayoutPanel.Controls.Add(txtTenDoiBong, 1, 1);
-            tableLayoutPanel.Controls.Add(txtTenSanNha, 2, 1);
-            tableLayoutPanel.Controls.Add(btnTiepNhanDoiBong, 0, 3);
-            tableLayoutPanel.Controls.Add(btnThoat, 8, 3);
-            tableLayoutPanel.Controls.Add(pDanhSachCauThu, 0, 2);
-            tableLayoutPanel.Dock = DockStyle.Fill;
-            tableLayoutPanel.Location = new Point(0, 0);
-            tableLayoutPanel.Margin = new Padding(0);
-            tableLayoutPanel.Name = "tableLayoutPanel";
-            tableLayoutPanel.Padding = new Padding(10);
-            tableLayoutPanel.RowCount = 3;
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            tableLayoutPanel.Size = new Size(1418, 507);
-            tableLayoutPanel.TabIndex = 3;
+            tlpFrame.ColumnCount = 8;
+            tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
+            tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
+            tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
+            tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
+            tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
+            tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
+            tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
+            tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
+            tlpFrame.Controls.Add(btnThemCauThu, 1, 3);
+            tlpFrame.Controls.Add(lblMaDoiBong, 0, 0);
+            tlpFrame.Controls.Add(lblTenSanNha, 2, 0);
+            tlpFrame.Controls.Add(lblTenDoiBong, 1, 0);
+            tlpFrame.Controls.Add(txtMaDoiBong, 0, 1);
+            tlpFrame.Controls.Add(txtTenDoiBong, 1, 1);
+            tlpFrame.Controls.Add(txtTenSanNha, 2, 1);
+            tlpFrame.Controls.Add(btnTiepNhanDoiBong, 0, 3);
+            tlpFrame.Controls.Add(btnThoat, 8, 3);
+            tlpFrame.Controls.Add(pDanhSachCauThu, 0, 2);
+            tlpFrame.Dock = DockStyle.Fill;
+            tlpFrame.Location = new Point(0, 0);
+            tlpFrame.Margin = new Padding(0);
+            tlpFrame.Name = "tlpFrame";
+            tlpFrame.Padding = new Padding(10);
+            tlpFrame.RowCount = 3;
+            tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
+            tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
+            tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
+            tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
+            tlpFrame.Size = new Size(1418, 507);
+            tlpFrame.TabIndex = 3;
             // 
             // btnThemCauThu
             // 
@@ -104,7 +104,7 @@
             // lblTenSanNha
             // 
             lblTenSanNha.AutoSize = true;
-            tableLayoutPanel.SetColumnSpan(lblTenSanNha, 2);
+            tlpFrame.SetColumnSpan(lblTenSanNha, 2);
             lblTenSanNha.Dock = DockStyle.Fill;
             lblTenSanNha.Location = new Point(542, 20);
             lblTenSanNha.Margin = new Padding(10);
@@ -117,7 +117,7 @@
             // lblTenDoiBong
             // 
             lblTenDoiBong.AutoSize = true;
-            tableLayoutPanel.SetColumnSpan(lblTenDoiBong, 2);
+            tlpFrame.SetColumnSpan(lblTenDoiBong, 2);
             lblTenDoiBong.Dock = DockStyle.Fill;
             lblTenDoiBong.Location = new Point(194, 20);
             lblTenDoiBong.Margin = new Padding(10);
@@ -141,7 +141,7 @@
             // txtTenDoiBong
             // 
             txtTenDoiBong.BorderStyle = BorderStyle.FixedSingle;
-            tableLayoutPanel.SetColumnSpan(txtTenDoiBong, 2);
+            tlpFrame.SetColumnSpan(txtTenDoiBong, 2);
             txtTenDoiBong.Dock = DockStyle.Fill;
             txtTenDoiBong.Location = new Point(194, 68);
             txtTenDoiBong.Margin = new Padding(10);
@@ -152,7 +152,7 @@
             // txtTenSanNha
             // 
             txtTenSanNha.BorderStyle = BorderStyle.FixedSingle;
-            tableLayoutPanel.SetColumnSpan(txtTenSanNha, 2);
+            tlpFrame.SetColumnSpan(txtTenSanNha, 2);
             txtTenSanNha.Dock = DockStyle.Fill;
             txtTenSanNha.Location = new Point(542, 68);
             txtTenSanNha.Margin = new Padding(10);
@@ -191,7 +191,7 @@
             pDanhSachCauThu.AutoScroll = true;
             pDanhSachCauThu.BackColor = Color.White;
             pDanhSachCauThu.BorderStyle = BorderStyle.FixedSingle;
-            tableLayoutPanel.SetColumnSpan(pDanhSachCauThu, 8);
+            tlpFrame.SetColumnSpan(pDanhSachCauThu, 8);
             pDanhSachCauThu.Dock = DockStyle.Fill;
             pDanhSachCauThu.Location = new Point(20, 116);
             pDanhSachCauThu.Margin = new Padding(10);
@@ -205,17 +205,17 @@
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1418, 507);
-            Controls.Add(tableLayoutPanel);
+            Controls.Add(tlpFrame);
             Name = "GUI_TiepNhanDoiBong";
             Text = "Tiếp nhận hồ sơ đội bóng";
             Load += GUI_TiepNhanDoiBong_Load;
-            tableLayoutPanel.ResumeLayout(false);
-            tableLayoutPanel.PerformLayout();
+            tlpFrame.ResumeLayout(false);
+            tlpFrame.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
-        private TableLayoutPanel tableLayoutPanel;
+        private TableLayoutPanel tlpFrame;
         private Button btnThemCauThu;
         private Label lblMaDoiBong;
         private Label lblTenSanNha;

@@ -133,20 +133,31 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void btnThemTranDau_Click(object sender, EventArgs e)
         {
+            pDanhSachTranDau.SuspendLayout();
+            
+            //Main logic
             GUI_LapTranDau_RowVersion tranDauRow = new GUI_LapTranDau_RowVersion(this);
-            pDanhSachTranDau.Controls.Add(tranDauRow);            
+            pDanhSachTranDau.Controls.Add(tranDauRow);
+
+            pDanhSachTranDau.ResumeLayout();
         }
 
         internal void XoaTranDau(GUI_LapTranDau_RowVersion GUI_lapTranDau_RowVersion)
         {
+            pDanhSachTranDau.SuspendLayout();
+
             pDanhSachTranDau.Controls.Remove(GUI_lapTranDau_RowVersion);           
             danhSachTranDau.Delete(GUI_lapTranDau_RowVersion.TranDau.MaTranDau);
             CapNhatSTT();
             CapNhatMaTranDau();
+
+            pDanhSachTranDau.ResumeLayout();
         }
 
         private void CapNhatMaTranDau()
         {
+            pDanhSachTranDau.SuspendLayout();
+
             foreach (var row in pDanhSachTranDau.Controls)
             {
                 if (row is GUI_LapTranDau_RowVersion tranDau)
@@ -154,17 +165,23 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
                     tranDau.CapNhatMaTranDau();
                 }
             }
+
+            pDanhSachTranDau.ResumeLayout();
         }
 
         private void CapNhatSTT()
         {
-            foreach(var row in pDanhSachTranDau.Controls)
+            pDanhSachTranDau.SuspendLayout();
+
+            foreach (var row in pDanhSachTranDau.Controls)
             {
                 if(row is GUI_LapTranDau_RowVersion tranDau)
                 {
                     tranDau.CapNhatSTT();
                 }
             }
+
+            pDanhSachTranDau.ResumeLayout();
         }
 
         private void btnThoat_Click(object sender, EventArgs e)

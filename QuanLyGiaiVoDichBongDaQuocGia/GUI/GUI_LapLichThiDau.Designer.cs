@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            tableLayoutPanel1 = new TableLayoutPanel();
+            tlpFrame = new TableLayoutPanel();
             btnThemTranDau = new Button();
             btnThoat = new Button();
             lblVongThiDau = new Label();
@@ -37,40 +37,40 @@
             txtVongThiDau = new TextBox();
             pDanhSachTranDau = new Panel();
             btnLapLichThiDau = new Button();
-            tableLayoutPanel1.SuspendLayout();
+            tlpFrame.SuspendLayout();
             SuspendLayout();
             // 
-            // tableLayoutPanel1
+            // tlpFrame
             // 
-            tableLayoutPanel1.ColumnCount = 8;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel1.Controls.Add(btnThemTranDau, 1, 3);
-            tableLayoutPanel1.Controls.Add(btnThoat, 7, 3);
-            tableLayoutPanel1.Controls.Add(lblVongThiDau, 1, 0);
-            tableLayoutPanel1.Controls.Add(lblMaVongDau, 0, 0);
-            tableLayoutPanel1.Controls.Add(txtMaVongDau, 0, 1);
-            tableLayoutPanel1.Controls.Add(txtVongThiDau, 1, 1);
-            tableLayoutPanel1.Controls.Add(pDanhSachTranDau, 0, 2);
-            tableLayoutPanel1.Controls.Add(btnLapLichThiDau, 0, 3);
-            tableLayoutPanel1.Dock = DockStyle.Fill;
-            tableLayoutPanel1.Location = new Point(0, 0);
-            tableLayoutPanel1.Margin = new Padding(0);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.Padding = new Padding(10);
-            tableLayoutPanel1.RowCount = 4;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            tableLayoutPanel1.Size = new Size(1418, 507);
-            tableLayoutPanel1.TabIndex = 0;
+            tlpFrame.ColumnCount = 8;
+            tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
+            tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
+            tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
+            tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
+            tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
+            tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
+            tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
+            tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
+            tlpFrame.Controls.Add(btnThemTranDau, 1, 3);
+            tlpFrame.Controls.Add(btnThoat, 7, 3);
+            tlpFrame.Controls.Add(lblVongThiDau, 1, 0);
+            tlpFrame.Controls.Add(lblMaVongDau, 0, 0);
+            tlpFrame.Controls.Add(txtMaVongDau, 0, 1);
+            tlpFrame.Controls.Add(txtVongThiDau, 1, 1);
+            tlpFrame.Controls.Add(pDanhSachTranDau, 0, 2);
+            tlpFrame.Controls.Add(btnLapLichThiDau, 0, 3);
+            tlpFrame.Dock = DockStyle.Fill;
+            tlpFrame.Location = new Point(0, 0);
+            tlpFrame.Margin = new Padding(0);
+            tlpFrame.Name = "tlpFrame";
+            tlpFrame.Padding = new Padding(10);
+            tlpFrame.RowCount = 4;
+            tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
+            tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
+            tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
+            tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
+            tlpFrame.Size = new Size(1418, 507);
+            tlpFrame.TabIndex = 0;
             // 
             // btnThemTranDau
             // 
@@ -101,7 +101,7 @@
             // lblVongThiDau
             // 
             lblVongThiDau.AutoSize = true;
-            tableLayoutPanel1.SetColumnSpan(lblVongThiDau, 2);
+            tlpFrame.SetColumnSpan(lblVongThiDau, 2);
             lblVongThiDau.Dock = DockStyle.Fill;
             lblVongThiDau.Location = new Point(194, 20);
             lblVongThiDau.Margin = new Padding(10);
@@ -137,7 +137,7 @@
             // txtVongThiDau
             // 
             txtVongThiDau.BorderStyle = BorderStyle.FixedSingle;
-            tableLayoutPanel1.SetColumnSpan(txtVongThiDau, 2);
+            tlpFrame.SetColumnSpan(txtVongThiDau, 2);
             txtVongThiDau.Dock = DockStyle.Fill;
             txtVongThiDau.Location = new Point(194, 68);
             txtVongThiDau.Margin = new Padding(10);
@@ -150,7 +150,7 @@
             pDanhSachTranDau.AutoScroll = true;
             pDanhSachTranDau.BackColor = Color.White;
             pDanhSachTranDau.BorderStyle = BorderStyle.FixedSingle;
-            tableLayoutPanel1.SetColumnSpan(pDanhSachTranDau, 8);
+            tlpFrame.SetColumnSpan(pDanhSachTranDau, 8);
             pDanhSachTranDau.Dock = DockStyle.Fill;
             pDanhSachTranDau.Location = new Point(20, 116);
             pDanhSachTranDau.Margin = new Padding(10);
@@ -177,18 +177,18 @@
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1418, 507);
-            Controls.Add(tableLayoutPanel1);
+            Controls.Add(tlpFrame);
             Name = "GUI_LapLichThiDau";
             Text = "Lập lịch thi đấu";
             Load += GUI_LapLichThiDau_Load;
-            tableLayoutPanel1.ResumeLayout(false);
-            tableLayoutPanel1.PerformLayout();
+            tlpFrame.ResumeLayout(false);
+            tlpFrame.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private TableLayoutPanel tableLayoutPanel1;
+        private TableLayoutPanel tlpFrame;
         private Label lblMaVongDau;
         private TextBox txtMaVongDau;
         private TextBox txtVongThiDau;

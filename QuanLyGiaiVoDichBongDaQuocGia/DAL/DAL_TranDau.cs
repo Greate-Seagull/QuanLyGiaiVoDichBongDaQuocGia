@@ -1,10 +1,12 @@
 ﻿using QuanLyDaiLy.DAL;
 using QuanLyGiaiVoDichBongDaQuocGia.BUS;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
+using QuanLyGiaiVoDichBongDaQuocGia.Manager;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,6 +27,60 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             }
 
             return result.Rows[0]["MaTranDau"].ToString();
+        }
+
+        internal List<DTO_TranDau> LayDanhSachTranDau(HashSet<string> columns) //Use hashset to prevent duplicates automatically
+        {
+            //Make query
+            string query = "SELECT MaTranDau ";
+
+            if (columns.Any())
+                query += ", " + string.Join(", ", columns);
+
+            query += " FROM TRANDAU " +
+                     " WHERE Deleted = 0; ";
+            
+            //Prepare for main action
+            var result = databaseHelper.ExecuteQuery(query);
+
+            var columnActions = new List<Action<DataRow, DTO_TranDau>>();
+            var danhSachTranDau = new List<DTO_TranDau>();
+
+            //(Lazy) Get necessary action and load from cache
+            if (columns.Contains("MaVongDau"))
+            {
+                var danhSachVongDau = new BUS_VongDau().LayDanhSachVongDau();
+                columnActions.Add((row, tranDau) => tranDau.VongDau = danhSachVongDau.GetReadData(row["MaVongDau"].ToString()));
+            }
+            if(columns.Contains("MaDoi1") || columns.Contains("MaDoi2"))
+            {
+                var danhSachDoiBong = new BUS_DoiBong().LayDanhSachDoiBong();
+                if (columns.Contains("MaDoi1"))
+                    columnActions.Add((row, tranDau) => tranDau.DoiBong1 = danhSachDoiBong.GetReadData(row["MaDoi1"].ToString()));
+                if (columns.Contains("MaDoi2"))
+                    columnActions.Add((row, tranDau) => tranDau.DoiBong2 = danhSachDoiBong.GetReadData(row["MaDoi2"].ToString()));
+            }
+            if (columns.Contains("NgayGio"))
+                columnActions.Add((row, tranDau) => tranDau.NgayGio = (DateTime)row["NgayGio"]);
+            if (columns.Contains("TiSoDoi1"))
+                columnActions.Add((row, tranDau) => tranDau.TiSoDoi1 = (int)row["TiSoDoi1"]);
+            if (columns.Contains("TiSoDoi2"))
+                columnActions.Add((row, tranDau) => tranDau.TiSoDoi1 = (int)row["TiSoDoi2"]);
+            
+            //Load into DTO
+            foreach (DataRow row in result.Rows)
+            {
+                DTO_TranDau tranDau = new DTO_TranDau(row["MaTranDau"].ToString());
+                danhSachTranDau.Add(tranDau);
+
+                foreach(var action in columnActions)
+                {
+                    action(row, tranDau);
+                }
+            }
+
+            //--------------------
+            return danhSachTranDau;
         }
 
         internal List<DTO_TranDau> LayDanhSachCapDauLoaiTru(DTO_VongDau vongDauXuLy)
@@ -81,6 +137,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             }
 
             return databaseHelper.ExecuteNonQuery(query) > 0;
-        }        
+        }
     }
 }
