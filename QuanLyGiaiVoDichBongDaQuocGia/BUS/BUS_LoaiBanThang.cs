@@ -8,12 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
-{
-    public enum LoaiBanThangColumn
-    {
-        MaLoaiBanThang,
-        TenLoaiBanThang
-    }
+{    
     class BUS_LoaiBanThang
     {
         DAL_LoaiBanThang DAL_loaiBanThang = new DAL_LoaiBanThang();

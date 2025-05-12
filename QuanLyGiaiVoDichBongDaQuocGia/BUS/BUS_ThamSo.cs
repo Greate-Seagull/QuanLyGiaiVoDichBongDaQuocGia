@@ -7,17 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
-{
-    public enum ThamSoColumn
-    {
-        TuoiCauThuToiThieu,
-        TuoiCauThuToiDa,
-        SoLuongCauThuToiThieu,
-        SoLuongCauThuToiDa,
-        SoTranDauToiDaCuaMoiDoiTrongVongDau,
-        ThoiDiemGhiBanToiThieu,
-        ThoiDiemGhiBanToiDa
-    }
+{    
     class BUS_ThamSo
     {
         DAL.DAL_ThamSo DAL_thamSo = new DAL.DAL_ThamSo();

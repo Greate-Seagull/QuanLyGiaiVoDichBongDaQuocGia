@@ -8,13 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
-{
-    public enum LoaiCauThuColumn
-    {
-        MaLoaiCauThu,
-        TenLoaiCauThu,
-        SoLuongCauThuToiDaTheoLoaiCauThu
-    }
+{    
     public class BUS_LoaiCauThu
     {
         DAL_LoaiCauThu DAL_loaiCauThu = new DAL_LoaiCauThu();

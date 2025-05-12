@@ -27,17 +27,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             { CauThuColumn.GhiChu, (storer, filters, value) => storer.GhiChu = value.ToString() }
         };
 
-        //For lazy insert
-        Dictionary<CauThuColumn, Func<DTO_CauThu, object>> columnsInserter = new Dictionary<CauThuColumn, Func<DTO_CauThu, object>>
-        {
-            { CauThuColumn.MaCauThu, storer => storer.MaCauThu },
-            { CauThuColumn.TenCauThu, storer => storer.TenCauThu },
-            { CauThuColumn.MaLoaiCauThu, storer => storer.LoaiCauThu.MaLoaiCauThu },
-            { CauThuColumn.MaDoiBong, storer => storer.DoiBong.MaDoiBong },
-            { CauThuColumn.NgaySinh, storer => storer.NgaySinh },
-            { CauThuColumn.GhiChu, storer => storer.GhiChu }
-        };
-
         public string LayMaCauThuHienTai()
         {
             string query = "SELECT MaCauThu FROM CAUTHU ORDER BY MaCauThu DESC LIMIT 1";
@@ -68,7 +57,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
                 {
                     string parameter = $"{col}{paramCounter}";
                     paramStringBuilder.Add(parameter);
-                    parameters.Add(new MySqlParameter(parameter, columnsInserter[col](row)));
+                    parameters.Add(new MySqlParameter(parameter, CauThuConverter.Instance[col](row)));
                 }
 
                 queryBuilder.Append($"({string.Join(", ", paramStringBuilder)})");

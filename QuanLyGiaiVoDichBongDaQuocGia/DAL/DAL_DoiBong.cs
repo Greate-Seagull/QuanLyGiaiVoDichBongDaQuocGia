@@ -24,14 +24,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             { DoiBongColumn.TenSanNha, (storer, filters, value) => storer.TenSanNha = value.ToString() }
         };
 
-        //For lazy insert
-        Dictionary<DoiBongColumn, Func<DTO_DoiBong, object>> columnsInserter = new Dictionary<DoiBongColumn, Func<DTO_DoiBong, object>>
-        {
-            { DoiBongColumn.MaDoiBong, storer => storer.MaDoiBong},
-            { DoiBongColumn.TenDoiBong, storer => storer.TenDoiBong },
-            { DoiBongColumn.TenSanNha, storer => storer.TenSanNha }
-        };
-
         public string LayMaDoiBongMoi()
         {
             string query = "SELECT MaDoiBong FROM DOIBONG ORDER BY MaDoiBong DESC LIMIT 1";
@@ -94,7 +86,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
                 {
                     string parameter = $"{col}{paramCounter}";
                     paramStringBuilder.Add(parameter);
-                    parameters.Add(new MySqlParameter(parameter, columnsInserter[col](row)));
+                    parameters.Add(new MySqlParameter(parameter, DoiBongConverter.Instance[col](row)));
                 }
 
                 queryBuilder.Append($"({string.Join(", ", paramStringBuilder)})");

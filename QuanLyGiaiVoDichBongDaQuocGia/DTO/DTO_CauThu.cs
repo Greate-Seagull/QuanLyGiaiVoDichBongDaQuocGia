@@ -1,8 +1,10 @@
-﻿using System;
+﻿using QuanLyGiaiVoDichBongDaQuocGia.Helper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZstdSharp.Unsafe;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
 {
@@ -20,5 +22,34 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
         {
             return TenCauThu;
         }
+    }
+
+    public enum CauThuColumn
+    {
+        MaCauThu,
+        TenCauThu,
+        NgaySinh,
+        GhiChu,
+        MaDoiBong,
+        MaLoaiCauThu
+    }
+
+    public class CauThuConverter: ColumnConverter<CauThuColumn, DTO_CauThu>
+    {
+        private static readonly CauThuConverter _instance = new();
+
+        public static CauThuConverter Instance => _instance;
+
+        Dictionary<CauThuColumn, Func<DTO_CauThu, object>> columns = new()
+        {
+            { CauThuColumn.MaCauThu, storer => storer.MaCauThu },
+            { CauThuColumn.TenCauThu, storer => storer.TenCauThu },
+            { CauThuColumn.MaLoaiCauThu, storer => storer.LoaiCauThu.MaLoaiCauThu },
+            { CauThuColumn.MaDoiBong, storer => storer.DoiBong.MaDoiBong },
+            { CauThuColumn.NgaySinh, storer => storer.NgaySinh },
+            { CauThuColumn.GhiChu, storer => storer.GhiChu }
+        };
+
+        public Func<DTO_CauThu, object> this[CauThuColumn col] => columns[col];
     }
 }

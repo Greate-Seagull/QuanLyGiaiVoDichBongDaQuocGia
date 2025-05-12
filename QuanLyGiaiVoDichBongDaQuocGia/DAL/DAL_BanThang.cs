@@ -27,16 +27,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             { BanThangColumn.ThoiDiemGhiBan, (storer, filters, value) => storer.ThoiDiemGhiBan = (int)value }
         };
 
-        //For lazy insert
-        Dictionary<BanThangColumn, Func<DTO_BanThang, object>> columnsInserter = new Dictionary<BanThangColumn, Func<DTO_BanThang, object>>
-        {
-            { BanThangColumn.MaBanThang, storer => storer.MaBanThang},
-            { BanThangColumn.MaTranDau, storer => storer.TranDau.MaTranDau },
-            { BanThangColumn.MaCauThu, storer => storer.CauThu.MaCauThu },
-            { BanThangColumn.MaLoaiBanThang, storer => storer.LoaiBanThang.MaLoaiBanThang },
-            { BanThangColumn.ThoiDiemGhiBan, storer => storer.ThoiDiemGhiBan }
-        };
-
         public string LayMaBanThangHienTai()
         {
             string query = "SELECT MaBanThang FROM BANTHANG ORDER BY MaBanThang DESC LIMIT 1";
@@ -115,7 +105,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
                 {
                     string parameter = $"{col}{paramCounter}";
                     paramStringBuilder.Add(parameter);
-                    parameters.Add(new MySqlParameter(parameter, columnsInserter[col](row)));
+                    parameters.Add(new MySqlParameter(parameter, BanThangConverter.Instance[col](row)));
                 }
 
                 queryBuilder.Append($"({string.Join(", ", paramStringBuilder)})");

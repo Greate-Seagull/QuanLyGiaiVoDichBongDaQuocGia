@@ -28,15 +28,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             { VongDauColumn.NgayKetThuc, (storer, filters, value) => storer.NgayKetThuc = (DateTime)value }
         };
 
-        //For lazy insert
-        Dictionary<VongDauColumn, Func<DTO_VongDau, object>> columnsInserter = new Dictionary<VongDauColumn, Func<DTO_VongDau, object>>
-        {
-            { VongDauColumn.MaVongDau, storer => storer.MaVongDau},
-            { VongDauColumn.TenVongDau, storer => storer.TenVongDau },
-            { VongDauColumn.NgayBatDau, storer => storer.NgayBatDau },
-            { VongDauColumn.NgayKetThuc, storer => storer.NgayKetThuc }
-        };
-
         public string LayMaVongDauMoi()
         {
             string query = "SELECT MaVongDau FROM VONGDAU ORDER BY MaVongDau DESC LIMIT 1";
@@ -100,7 +91,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
                 {
                     string parameter = $"{col}{paramCounter}";
                     paramStringBuilder.Add(parameter);
-                    parameters.Add(new MySqlParameter(parameter, columnsInserter[col](row)));
+                    parameters.Add(new MySqlParameter(parameter, VongDauConverter.Instance[col](row)));
                 }
 
                 queryBuilder.Append($"({string.Join(", ", paramStringBuilder)})");

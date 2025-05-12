@@ -9,15 +9,7 @@ using System.Threading.Tasks;
 using System.Transactions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
-{
-    public enum VongDauColumn
-    {
-        MaVongDau,
-        TenVongDau,
-        NgayBatDau,
-        NgayKetThuc
-    }       
-
+{          
     class BUS_VongDau
     {        
         DAL_VongDau DAL = new DAL_VongDau();

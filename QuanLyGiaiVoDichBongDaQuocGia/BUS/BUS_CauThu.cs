@@ -9,16 +9,7 @@ using System.Threading.Tasks;
 using System.Transactions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
-{
-    public enum CauThuColumn
-    {
-        MaCauThu,
-        TenCauThu,
-        NgaySinh,
-        GhiChu,
-        MaDoiBong,
-        MaLoaiCauThu
-    }
+{    
     class BUS_CauThu
     {
         DAL_CauThu DAL = new DAL_CauThu();

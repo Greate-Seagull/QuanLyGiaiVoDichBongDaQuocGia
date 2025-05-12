@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QuanLyGiaiVoDichBongDaQuocGia.Helper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,5 +17,27 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
         {
             return TenDoiBong;
         }
+    }
+
+    public enum DoiBongColumn
+    {
+        MaDoiBong,
+        TenDoiBong,
+        TenSanNha
+    }
+
+    public class DoiBongConverter: ColumnConverter<DoiBongColumn, DTO_DoiBong>
+    {
+        private static readonly DoiBongConverter _instance = new();
+        public static DoiBongConverter Instance => _instance;
+
+        private readonly Dictionary<DoiBongColumn, Func<DTO_DoiBong, object>> columns = new()
+        {
+            { DoiBongColumn.MaDoiBong, storer => storer.MaDoiBong},
+            { DoiBongColumn.TenDoiBong, storer => storer.TenDoiBong },
+            { DoiBongColumn.TenSanNha, storer => storer.TenSanNha }
+        };
+
+        public Func<DTO_DoiBong, object> this[DoiBongColumn col] => columns[col];
     }
 }

@@ -11,12 +11,6 @@ using System.Transactions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 {
-    public enum DoiBongColumn
-    {
-        MaDoiBong,
-        TenDoiBong,
-        TenSanNha
-    }
     class BUS_DoiBong
     {
         DAL_DoiBong DAL = new DAL.DAL_DoiBong();   

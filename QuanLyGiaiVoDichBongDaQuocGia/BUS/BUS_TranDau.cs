@@ -9,18 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
-{
-    public enum TranDauColumn
-    {
-        MaTranDau,
-        MaVongDau,
-        MaDoi1,
-        MaDoi2,
-        NgayGio,
-        TiSoDoi1,
-        TiSoDoi2
-    }
-
+{        
     class BUS_TranDau
     {
         DAL_TranDau DAL = new DAL_TranDau();        
@@ -45,6 +34,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
         {
             var hashed = columns.ToHashSet();
             hashed.Add(TranDauColumn.MaTranDau);
+
+            var cachedRepository = CacheManager.Get<DataManager<DTO_TranDau>>(READ_TRANDAU);
+            var loadedData = cachedRepository.Filter(dt => dt.)
+
 
             return CacheManager.GetOrLoad(READ_TRANDAU,
                                           () => new DataManager<DTO_TranDau>(DAL.LayDanhSach(hashed, filters),

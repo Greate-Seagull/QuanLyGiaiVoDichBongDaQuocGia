@@ -30,18 +30,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             { TranDauColumn.TiSoDoi2, (storer, filters, value) => storer.TiSoDoi2 = (int)value }
         };
 
-        //For lazy insert
-        Dictionary<TranDauColumn, Func<DTO_TranDau, object>> columnsInserter = new Dictionary<TranDauColumn, Func<DTO_TranDau, object>>
-        {
-            { TranDauColumn.MaTranDau, storer => storer.MaTranDau},
-            { TranDauColumn.MaVongDau, storer => storer.VongDau.MaVongDau },
-            { TranDauColumn.MaDoi1, storer => storer.DoiBong1.MaDoiBong },
-            { TranDauColumn.MaDoi2, storer => storer.DoiBong2.MaDoiBong},
-            { TranDauColumn.NgayGio, storer => storer.NgayGio },
-            { TranDauColumn.TiSoDoi1, storer => storer.TiSoDoi1 },
-            { TranDauColumn.TiSoDoi2, storer => storer.TiSoDoi2 }
-        };
-
         public string LayMaTranDauHienTai()
         {
             string query = "SELECT MaTranDau FROM TRANDAU ORDER BY MaTranDau DESC LIMIT 1";
@@ -135,7 +123,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
                 {
                     string parameter = $"{col}{paramCounter}";
                     paramStringBuilder.Add(parameter);
-                    parameters.Add(new MySqlParameter(parameter, columnsInserter[col](row)));
+                    parameters.Add(new MySqlParameter(parameter, TranDauConverter.Instance[col](row)));
                 }
 
                 queryBuilder.Append($"({string.Join(", ", paramStringBuilder)})");

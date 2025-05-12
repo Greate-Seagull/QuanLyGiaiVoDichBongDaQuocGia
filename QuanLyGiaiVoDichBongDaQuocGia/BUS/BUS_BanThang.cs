@@ -7,14 +7,6 @@ using System.Linq;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 {
-    public enum BanThangColumn
-    {
-        MaBanThang,
-        MaTranDau,
-        MaCauThu,
-        MaLoaiBanThang,
-        ThoiDiemGhiBan
-    }
     public class BUS_BanThang
     {
         DAL_BanThang DAL = new DAL_BanThang();
