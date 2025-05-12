@@ -29,14 +29,15 @@
         private void InitializeComponent()
         {
             tlpThongTinCauThu = new TableLayoutPanel();
-            dtpThoiDiemGhiBan = new DateTimePicker();
+            cbDoiBong = new ComboBox();
+            cbLoaiBanThang = new ComboBox();
             cbCauThu = new ComboBox();
             txtMaBanThang = new TextBox();
             lblSTT = new Label();
             btnXoa = new Button();
-            txtDoiBong = new TextBox();
-            cbLoaiBanThang = new ComboBox();
+            nudThoiDiemGhiBan = new NumericUpDown();
             tlpThongTinCauThu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)nudThoiDiemGhiBan).BeginInit();
             SuspendLayout();
             // 
             // tlpThongTinCauThu
@@ -49,15 +50,15 @@
             tlpThongTinCauThu.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 28.5714283F));
             tlpThongTinCauThu.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 28.5714283F));
             tlpThongTinCauThu.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 14.2857141F));
-            tlpThongTinCauThu.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 14.2857141F));
+            tlpThongTinCauThu.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 14.28571F));
             tlpThongTinCauThu.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 55F));
+            tlpThongTinCauThu.Controls.Add(cbDoiBong, 3, 0);
             tlpThongTinCauThu.Controls.Add(cbLoaiBanThang, 4, 0);
-            tlpThongTinCauThu.Controls.Add(txtDoiBong, 3, 0);
-            tlpThongTinCauThu.Controls.Add(dtpThoiDiemGhiBan, 5, 0);
             tlpThongTinCauThu.Controls.Add(cbCauThu, 2, 0);
             tlpThongTinCauThu.Controls.Add(txtMaBanThang, 1, 0);
             tlpThongTinCauThu.Controls.Add(lblSTT, 0, 0);
             tlpThongTinCauThu.Controls.Add(btnXoa, 6, 0);
+            tlpThongTinCauThu.Controls.Add(nudThoiDiemGhiBan, 5, 0);
             tlpThongTinCauThu.Dock = DockStyle.Fill;
             tlpThongTinCauThu.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
             tlpThongTinCauThu.Location = new Point(0, 0);
@@ -65,20 +66,31 @@
             tlpThongTinCauThu.Name = "tlpThongTinCauThu";
             tlpThongTinCauThu.RowCount = 1;
             tlpThongTinCauThu.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tlpThongTinCauThu.Size = new Size(1386, 46);
+            tlpThongTinCauThu.Size = new Size(1388, 48);
             tlpThongTinCauThu.TabIndex = 2;
             // 
-            // dtpThoiDiemGhiBan
+            // cbDoiBong
             // 
-            dtpThoiDiemGhiBan.CustomFormat = "HH:mm";
-            dtpThoiDiemGhiBan.Dock = DockStyle.Fill;
-            dtpThoiDiemGhiBan.Format = DateTimePickerFormat.Custom;
-            dtpThoiDiemGhiBan.Location = new Point(1158, 10);
-            dtpThoiDiemGhiBan.Margin = new Padding(10);
-            dtpThoiDiemGhiBan.Name = "dtpThoiDiemGhiBan";
-            dtpThoiDiemGhiBan.ShowUpDown = true;
-            dtpThoiDiemGhiBan.Size = new Size(161, 31);
-            dtpThoiDiemGhiBan.TabIndex = 22;
+            cbDoiBong.Dock = DockStyle.Fill;
+            cbDoiBong.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbDoiBong.FormattingEnabled = true;
+            cbDoiBong.Location = new Point(614, 10);
+            cbDoiBong.Margin = new Padding(10);
+            cbDoiBong.Name = "cbDoiBong";
+            cbDoiBong.Size = new Size(343, 33);
+            cbDoiBong.TabIndex = 26;
+            cbDoiBong.SelectedIndexChanged += cbDoiBong_SelectedIndexChanged;
+            // 
+            // cbLoaiBanThang
+            // 
+            cbLoaiBanThang.Dock = DockStyle.Fill;
+            cbLoaiBanThang.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbLoaiBanThang.FormattingEnabled = true;
+            cbLoaiBanThang.Location = new Point(977, 10);
+            cbLoaiBanThang.Margin = new Padding(10);
+            cbLoaiBanThang.Name = "cbLoaiBanThang";
+            cbLoaiBanThang.Size = new Size(161, 33);
+            cbLoaiBanThang.TabIndex = 24;
             // 
             // cbCauThu
             // 
@@ -110,7 +122,7 @@
             lblSTT.Location = new Point(10, 10);
             lblSTT.Margin = new Padding(10);
             lblSTT.Name = "lblSTT";
-            lblSTT.Size = new Size(40, 26);
+            lblSTT.Size = new Size(40, 28);
             lblSTT.TabIndex = 18;
             lblSTT.Text = "0";
             lblSTT.TextAlign = ContentAlignment.MiddleCenter;
@@ -123,33 +135,22 @@
             btnXoa.Location = new Point(1339, 10);
             btnXoa.Margin = new Padding(10);
             btnXoa.Name = "btnXoa";
-            btnXoa.Size = new Size(37, 26);
+            btnXoa.Size = new Size(39, 28);
             btnXoa.TabIndex = 19;
             btnXoa.Text = "Xóa";
             btnXoa.UseVisualStyleBackColor = true;
+            btnXoa.Click += btnXoa_Click;
             // 
-            // txtDoiBong
+            // nudThoiDiemGhiBan
             // 
-            txtDoiBong.BorderStyle = BorderStyle.FixedSingle;
-            txtDoiBong.Dock = DockStyle.Fill;
-            txtDoiBong.Location = new Point(614, 10);
-            txtDoiBong.Margin = new Padding(10);
-            txtDoiBong.Name = "txtDoiBong";
-            txtDoiBong.ReadOnly = true;
-            txtDoiBong.Size = new Size(343, 31);
-            txtDoiBong.TabIndex = 23;
-            txtDoiBong.TextAlign = HorizontalAlignment.Center;
-            // 
-            // cbLoaiBanThang
-            // 
-            cbLoaiBanThang.Dock = DockStyle.Fill;
-            cbLoaiBanThang.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbLoaiBanThang.FormattingEnabled = true;
-            cbLoaiBanThang.Location = new Point(977, 10);
-            cbLoaiBanThang.Margin = new Padding(10);
-            cbLoaiBanThang.Name = "cbLoaiBanThang";
-            cbLoaiBanThang.Size = new Size(161, 33);
-            cbLoaiBanThang.TabIndex = 24;
+            nudThoiDiemGhiBan.BorderStyle = BorderStyle.FixedSingle;
+            nudThoiDiemGhiBan.Dock = DockStyle.Fill;
+            nudThoiDiemGhiBan.Location = new Point(1158, 10);
+            nudThoiDiemGhiBan.Margin = new Padding(10);
+            nudThoiDiemGhiBan.Maximum = new decimal(new int[] { 96, 0, 0, 0 });
+            nudThoiDiemGhiBan.Name = "nudThoiDiemGhiBan";
+            nudThoiDiemGhiBan.Size = new Size(161, 31);
+            nudThoiDiemGhiBan.TabIndex = 25;
             // 
             // GUI_GhiNhanBanThang_RowVersion
             // 
@@ -160,9 +161,11 @@
             Controls.Add(tlpThongTinCauThu);
             Margin = new Padding(10);
             Name = "GUI_GhiNhanBanThang_RowVersion";
-            Size = new Size(1386, 46);
+            Size = new Size(1388, 48);
+            Load += GUI_GhiNhanBanThang_RowVersion_Load;
             tlpThongTinCauThu.ResumeLayout(false);
             tlpThongTinCauThu.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)nudThoiDiemGhiBan).EndInit();
             ResumeLayout(false);
         }
 
@@ -170,11 +173,11 @@
 
         private TableLayoutPanel tlpThongTinCauThu;
         private ComboBox cbLoaiBanThang;
-        private TextBox txtDoiBong;
-        private DateTimePicker dtpThoiDiemGhiBan;
         private ComboBox cbCauThu;
         private TextBox txtMaBanThang;
         private Label lblSTT;
         private Button btnXoa;
+        private NumericUpDown nudThoiDiemGhiBan;
+        private ComboBox cbDoiBong;
     }
 }

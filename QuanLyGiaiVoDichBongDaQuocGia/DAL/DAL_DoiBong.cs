@@ -1,5 +1,8 @@
-﻿using QuanLyDaiLy.DAL;
+﻿using MySql.Data.MySqlClient;
+using QuanLyDaiLy.DAL;
+using QuanLyGiaiVoDichBongDaQuocGia.BUS;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
+using QuanLyGiaiVoDichBongDaQuocGia.FilterHelper;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -12,6 +15,22 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
     class DAL_DoiBong
     {
         DatabaseHelper databaseHelper = new DatabaseHelper();
+
+        //For lazy retrieve
+        Dictionary<DoiBongColumn, Action<DTO_DoiBong, string, object>> columnsLoader = new Dictionary<DoiBongColumn, Action<DTO_DoiBong, string, object>>
+        {
+            { DoiBongColumn.MaDoiBong, (storer, filters, value) => storer.MaDoiBong = value.ToString() },
+            { DoiBongColumn.TenDoiBong, (storer, filters, value) => storer.TenDoiBong = value.ToString() },
+            { DoiBongColumn.TenSanNha, (storer, filters, value) => storer.TenSanNha = value.ToString() }
+        };
+
+        //For lazy insert
+        Dictionary<DoiBongColumn, Func<DTO_DoiBong, object>> columnsInserter = new Dictionary<DoiBongColumn, Func<DTO_DoiBong, object>>
+        {
+            { DoiBongColumn.MaDoiBong, storer => storer.MaDoiBong},
+            { DoiBongColumn.TenDoiBong, storer => storer.TenDoiBong },
+            { DoiBongColumn.TenSanNha, storer => storer.TenSanNha }
+        };
 
         public string LayMaDoiBongMoi()
         {
@@ -28,42 +47,68 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             return "DB" + soMoi.ToString("D3");
         }
 
-        public List<DTO_DoiBong> LayDanhSachDoiBong()
+        internal List<DTO_DoiBong> LayDanhSach(HashSet<DoiBongColumn> columns, string? filters) //Use hashset to prevent duplicates automatically
         {
-            string query = "SELECT MaDoiBong, TenDoiBong, TenSanNha " +
-                           "FROM DOIBONG " +
-                           "WHERE Deleted = 0 ";
-            DataTable result = databaseHelper.ExecuteQuery(query);
+            //Make query
+            string query = $"SELECT {string.Join(", ", columns)} " +
+                            "FROM DOIBONG " +
+                            "WHERE Deleted = 0 ";
 
-            List<DTO_DoiBong> danhSachDoiBong = new List<DTO_DoiBong>();
-            foreach(DataRow row in result.Rows)
+            if (string.IsNullOrEmpty(filters) == false)
+                query += "AND " + filters;
+
+            //Prepare for main action
+            var result = databaseHelper.ExecuteQuery(query);
+
+            //Load into DTO
+            var finalResult = new List<DTO_DoiBong>();
+
+            foreach (DataRow row in result.Rows)
             {
-                string maDoiBong = row["MaDoiBong"].ToString();
-                string tenDoiBong = row["TenDoiBong"].ToString();
-                string tenSan = row["TenSanNha"].ToString();
+                DTO_DoiBong obj = new DTO_DoiBong();
+                finalResult.Add(obj);
 
-                danhSachDoiBong.Add(new DTO_DoiBong(maDoiBong, tenDoiBong, tenSan));
+                foreach (var col in columns)
+                {
+                    columnsLoader[col](obj, default, row[col.ToString()]);
+                }
             }
 
-            return danhSachDoiBong;
+            return finalResult;
         }
 
-        internal bool LuuDanhSachTranDau(List<DTO_DoiBong> upsert)
+        internal bool LuuDanhSach(List<DTO_DoiBong> upsertList, HashSet<DoiBongColumn> columns)
         {
-            string query = "INSERT INTO VONGDAU (MaDoiBong, TenDoiBong, TenSanNha) VALUES ";
+            var queryBuilder = new StringBuilder();
+            var parameters = new List<MySqlParameter>();
 
-            query += string.Join(", ", upsert.Select(doiBong =>
-                                $"('{doiBong.MaDoiBong}', '{doiBong.TenDoiBong}', '{doiBong.TenSanNha}')"
-                                ));
+            string selectedColumnsBuild = string.Join(", ", columns);
+            queryBuilder.Append($"INSERT INTO DOIBONG ({selectedColumnsBuild}) VALUES ");
 
-            query += $"ON DUPLICATE KEY UPDATE " +
-                     $"TenDoiBong = VALUES(TenDoiBong), " +
-                     $"TenSanNha = VALUES(TenSanNha); ";
+            int paramCounter = 0;
+            foreach (var row in upsertList)
+            {
+                var paramStringBuilder = new List<string>();
 
-            return databaseHelper.ExecuteNonQuery(query) > 0;
+                foreach (var col in columns)
+                {
+                    string parameter = $"{col}{paramCounter}";
+                    paramStringBuilder.Add(parameter);
+                    parameters.Add(new MySqlParameter(parameter, columnsInserter[col](row)));
+                }
+
+                queryBuilder.Append($"({string.Join(", ", paramStringBuilder)})");
+                paramCounter++;
+            }
+
+            queryBuilder.Append("ON DUPLICATE KEY UPDATE " + string.Join(", ", columns.Select(col => $"{col} = VALUES({col})")));
+
+            string query = queryBuilder.ToString();
+
+            return databaseHelper.ExecuteNonQuery(query, parameters.ToArray()) > 0;
         }
 
-        internal bool XoaDanhSachTranDau(List<DTO_DoiBong> delete)
+        internal bool XoaDanhSachDoiBong(List<DTO_DoiBong> delete)
         {
             string query = "";
 

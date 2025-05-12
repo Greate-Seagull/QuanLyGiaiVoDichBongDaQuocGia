@@ -1,6 +1,8 @@
-﻿using QuanLyDaiLy.DAL;
+﻿using MySql.Data.MySqlClient;
+using QuanLyDaiLy.DAL;
 using QuanLyGiaiVoDichBongDaQuocGia.BUS;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
+using QuanLyGiaiVoDichBongDaQuocGia.FilterHelper;
 using QuanLyGiaiVoDichBongDaQuocGia.Manager;
 using System;
 using System.Collections.Generic;
@@ -16,6 +18,30 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
     {
         DatabaseHelper databaseHelper = new DatabaseHelper();
 
+        //For lazy retrieve
+        Dictionary<TranDauColumn, Action<DTO_TranDau, string, object>> columnsLoader = new Dictionary<TranDauColumn, Action<DTO_TranDau, string, object>>
+        {
+            { TranDauColumn.MaTranDau, (storer, filters, value) => storer.MaTranDau = value.ToString() },
+            { TranDauColumn.MaVongDau, (storer, filters, value) => storer.VongDau = new BUS_VongDau().LayDanhSach(filters).GetReadData(value.ToString()) },
+            { TranDauColumn.MaDoi1, (storer, filters, value) => storer.DoiBong1 = new BUS_DoiBong().LayDanhSach(filters).GetReadData(value.ToString()) },
+            { TranDauColumn.MaDoi2, (storer, filters, value) => storer.DoiBong2 = new BUS_DoiBong().LayDanhSach(filters).GetReadData(value.ToString()) },
+            { TranDauColumn.NgayGio, (storer, filters, value) => storer.NgayGio = (DateTime)value },
+            { TranDauColumn.TiSoDoi1, (storer, filters, value) => storer.TiSoDoi1 = (int)value },
+            { TranDauColumn.TiSoDoi2, (storer, filters, value) => storer.TiSoDoi2 = (int)value }
+        };
+
+        //For lazy insert
+        Dictionary<TranDauColumn, Func<DTO_TranDau, object>> columnsInserter = new Dictionary<TranDauColumn, Func<DTO_TranDau, object>>
+        {
+            { TranDauColumn.MaTranDau, storer => storer.MaTranDau},
+            { TranDauColumn.MaVongDau, storer => storer.VongDau.MaVongDau },
+            { TranDauColumn.MaDoi1, storer => storer.DoiBong1.MaDoiBong },
+            { TranDauColumn.MaDoi2, storer => storer.DoiBong2.MaDoiBong},
+            { TranDauColumn.NgayGio, storer => storer.NgayGio },
+            { TranDauColumn.TiSoDoi1, storer => storer.TiSoDoi1 },
+            { TranDauColumn.TiSoDoi2, storer => storer.TiSoDoi2 }
+        };
+
         public string LayMaTranDauHienTai()
         {
             string query = "SELECT MaTranDau FROM TRANDAU ORDER BY MaTranDau DESC LIMIT 1";
@@ -29,100 +55,53 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             return result.Rows[0]["MaTranDau"].ToString();
         }
 
-        internal List<DTO_TranDau> LayDanhSachTranDau(HashSet<string> columns) //Use hashset to prevent duplicates automatically
+        internal List<DTO_TranDau> LayDanhSach(HashSet<TranDauColumn> columns, string? filters) //Use hashset to prevent duplicates automatically
         {
             //Make query
-            string query = "SELECT MaTranDau ";
+            string query = $"SELECT {string.Join(", ", columns)} " +
+                            "FROM TRANDAU " +
+                            "WHERE Deleted = 0 ";
 
-            if (columns.Any())
-                query += ", " + string.Join(", ", columns);
+            if (string.IsNullOrEmpty(filters) == false)
+                query += "AND " + filters;
 
-            query += " FROM TRANDAU " +
-                     " WHERE Deleted = 0; ";
-            
             //Prepare for main action
             var result = databaseHelper.ExecuteQuery(query);
 
-            var columnActions = new List<Action<DataRow, DTO_TranDau>>();
-            var danhSachTranDau = new List<DTO_TranDau>();
+            //Filter for retrieving object from cache
+            var filtersForColumns = new Dictionary<TranDauColumn, string>();
 
-            //(Lazy) Get necessary action and load from cache
-            if (columns.Contains("MaVongDau"))
+            if (columns.Contains(TranDauColumn.MaVongDau))
             {
-                var danhSachVongDau = new BUS_VongDau().LayDanhSachVongDau();
-                columnActions.Add((row, tranDau) => tranDau.VongDau = danhSachVongDau.GetReadData(row["MaVongDau"].ToString()));
+                filtersForColumns[TranDauColumn.MaVongDau] = FilterBuilder<VongDauColumn>
+                    .Where(VongDauColumn.MaVongDau).In(result.AsEnumerable().Select(row => row.Field<string>("MaVongDau")).ToHashSet()).Build();
             }
-            if(columns.Contains("MaDoi1") || columns.Contains("MaDoi2"))
+            if (columns.Contains(TranDauColumn.MaDoi1))
             {
-                var danhSachDoiBong = new BUS_DoiBong().LayDanhSachDoiBong();
-                if (columns.Contains("MaDoi1"))
-                    columnActions.Add((row, tranDau) => tranDau.DoiBong1 = danhSachDoiBong.GetReadData(row["MaDoi1"].ToString()));
-                if (columns.Contains("MaDoi2"))
-                    columnActions.Add((row, tranDau) => tranDau.DoiBong2 = danhSachDoiBong.GetReadData(row["MaDoi2"].ToString()));
+                filtersForColumns[TranDauColumn.MaDoi1] = FilterBuilder<DoiBongColumn>
+                    .Where(DoiBongColumn.MaDoiBong).In(result.AsEnumerable().Select(row => row.Field<string>("MaDoi1")).ToHashSet()).Build();
             }
-            if (columns.Contains("NgayGio"))
-                columnActions.Add((row, tranDau) => tranDau.NgayGio = (DateTime)row["NgayGio"]);
-            if (columns.Contains("TiSoDoi1"))
-                columnActions.Add((row, tranDau) => tranDau.TiSoDoi1 = (int)row["TiSoDoi1"]);
-            if (columns.Contains("TiSoDoi2"))
-                columnActions.Add((row, tranDau) => tranDau.TiSoDoi1 = (int)row["TiSoDoi2"]);
-            
+            if (columns.Contains(TranDauColumn.MaDoi2))
+            {
+                filtersForColumns[TranDauColumn.MaDoi2] = FilterBuilder<DoiBongColumn>
+                    .Where(DoiBongColumn.MaDoiBong).In(result.AsEnumerable().Select(row => row.Field<string>("MaDoi2")).ToHashSet()).Build();
+            }
+
             //Load into DTO
+            var finalResult = new List<DTO_TranDau>();
+
             foreach (DataRow row in result.Rows)
             {
-                DTO_TranDau tranDau = new DTO_TranDau(row["MaTranDau"].ToString());
-                danhSachTranDau.Add(tranDau);
+                DTO_TranDau obj = new DTO_TranDau();
+                finalResult.Add(obj);
 
-                foreach(var action in columnActions)
+                foreach (var col in columns)
                 {
-                    action(row, tranDau);
+                    columnsLoader[col](obj, filtersForColumns.GetValueOrDefault(col), row[col.ToString()]);
                 }
             }
 
-            //--------------------
-            return danhSachTranDau;
-        }
-
-        internal List<DTO_TranDau> LayDanhSachCapDauLoaiTru(DTO_VongDau vongDauXuLy)
-        {
-            //Load from database
-            string query = "SELECT MaTranDau, MaDoi1, MaDoi2 " +
-                           "FROM TRANDAU " +
-                           "WHERE Deleted = 0 AND " +
-                                $"MaVongDau != '{vongDauXuLy.MaVongDau}'; ";
-            DataTable result = databaseHelper.ExecuteQuery(query);
-
-            //Load from cache
-            BUS_DoiBong BUS_doiBong = new BUS_DoiBong();
-            Manager.DataManager<DTO_DoiBong> danhSachDoiBong = BUS_doiBong.LayDanhSachDoiBong();
-            List<DTO_TranDau> danhSachCapDau = new List<DTO_TranDau>();
-            foreach (DataRow row in result.Rows)
-            {
-                danhSachCapDau.Add(new DTO_TranDau(row["MaTranDau"].ToString(),
-                                                   danhSachDoiBong.GetReadData(row["MaDoi1"].ToString()),
-                                                   danhSachDoiBong.GetReadData(row["MaDoi2"].ToString()),
-                                                   default, default
-                                                   )
-                                   );
-            }
-
-            return danhSachCapDau;
-        }
-
-        public bool LuuDanhSachTranDau(List<DTO_TranDau> upsert)
-        {
-            string query = "INSERT INTO TRANDAU (MaTranDau, MaVongDau, MaDoi1, MaDoi2, NgayGio) VALUES ";
-
-            query += string.Join(", ", upsert.Select(tranDau => $"('{tranDau.MaTranDau}', '{tranDau.VongDau.MaVongDau}', " +
-                                                                $"'{tranDau.DoiBong1.MaDoiBong}', '{tranDau.DoiBong2.MaDoiBong}', " +
-                                                                $"'{tranDau.NgayGio.ToString(DataFormat.DataFormat.DateTimeFormat)}') "));
-
-            query += "ON DUPLICATE KEY UPDATE " +
-                     "MaDoi1 = VALUES(MaDoi1), " +
-                     "MaDoi2 = VALUES(MaDoi2), " +
-                     "NgayGio = VALUES(NgayGio); ";
-
-            return databaseHelper.ExecuteNonQuery(query) > 0;
+            return finalResult;
         }
 
         public bool XoaDanhSachTranDau(List<DTO_TranDau> delete)
@@ -137,6 +116,37 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             }
 
             return databaseHelper.ExecuteNonQuery(query) > 0;
+        }
+
+        public bool LuuDanhSach(List<DTO_TranDau> upsertList, HashSet<TranDauColumn> columns)
+        {
+            var queryBuilder = new StringBuilder();
+            var parameters = new List<MySqlParameter>();
+
+            string selectedColumnsBuild = string.Join(", ", columns);
+            queryBuilder.Append($"INSERT INTO TRANDAU ({selectedColumnsBuild}) VALUES ");
+
+            int paramCounter = 0;
+            foreach (var row in upsertList)
+            {
+                var paramStringBuilder = new List<string>();
+
+                foreach (var col in columns)
+                {
+                    string parameter = $"{col}{paramCounter}";
+                    paramStringBuilder.Add(parameter);
+                    parameters.Add(new MySqlParameter(parameter, columnsInserter[col](row)));
+                }
+
+                queryBuilder.Append($"({string.Join(", ", paramStringBuilder)})");
+                paramCounter++;
+            }
+
+            queryBuilder.Append("ON DUPLICATE KEY UPDATE " + string.Join(", ", columns.Select(col => $"{col} = VALUES({col})")));
+
+            string query = queryBuilder.ToString();
+
+            return databaseHelper.ExecuteNonQuery(query, parameters.ToArray()) > 0;
         }
     }
 }

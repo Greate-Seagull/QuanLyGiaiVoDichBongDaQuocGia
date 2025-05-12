@@ -29,6 +29,10 @@
         private void InitializeComponent()
         {
             tlpFrame = new TableLayoutPanel();
+            txtNgayKetThuc = new TextBox();
+            txtNgayBatDau = new TextBox();
+            lblNgayKetThuc = new Label();
+            lblNgayBatDau = new Label();
             btnThemTranDau = new Button();
             btnThoat = new Button();
             lblVongThiDau = new Label();
@@ -51,6 +55,10 @@
             tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
             tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
             tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
+            tlpFrame.Controls.Add(txtNgayKetThuc, 4, 1);
+            tlpFrame.Controls.Add(txtNgayBatDau, 3, 1);
+            tlpFrame.Controls.Add(lblNgayKetThuc, 4, 0);
+            tlpFrame.Controls.Add(lblNgayBatDau, 3, 0);
             tlpFrame.Controls.Add(btnThemTranDau, 1, 3);
             tlpFrame.Controls.Add(btnThoat, 7, 3);
             tlpFrame.Controls.Add(lblVongThiDau, 1, 0);
@@ -71,6 +79,52 @@
             tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
             tlpFrame.Size = new Size(1418, 507);
             tlpFrame.TabIndex = 0;
+            // 
+            // txtNgayKetThuc
+            // 
+            txtNgayKetThuc.BorderStyle = BorderStyle.FixedSingle;
+            txtNgayKetThuc.Dock = DockStyle.Fill;
+            txtNgayKetThuc.Location = new Point(716, 68);
+            txtNgayKetThuc.Margin = new Padding(10);
+            txtNgayKetThuc.Name = "txtNgayKetThuc";
+            txtNgayKetThuc.ReadOnly = true;
+            txtNgayKetThuc.Size = new Size(154, 31);
+            txtNgayKetThuc.TabIndex = 18;
+            // 
+            // txtNgayBatDau
+            // 
+            txtNgayBatDau.BorderStyle = BorderStyle.FixedSingle;
+            txtNgayBatDau.Dock = DockStyle.Fill;
+            txtNgayBatDau.Location = new Point(542, 68);
+            txtNgayBatDau.Margin = new Padding(10);
+            txtNgayBatDau.Name = "txtNgayBatDau";
+            txtNgayBatDau.ReadOnly = true;
+            txtNgayBatDau.Size = new Size(154, 31);
+            txtNgayBatDau.TabIndex = 17;
+            // 
+            // lblNgayKetThuc
+            // 
+            lblNgayKetThuc.AutoSize = true;
+            lblNgayKetThuc.Dock = DockStyle.Fill;
+            lblNgayKetThuc.Location = new Point(716, 20);
+            lblNgayKetThuc.Margin = new Padding(10);
+            lblNgayKetThuc.Name = "lblNgayKetThuc";
+            lblNgayKetThuc.Size = new Size(154, 28);
+            lblNgayKetThuc.TabIndex = 16;
+            lblNgayKetThuc.Text = "Ngày kết thúc";
+            lblNgayKetThuc.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // lblNgayBatDau
+            // 
+            lblNgayBatDau.AutoSize = true;
+            lblNgayBatDau.Dock = DockStyle.Fill;
+            lblNgayBatDau.Location = new Point(542, 20);
+            lblNgayBatDau.Margin = new Padding(10);
+            lblNgayBatDau.Name = "lblNgayBatDau";
+            lblNgayBatDau.Size = new Size(154, 28);
+            lblNgayBatDau.TabIndex = 15;
+            lblNgayBatDau.Text = "Ngày bắt đầu";
+            lblNgayBatDau.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // btnThemTranDau
             // 
@@ -197,5 +251,9 @@
         private Label lblVongThiDau;
         private Button btnThoat;
         private Button btnThemTranDau;
+        private TextBox txtNgayKetThuc;
+        private TextBox txtNgayBatDau;
+        private Label lblNgayKetThuc;
+        private Label lblNgayBatDau;
     }
 }

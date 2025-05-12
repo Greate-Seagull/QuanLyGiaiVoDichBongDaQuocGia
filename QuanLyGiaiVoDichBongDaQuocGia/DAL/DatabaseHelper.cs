@@ -17,26 +17,39 @@ namespace QuanLyDaiLy.DAL
             return new MySqlConnection(connectionString);
         }
 
-        public DataTable ExecuteQuery(string query)
+        public DataTable ExecuteQuery(string query, params MySqlParameter[] parameters)
         {
             using (var conn = GetConnection())
+            using (var command = new MySqlCommand(query, conn))
             {
+                if(parameters != null)
+                {
+                    command.Parameters.AddRange(parameters);
+                }
+
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand(query, conn);
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(command);
                 DataTable dt = new DataTable();
                 adapter.Fill(dt);
+
                 return dt;
             }
         }
 
-        public int ExecuteNonQuery(string query)
+        public int ExecuteNonQuery(string query, params MySqlParameter[] parameters)
         {
             using (var conn = GetConnection())
+            using (var command = new MySqlCommand(query, conn))
             {
+                if(parameters != null)
+                {
+                    command.Parameters.AddRange(parameters);
+                }
+
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand(query, conn);
-                return cmd.ExecuteNonQuery();
+
+                return command.ExecuteNonQuery();
             }
         }
     }

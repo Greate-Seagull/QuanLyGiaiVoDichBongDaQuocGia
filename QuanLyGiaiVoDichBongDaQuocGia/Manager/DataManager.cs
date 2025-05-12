@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QuanLyGiaiVoDichBongDaQuocGia.DTO;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
@@ -51,6 +52,8 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
     public class DataManager<T>
     {
         Dictionary<string, ManagedItem<T>> table = new Dictionary<string, ManagedItem<T>>();
+        private List<DTO_CauThu> items;
+        private Func<DTO_CauThu, string> keySelector;
 
         //Write to database
         public DataManager()
@@ -63,6 +66,12 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
                 string key = KeySelector(item);
                 this.Add(key, new ManagedItem<T>(item, DataState.Unchanged));
             }
+        }
+
+        public DataManager(List<DTO_CauThu> items, Func<DTO_CauThu, string> keySelector)
+        {
+            this.items = items;
+            this.keySelector = keySelector;
         }
 
         public int Count { get => table.Count; }
@@ -259,6 +268,11 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
                     item.State = DataState.Deleted;
                 }
             }
+        }
+
+        internal void AddOrUpdate(object maBanThang, object output)
+        {
+            throw new NotImplementedException();
         }
     }
 }

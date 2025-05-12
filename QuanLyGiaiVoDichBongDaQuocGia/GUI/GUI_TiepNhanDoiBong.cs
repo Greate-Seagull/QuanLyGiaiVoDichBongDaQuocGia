@@ -35,7 +35,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         public DTO_ThamSo ThamSo { get => thamSo; set => thamSo = value; }
         public DTO_DoiBong DoiBong { get => doiBong; }
         public List<DTO_LoaiCauThu> DanhSachLoaiCauThu { get => danhSachLoaiCauThu; }
-        internal BUS_CauThu BusCauThu { get => busCauThu; set => busCauThu = value; }
         public IDManager STT { get => stt; set => stt = value; }
         public IDManager MaCauThu { get => maCauThu; set => maCauThu = value; }
 
@@ -46,10 +45,8 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void GUI_TiepNhanDoiBong_Load(object sender, EventArgs e)
         {
-            LayThamSo();
-            LayMaDoiBongMoi();
-            TaoSTT();            
-            TaoMaCauThu();
+            LayThamSo();            
+            TaoSTT();     
             TaoDoiBong();
             TaoDanhSachCauThu();
             LayDanhSachLoaiCauThu();
@@ -67,25 +64,28 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void TaoDanhSachCauThu()
         {
-            danhSachCauThu = BusCauThu.LayDanhSachNhap();
+            TaoMaCauThu();
+            danhSachCauThu = busCauThu.LayDanhSachNhap();
         }
 
         private void TaoDoiBong()
         {
-            doiBong = new DTO_DoiBong(txtMaDoiBong.Text, txtTenDoiBong.Text, txtTenSanNha.Text);
+            LayMaDoiBongMoi();
 
-            DataManager<DTO_DoiBong> danhSachDoiBong = busDoiBong.LayDanhSachDoiBong();
+            doiBong = new DTO_DoiBong { MaDoiBong = txtMaDoiBong.Text };
+
+            DataManager<DTO_DoiBong> danhSachDoiBong = busDoiBong.LayDanhSachNhap();
             danhSachDoiBong.Add(doiBong.MaDoiBong, doiBong);
         }
 
         private void TaoMaCauThu()
         {
-            maCauThu = new IDManager(BusCauThu.LayMaCauThuHienTai());
+            maCauThu = new IDManager(busCauThu.LayMaCauThuHienTai());
         }
 
         private void LayDanhSachLoaiCauThu()
         {
-            danhSachLoaiCauThu = busLoaiCauThu.LayDanhSachLoaiCauThu().GetReadData();
+            danhSachLoaiCauThu = busLoaiCauThu.LayDanhSach(default, LoaiCauThuColumn.TenLoaiCauThu, LoaiCauThuColumn.SoLuongCauThuToiDaTheoLoaiCauThu).GetReadData();
         }
 
         private void LayMaDoiBongMoi()
@@ -112,8 +112,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             }
             catch (Exception err)
             {
-                //danhSachCauThuDaTiepNhan.CapNhatDuLieuLoi();
-
                 MessageBox.Show(err.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
@@ -145,11 +143,15 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void btnThemCauThu_Click(object sender, EventArgs e)
         {
-            if(pDanhSachCauThu.Controls.Count < ThamSo.SoLuongCauThuToiDa)
+            pDanhSachCauThu.SuspendLayout();
+
+            if (pDanhSachCauThu.Controls.Count < ThamSo.SoLuongCauThuToiDa)
             {
                 GUI_TiepNhanCauThu_RowVersion newRow = new GUI_TiepNhanCauThu_RowVersion(this);
                 pDanhSachCauThu.Controls.Add(newRow);                
-            }            
+            }
+
+            pDanhSachCauThu.ResumeLayout();
         }
 
         private void btnThoat_Click(object sender, EventArgs e)
@@ -160,25 +162,35 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         internal void XoaCauThu(GUI_TiepNhanCauThu_RowVersion row)
         {
+            pDanhSachCauThu.SuspendLayout();
+
             danhSachCauThu.Delete(row.CauThu.MaCauThu);
             pDanhSachCauThu.Controls.Remove(row);
             CapNhatSTT();
             CapNhatMaCauThu();
+
+            pDanhSachCauThu.ResumeLayout();
         }
 
         private void CapNhatSTT()
         {
-            foreach(var row in pDanhSachCauThu.Controls)
+            pDanhSachCauThu.SuspendLayout();
+
+            foreach (var row in pDanhSachCauThu.Controls)
             {
                 if(row is GUI_TiepNhanCauThu_RowVersion cauThu)
                 {
                     cauThu.CapNhatSTT();
                 }
             }
+
+            pDanhSachCauThu.ResumeLayout();
         }
 
         private void CapNhatMaCauThu()
         {
+            pDanhSachCauThu.SuspendLayout();
+
             foreach (var row in pDanhSachCauThu.Controls)
             {
                 if (row is GUI_TiepNhanCauThu_RowVersion cauThu)
@@ -186,6 +198,8 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
                     cauThu.CapNhatMaCauThu();
                 }
             }
+
+            pDanhSachCauThu.ResumeLayout();
         }
     }
 }

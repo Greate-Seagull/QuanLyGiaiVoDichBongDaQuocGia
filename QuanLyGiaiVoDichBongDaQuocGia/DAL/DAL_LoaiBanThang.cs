@@ -1,5 +1,7 @@
 ﻿using QuanLyDaiLy.DAL;
+using QuanLyGiaiVoDichBongDaQuocGia.BUS;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
+using QuanLyGiaiVoDichBongDaQuocGia.FilterHelper;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,22 +15,41 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
     {
         DatabaseHelper databaseHelper = new DatabaseHelper();
 
-        public List<DTO_LoaiBanThang> LayDanhSachLoaiBanThang()
+        //For lazy retrieve
+        Dictionary<LoaiBanThangColumn, Action<DTO_LoaiBanThang, string, object>> columnsLoader = new Dictionary<LoaiBanThangColumn, Action<DTO_LoaiBanThang, string, object>>
         {
-            string query = "SELECT MaLoaiBanThang, TenLoaiBanThang " +
-                           "FROM LOAIBANTHANG; ";
-            DataTable result = databaseHelper.ExecuteQuery(query);
-            
-            List<DTO_LoaiBanThang> danhSachLoaiBanThang = new List<DTO_LoaiBanThang>();
-            foreach(DataRow row in result.Rows)
+            { LoaiBanThangColumn.MaLoaiBanThang, (storer, filters, value) => storer.MaLoaiBanThang = value.ToString() },
+            { LoaiBanThangColumn.TenLoaiBanThang, (storer, filters, value) => storer.TenLoaiBanThang = value.ToString() }
+        };
+
+        internal List<DTO_LoaiBanThang> LayDanhSach(HashSet<LoaiBanThangColumn> columns, string? filters)
+        {
+            //Make query
+            string query = $"SELECT {string.Join(", ", columns)} " +
+                            "FROM LOAIBANTHANG " +
+                            "WHERE 1 = 1 ";
+
+            if (string.IsNullOrEmpty(filters) == false)
+                query += "AND " + filters;
+
+            //Prepare for main action
+            var result = databaseHelper.ExecuteQuery(query);
+
+            //Load into DTO
+            var finalResult = new List<DTO_LoaiBanThang>();
+
+            foreach (DataRow row in result.Rows)
             {
-                danhSachLoaiBanThang.Add(new DTO_LoaiBanThang(row["MaLoaiBanThang"].ToString(), 
-                                                              row["TenLoaiBanThang"].ToString()
-                                                              )
-                                        );
+                DTO_LoaiBanThang obj = new DTO_LoaiBanThang();
+                finalResult.Add(obj);
+
+                foreach (var col in columns)
+                {
+                    columnsLoader[col](obj, default, row[col.ToString()]);
+                }
             }
 
-            return danhSachLoaiBanThang;
+            return finalResult;
         }
     }
 }

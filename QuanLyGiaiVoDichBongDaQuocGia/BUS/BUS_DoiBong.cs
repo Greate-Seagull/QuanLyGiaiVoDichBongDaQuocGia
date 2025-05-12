@@ -11,6 +11,12 @@ using System.Transactions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 {
+    public enum DoiBongColumn
+    {
+        MaDoiBong,
+        TenDoiBong,
+        TenSanNha
+    }
     class BUS_DoiBong
     {
         DAL_DoiBong DAL_doiBong = new DAL.DAL_DoiBong();   
@@ -23,24 +29,27 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
         public DataManager<DTO_DoiBong> LayDanhSachNhap()
         {
-            DataManager<DTO_DoiBong> danhSachNhapDoiBong = CacheManager.Get<DataManager<DTO_DoiBong>>(WRITE_DOIBONG);
+            DataManager<DTO_DoiBong> danhSachNhap = CacheManager.Get<DataManager<DTO_DoiBong>>(WRITE_DOIBONG);
 
-            if (danhSachNhapDoiBong == null)
+            if (danhSachNhap == null)
             {
-                danhSachNhapDoiBong = new Manager.DataManager<DTO_DoiBong>();
-                Manager.CacheManager.Add(WRITE_DOIBONG, danhSachNhapDoiBong);
+                danhSachNhap = new Manager.DataManager<DTO_DoiBong>();
+                Manager.CacheManager.Add(WRITE_DOIBONG, danhSachNhap);
             }
 
-            return danhSachNhapDoiBong;
+            return danhSachNhap;
         }
 
-        internal Manager.DataManager<DTO_DoiBong> LayDanhSachDoiBong()
+        internal DataManager<DTO_DoiBong> LayDanhSach(string? filters = default, params DoiBongColumn[] columns)
         {
-            return Manager.CacheManager.GetOrLoad("DOIBONG",
-                                                  () => new Manager.DataManager<DTO_DoiBong>(DAL_doiBong.LayDanhSachDoiBong(),
-                                                                                             doiBong => doiBong.MaDoiBong
-                                                                                            )
-                                                 );
+            var hashed = columns.ToHashSet();
+            hashed.Add(DoiBongColumn.MaDoiBong);
+
+            return CacheManager.GetOrLoad(READ_DOIBONG,
+                                          () => new Manager.DataManager<DTO_DoiBong>(DAL_doiBong.LayDanhSach(hashed, filters),
+                                                                                    doiBong => doiBong.MaDoiBong
+                                                                                    )
+                                         );
         }
 
         public string LayMaDoiBongMoi()
@@ -57,14 +66,14 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
             using (var transaction = new TransactionScope())
             {
-                this.LuuThongTin();
+                this.LuuThongTin(DoiBongColumn.MaDoiBong, DoiBongColumn.TenDoiBong, DoiBongColumn.TenSanNha);
                 BUS_cauThu.TiepNhanCauThu();
                 transaction.Complete();
                 return true;
             }            
         }
 
-        private bool LuuThongTin()
+        private bool LuuThongTin(params DoiBongColumn[] columns)
         {
             DataManager<DTO_DoiBong> danhSachDoiBong = this.LayDanhSachNhap();
             DTO_DoiBong doiBong;
@@ -89,8 +98,8 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
                 }
             }
 
-            if (upsert.Count > 0) DAL_doiBong.LuuDanhSachTranDau(upsert);
-            if (delete.Count > 0) DAL_doiBong.XoaDanhSachTranDau(delete);
+            if (upsert.Count > 0) DAL_doiBong.LuuDanhSach(upsert, columns.ToHashSet());
+            if (delete.Count > 0) DAL_doiBong.XoaDanhSachDoiBong(delete);
 
             return true;
         }        

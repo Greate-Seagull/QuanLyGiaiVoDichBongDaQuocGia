@@ -10,9 +10,16 @@ using System.Transactions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 {
-    class BUS_VongDau
+    public enum VongDauColumn
     {
-        BUS_TranDau BUS_tranDau = new BUS_TranDau();
+        MaVongDau,
+        TenVongDau,
+        NgayBatDau,
+        NgayKetThuc
+    }       
+
+    class BUS_VongDau
+    {        
         DAL_VongDau DAL_vongDau = new DAL_VongDau();
 
         private readonly string READ_VONGDAU = "READ_VONGDAU";
@@ -20,25 +27,26 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
         public DataManager<DTO_VongDau> LayDanhSachNhap()
         {
-            DataManager<DTO_VongDau> danhSachNhapVongDau = CacheManager.Get<DataManager<DTO_VongDau>>(WRITE_VONGDAU);
+            DataManager<DTO_VongDau> danhSachNhap = CacheManager.Get<DataManager<DTO_VongDau>>(WRITE_VONGDAU);
 
-            if(danhSachNhapVongDau == null)
+            if(danhSachNhap == null)
             {
-                danhSachNhapVongDau = new Manager.DataManager<DTO_VongDau>();
-                Manager.CacheManager.Add(WRITE_VONGDAU, danhSachNhapVongDau);
+                danhSachNhap = new Manager.DataManager<DTO_VongDau>();
+                Manager.CacheManager.Add(WRITE_VONGDAU, danhSachNhap);
             }
 
-            return danhSachNhapVongDau;
+            return danhSachNhap;
         }
 
-        public DataManager<DTO_VongDau> LayDanhSachVongDau()
+        public DataManager<DTO_VongDau> LayDanhSach(string? filters = default, params VongDauColumn[] columns)
         {
-            DataManager<DTO_VongDau> danhSachNhapVongDau = CacheManager.GetOrLoad(READ_VONGDAU,
-                                                                                  () => new DataManager<DTO_VongDau>(DAL_vongDau.LayDanhSachVongDau(),
-                                                                                                                     vongDau => vongDau.MaVongDau)
-                                                                                 );
+            var hashed = columns.ToHashSet();
+            hashed.Add(VongDauColumn.MaVongDau);
 
-            return danhSachNhapVongDau;
+            return CacheManager.GetOrLoad(READ_VONGDAU, () => new DataManager<DTO_VongDau>(DAL_vongDau.LayDanhSach(hashed, filters),
+                                                                                           vongDau => vongDau.MaVongDau)
+                                         );
+
         }
 
         public string LayMaVongDauMoi()
@@ -48,12 +56,14 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
         public bool LapLichThiDau()
         {
+            BUS_TranDau BUS_tranDau = new BUS_TranDau();
+
             this.KiemTraNhapLieu();
             BUS_tranDau.KiemTraSoLuongTranDauToiThieu();
 
             using(var transaction = new TransactionScope())
             {
-                this.LuuThongTin();
+                this.LuuThongTin(VongDauColumn.MaVongDau, VongDauColumn.TenVongDau);
                 BUS_tranDau.LapTranDau();
 
                 transaction.Complete();
@@ -61,7 +71,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             }
         }
 
-        private bool LuuThongTin()
+        private bool LuuThongTin(params VongDauColumn[] columns)
         {
             DataManager<DTO_VongDau> danhSachVongDau = this.LayDanhSachNhap();
             DTO_VongDau vongDau;
@@ -86,7 +96,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
                 }
             }
 
-            if (upsert.Count > 0) DAL_vongDau.LuuDanhSachTranDau(upsert);
+            if (upsert.Count > 0) DAL_vongDau.LuuDanhSach(upsert, columns.ToHashSet());
             if (delete.Count > 0) DAL_vongDau.XoaDanhSachTranDau(delete);
 
             return true;

@@ -44,17 +44,15 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             cbTenDoi2_oldSelectedItem = lichThiDau.cbTenDoi_DefaultItem;
 
             //Data
-            this.lichThiDau = lichThiDau;            
+            this.lichThiDau = lichThiDau;     
         }
 
         private void GUI_LapTranDau_RowVersion_Load(object sender, EventArgs e)
         {
             TaoSTT();
             CapNhatSTT();
-            CapNhatDanhSachDoiBong();
-            TaoMaTranDau();
-            CapNhatMaTranDau();
             TaoTranDau();
+            CapNhatDanhSachDoiBong();
 
             UI_Load();
         }
@@ -81,12 +79,11 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void TaoTranDau()
         {
-            DTO_TranDau tranDau = new DTO_TranDau(maTranDau.ToString(),
-                                                  (DTO_DoiBong)cbTenDoi1.SelectedItem,
-                                                  (DTO_DoiBong)cbTenDoi2.SelectedItem,
-                                                  lichThiDau.VongDau,
-                                                  dtpNgay.Value.Date + dtpGio.Value.TimeOfDay);
+            TaoMaTranDau();
 
+            CapNhatMaTranDau();
+
+            DTO_TranDau tranDau = new DTO_TranDau { MaTranDau = maTranDau.ToString() };
             output = new ManagedItem<DTO_TranDau>(tranDau);
         }
 

@@ -9,19 +9,28 @@ using System.Threading.Tasks;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 {
+    public enum LoaiCauThuColumn
+    {
+        MaLoaiCauThu,
+        TenLoaiCauThu,
+        SoLuongCauThuToiDaTheoLoaiCauThu
+    }
     public class BUS_LoaiCauThu
     {
         DAL_LoaiCauThu DAL_loaiCauThu = new DAL_LoaiCauThu();
 
         BUS_CauThu BUS_cauThu = new BUS_CauThu();
 
-        public Manager.DataManager<DTO_LoaiCauThu> LayDanhSachLoaiCauThu()
+        public Manager.DataManager<DTO_LoaiCauThu> LayDanhSach(string? filters = default, params LoaiCauThuColumn[] columns)
         {
+            var hashed = columns.ToHashSet();
+            hashed.Add(LoaiCauThuColumn.MaLoaiCauThu);
+
             return Manager.CacheManager.GetOrLoad("LOAICAUTHU",
-                                                  () => new Manager.DataManager<DTO_LoaiCauThu>(DAL_loaiCauThu.LayDanhSachLoaiCauThu(),
+                                                  () => new Manager.DataManager<DTO_LoaiCauThu>(DAL_loaiCauThu.LayDanhSach(hashed, filters),
                                                                                                 loaiCauThu => loaiCauThu.MaLoaiCauThu)
                                                  );
-                
+
         }
 
         public void KiemTraSoLuongCauThuToiDa()

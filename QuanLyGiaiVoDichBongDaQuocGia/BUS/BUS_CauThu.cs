@@ -1,4 +1,5 @@
-﻿using QuanLyGiaiVoDichBongDaQuocGia.DTO;
+﻿using QuanLyGiaiVoDichBongDaQuocGia.DAL;
+using QuanLyGiaiVoDichBongDaQuocGia.DTO;
 using QuanLyGiaiVoDichBongDaQuocGia.Manager;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,15 @@ using System.Transactions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 {
+    public enum CauThuColumn
+    {
+        MaCauThu,
+        TenCauThu,
+        NgaySinh,
+        GhiChu,
+        MaDoiBong,
+        MaLoaiCauThu
+    }
     class BUS_CauThu
     {
         DAL.DAL_CauThu DAL_cauThu = new DAL.DAL_CauThu();
@@ -20,15 +30,27 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
         internal DataManager<DTO_CauThu> LayDanhSachNhap()
         {
-            DataManager<DTO_CauThu> danhSachNhapCauThu = CacheManager.Get<DataManager<DTO_CauThu>>(WRITE_CAUTHU);
+            DataManager<DTO_CauThu> danhSachNhap = CacheManager.Get<DataManager<DTO_CauThu>>(WRITE_CAUTHU);
 
-            if (danhSachNhapCauThu == null)
+            if (danhSachNhap == null)
             {
-                danhSachNhapCauThu = new Manager.DataManager<DTO_CauThu>();
-                Manager.CacheManager.Add(WRITE_CAUTHU, danhSachNhapCauThu);
+                danhSachNhap = new Manager.DataManager<DTO_CauThu>();
+                Manager.CacheManager.Add(WRITE_CAUTHU, danhSachNhap);
             }
 
-            return danhSachNhapCauThu;
+            return danhSachNhap;
+        }
+
+        public DataManager<DTO_CauThu> LayDanhSach(string? filters = default, params CauThuColumn[] columns)
+        {
+            var hashed = columns.ToHashSet();
+            hashed.Add(CauThuColumn.MaCauThu);
+
+            return CacheManager.GetOrLoad(READ_CAUTHU,
+                                          () => new DataManager<DTO_CauThu>(DAL_cauThu.LayDanhSach(hashed, filters),
+                                                                             cauThu => cauThu.MaCauThu
+                                                                             )
+                                          );
         }
 
         public string LayMaCauThuHienTai()
@@ -39,10 +61,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
         public bool TiepNhanCauThu()
         {
             this.KiemTraNhapLieu();
-            return LuuCauThu();
+            return LuuCauThu(CauThuColumn.MaCauThu, CauThuColumn.TenCauThu, CauThuColumn.MaLoaiCauThu, CauThuColumn.NgaySinh, CauThuColumn.GhiChu);
         }
 
-        public bool LuuCauThu()
+        public bool LuuCauThu(params CauThuColumn[] columns)
         {
             DataManager<DTO_CauThu> danhSachCauThu = this.LayDanhSachNhap();
             DTO.DTO_CauThu cauThu;
@@ -67,7 +89,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
                 }
             }
 
-            if (upsertList.Count > 0) DAL_cauThu.LuuDanhSachCauThuMoi(upsertList);
+            if (upsertList.Count > 0) DAL_cauThu.LuuDanhSach(upsertList, columns.ToHashSet());
             if (deleteList.Count > 0) DAL_cauThu.XoaDanhSachCauThu(deleteList);
 
             return true;

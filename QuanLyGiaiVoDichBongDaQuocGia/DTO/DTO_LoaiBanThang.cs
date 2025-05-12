@@ -6,19 +6,10 @@ using System.Threading.Tasks;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
 {
-    class DTO_LoaiBanThang
+    public class DTO_LoaiBanThang
     {
-        private string maLoaiBanThang;
-        private string tenLoaiBanThang;
-
-        public DTO_LoaiBanThang(string maLoaiBanThang, string tenLoaiBanThang)
-        {
-            this.MaLoaiBanThang = maLoaiBanThang;
-            this.TenLoaiBanThang = tenLoaiBanThang;
-        }
-
-        public string MaLoaiBanThang { get => maLoaiBanThang; set => maLoaiBanThang = value; }
-        public string TenLoaiBanThang { get => tenLoaiBanThang; set => tenLoaiBanThang = value; }
+        public string? MaLoaiBanThang { get; set; }
+        public string? TenLoaiBanThang { get; set; }
 
         public override string ToString()
         {

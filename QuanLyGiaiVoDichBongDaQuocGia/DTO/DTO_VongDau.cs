@@ -8,17 +8,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
 {
     public class DTO_VongDau
     {
-        private string maVongDau;
-        private string tenVongDau;
-
-        public DTO_VongDau(string maVongDau, string tenVongDau)
-        {
-            this.MaVongDau = maVongDau;
-            this.TenVongDau = tenVongDau;
-        }
-
-        public string MaVongDau { get => maVongDau; set => maVongDau = value; }
-        public string TenVongDau { get => tenVongDau; set => tenVongDau = value; }
+        public string? MaVongDau { get; set; }
+        public string? TenVongDau { get; set; }
+        public DateTime NgayBatDau { get; set; }
+        public DateTime NgayKetThuc { get; set; }
 
         public override string ToString()
         {

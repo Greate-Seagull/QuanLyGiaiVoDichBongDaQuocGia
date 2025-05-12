@@ -42,8 +42,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         {                        
             TaoSTT();
             CapNhatSTT();            
-            TaoMaCauThu();
-            CapNhatMaCauThu();
             TaoCauThuMoi();
             CapNhatDanhSachLoaiCauThu();
             CaiDatNgaySinh();
@@ -77,11 +75,11 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void TaoCauThuMoi()
         {
-            //local
-            DTO_CauThu cauThu = new DTO_CauThu(maCauThu.ToString(), txtTenCauThu.Text,
-                                    dtpNgaySinh.Value, txtGhiChu.Text, hoSoDoiBong.DoiBong,
-                                    (DTO_LoaiCauThu)cbLoaiCauThu.SelectedItem);
+            TaoMaCauThu();
 
+            CapNhatMaCauThu();
+            
+            DTO_CauThu cauThu = new DTO_CauThu { MaCauThu = maCauThu.ToString() };
             output = new ManagedItem<DTO_CauThu>(cauThu);
         }
 
@@ -94,7 +92,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         private void CapNhatDanhSachLoaiCauThu()
         {            
             cbLoaiCauThu.DataSource = hoSoDoiBong.DanhSachLoaiCauThu;
-            cbLoaiCauThu.DisplayMember = "TenLoaiCauThu";            
         }
 
         public void CapNhatThongTinCauThu()

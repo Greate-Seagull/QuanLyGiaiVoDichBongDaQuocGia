@@ -1,6 +1,9 @@
-﻿using Org.BouncyCastle.Cms;
+﻿using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Cms;
 using QuanLyDaiLy.DAL;
+using QuanLyGiaiVoDichBongDaQuocGia.BUS;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
+using QuanLyGiaiVoDichBongDaQuocGia.FilterHelper;
 using QuanLyGiaiVoDichBongDaQuocGia.Manager;
 using System;
 using System.Collections.Generic;
@@ -15,6 +18,24 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
     class DAL_VongDau
     {
         DatabaseHelper databaseHelper = new DatabaseHelper();
+
+        //For lazy retrieve
+        Dictionary<VongDauColumn, Action<DTO_VongDau, string, object>> columnsLoader = new Dictionary<VongDauColumn, Action<DTO_VongDau, string, object>>
+        {
+            { VongDauColumn.MaVongDau, (storer, filters, value) => storer.MaVongDau = value.ToString() },
+            { VongDauColumn.TenVongDau, (storer, filters, value) => storer.TenVongDau = value.ToString() },
+            { VongDauColumn.NgayBatDau, (storer, filters, value) => storer.NgayBatDau = (DateTime)value },
+            { VongDauColumn.NgayKetThuc, (storer, filters, value) => storer.NgayKetThuc = (DateTime)value }
+        };
+
+        //For lazy insert
+        Dictionary<VongDauColumn, Func<DTO_VongDau, object>> columnsInserter = new Dictionary<VongDauColumn, Func<DTO_VongDau, object>>
+        {
+            { VongDauColumn.MaVongDau, storer => storer.MaVongDau},
+            { VongDauColumn.TenVongDau, storer => storer.TenVongDau },
+            { VongDauColumn.NgayBatDau, storer => storer.NgayBatDau },
+            { VongDauColumn.NgayKetThuc, storer => storer.NgayKetThuc }
+        };
 
         public string LayMaVongDauMoi()
         {
@@ -32,36 +53,65 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             return "VD" + soMoi.ToString("D3");
         }
 
-        internal List<DTO_VongDau> LayDanhSachVongDau()
+        internal List<DTO_VongDau> LayDanhSach(HashSet<VongDauColumn> columns, string? filters)
         {
-            string query = "SELECT MaVongDau, TenVongDau " +
-                           "FROM VONGDAU " +
-                           "WHERE Deleted = 0; ";
-            DataTable result = databaseHelper.ExecuteQuery(query);
+            //Make query
+            string query = $"SELECT {string.Join(", ", columns)} " +
+                            "FROM VONGDAU " +
+                            "WHERE Deleted = 0 ";
 
-            List<DTO_VongDau> danhSachVongDau = new List<DTO_VongDau>();
-            foreach(DataRow row in result.Rows)
+            if (string.IsNullOrEmpty(filters) == false)
+                query += "AND " + filters;
+
+            //Prepare for main action
+            var result = databaseHelper.ExecuteQuery(query);           
+
+            //Load into DTO
+            var finalResult = new List<DTO_VongDau>();
+
+            foreach (DataRow row in result.Rows)
             {
-                danhSachVongDau.Add(new DTO_VongDau(row["MaVongDau"].ToString(),
-                                                    row["TenVongDau"].ToString()));
+                DTO_VongDau obj = new DTO_VongDau();
+                finalResult.Add(obj);
+
+                foreach (var col in columns)
+                {
+                    columnsLoader[col](obj, default, row[col.ToString()]);
+                }
             }
 
-            return danhSachVongDau;
+            return finalResult;
         }
 
-        internal bool LuuDanhSachTranDau(List<DTO_VongDau> upsert)
+        internal bool LuuDanhSach(List<DTO_VongDau> upsertList, HashSet<VongDauColumn> columns)
         {
-            string query = "INSERT INTO VONGDAU (MaVongDau, TenVongDau) VALUES ";
+            var queryBuilder = new StringBuilder();
+            var parameters = new List<MySqlParameter>();
 
-            query += string.Join(", ", upsert.Select(vongDau =>
-                                $"('{vongDau.MaVongDau}', '{vongDau.TenVongDau}')"
-                                ));
-            
-            query += $"ON DUPLICATE KEY UPDATE " +
-                     $"MaVongDau = VALUES(MaVongDau), " +
-                     $"TenVongDau = VALUES(TenVongDau); ";
+            string selectedColumnsBuild = string.Join(", ", columns);
+            queryBuilder.Append($"INSERT INTO VONGDAU ({selectedColumnsBuild}) VALUES ");
 
-            return databaseHelper.ExecuteNonQuery(query) > 0;
+            int paramCounter = 0;
+            foreach (var row in upsertList)
+            {
+                var paramStringBuilder = new List<string>();
+
+                foreach (var col in columns)
+                {
+                    string parameter = $"{col}{paramCounter}";
+                    paramStringBuilder.Add(parameter);
+                    parameters.Add(new MySqlParameter(parameter, columnsInserter[col](row)));
+                }
+
+                queryBuilder.Append($"({string.Join(", ", paramStringBuilder)})");
+                paramCounter++;
+            }
+
+            queryBuilder.Append("ON DUPLICATE KEY UPDATE " + string.Join(", ", columns.Select(col => $"{col} = VALUES({col})")));
+
+            string query = queryBuilder.ToString();
+
+            return databaseHelper.ExecuteNonQuery(query, parameters.ToArray()) > 0;
         }
 
         internal bool XoaDanhSachTranDau(List<DTO_VongDau> delete)

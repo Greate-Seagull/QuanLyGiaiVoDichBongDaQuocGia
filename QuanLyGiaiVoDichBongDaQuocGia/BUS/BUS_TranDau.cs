@@ -12,7 +12,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 {
     public enum TranDauColumn
     {
-        //MaTranDau,
+        MaTranDau,
         MaVongDau,
         MaDoi1,
         MaDoi2,
@@ -20,39 +20,34 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
         TiSoDoi1,
         TiSoDoi2
     }
+
     class BUS_TranDau
     {
-        DAL_TranDau DAL_tranDau = new DAL_TranDau();
+        DAL_TranDau DAL_tranDau = new DAL_TranDau();        
 
         private readonly string READ_TRANDAU = "READ_TRANDAU";
         private readonly string WRITE_TRANDAU = "WRITE_TRANDAU";
 
         public DataManager<DTO_TranDau> LayDanhSachNhap()
         {
-            DataManager<DTO_TranDau> danhSachNhapTranDau = CacheManager.Get<DataManager<DTO_TranDau>>(WRITE_TRANDAU);
+            DataManager<DTO_TranDau> danhSachNhap = CacheManager.Get<DataManager<DTO_TranDau>>(WRITE_TRANDAU);
 
-            if (danhSachNhapTranDau == null)
+            if (danhSachNhap == null)
             {
-                danhSachNhapTranDau = new DataManager<DTO_TranDau>();
-                CacheManager.Add(WRITE_TRANDAU, danhSachNhapTranDau);
+                danhSachNhap = new DataManager<DTO_TranDau>();
+                CacheManager.Add(WRITE_TRANDAU, danhSachNhap);
             }
 
-            return danhSachNhapTranDau;
+            return danhSachNhap;
         }
 
-        public DataManager<DTO_TranDau> LayDanhSachCapDauLoaiTru(DTO_VongDau vongDauXuLy)
+        public DataManager<DTO_TranDau> LayDanhSach(string? filters = default, params TranDauColumn[] columns)
         {
-            return CacheManager.GetOrLoad(READ_TRANDAU,
-                                          () => new DataManager<DTO_TranDau>(DAL_tranDau.LayDanhSachCapDauLoaiTru(vongDauXuLy),
-                                                                             tranDau => tranDau.MaTranDau
-                                                                             )
-                                          );
-        }
+            var hashed = columns.ToHashSet();
+            hashed.Add(TranDauColumn.MaTranDau);
 
-        public DataManager<DTO_TranDau> LayDanhSachTranDau(params TranDauColumn[] columns)
-        {
             return CacheManager.GetOrLoad(READ_TRANDAU,
-                                          () => new DataManager<DTO_TranDau>(DAL_tranDau.LayDanhSachTranDau(columns.Select(col => col.ToString()).ToHashSet()),
+                                          () => new DataManager<DTO_TranDau>(DAL_tranDau.LayDanhSach(hashed, filters),
                                                                              tranDau => tranDau.MaTranDau
                                                                              )
                                           );
@@ -66,10 +61,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
         public bool LapTranDau()
         {
             KiemTraNhapLieu();
-            return LuuThongTin();
+            return LuuThongTin(TranDauColumn.MaTranDau, TranDauColumn.MaVongDau, TranDauColumn.MaDoi1, TranDauColumn.MaDoi2, TranDauColumn.NgayGio);
         }
 
-        public bool LuuThongTin()
+        public bool LuuThongTin(params TranDauColumn[] columns)
         {
             DataManager<DTO_TranDau> danhSachTranDau = this.LayDanhSachNhap();
 
@@ -95,7 +90,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
                 }
             }
 
-            if (upsert.Count > 0) DAL_tranDau.LuuDanhSachTranDau(upsert);
+            if (upsert.Count > 0) DAL_tranDau.LuuDanhSach(upsert, columns.ToHashSet());
             if (delete.Count > 0) DAL_tranDau.XoaDanhSachTranDau(delete);
 
             return true;
@@ -121,6 +116,12 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
             if (danhSachTranDau.CountActive < 1)
                 throw new Exception($"Vi phạm số trận đấu tối thiểu {danhSachTranDau.CountActive} < 1");
+        }
+
+        internal bool GhiNhanKetQua()
+        {
+            new BUS_BanThang().GhiNhanBanThang();
+            return LuuThongTin(TranDauColumn.MaTranDau, TranDauColumn.TiSoDoi1, TranDauColumn.TiSoDoi2);
         }
     }
 }

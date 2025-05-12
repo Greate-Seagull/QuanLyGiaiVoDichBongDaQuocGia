@@ -1,6 +1,7 @@
 ﻿using QuanLyGiaiVoDichBongDaQuocGia.BUS;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
 using QuanLyGiaiVoDichBongDaQuocGia.Manager;
+using QuanLyGiaiVoDichBongDaQuocGia.FilterHelper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -33,7 +34,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         IDManager maTranDau;       
 
         //UI
-        public DTO_DoiBong cbTenDoi_DefaultItem = new DTO_DoiBong(default, "Chọn đội bóng", default);
+        public DTO_DoiBong cbTenDoi_DefaultItem = new DTO_DoiBong { TenDoiBong = "Chọn đội bóng" };
 
         public DTO_VongDau VongDau { get => vongDau; set => vongDau = value; }
         public OwnerManager<DTO_DoiBong, ComboBox> DanhSachDoiBong { get => danhSachDoiBong; set => danhSachDoiBong = value; }
@@ -47,8 +48,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         }
 
         private void GUI_LapLichThiDau_Load(object sender, EventArgs e)
-        {            
-            LayMaVongDauMoi();
+        {                        
             TaoSTT();
             TaoMaTranDau();
             TaoVongDau();
@@ -64,12 +64,16 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void LayDanhSachCapDau()
         {
-            danhSachCapDau = BUS_tranDau.LayDanhSachCapDauLoaiTru(vongDau).GetReadData();
+            var filters = FilterBuilder<TranDauColumn>
+                .Where(TranDauColumn.MaVongDau).NotEqualsTo(VongDau.MaVongDau)
+                .Build();
+
+            danhSachCapDau = BUS_tranDau.LayDanhSach(filters, TranDauColumn.MaDoi1, TranDauColumn.MaDoi2).GetReadData();
         }
 
         private void LayDanhSachDoiBong()
         {
-            danhSachDoiBong = new OwnerManager<DTO_DoiBong, ComboBox>(BUS_doiBong.LayDanhSachDoiBong());
+            danhSachDoiBong = new OwnerManager<DTO_DoiBong, ComboBox>(BUS_doiBong.LayDanhSach(default, DoiBongColumn.TenDoiBong, DoiBongColumn.TenSanNha));
             danhSachDoiBong.AddData(cbTenDoi_DefaultItem, 100);
         }
 
@@ -80,7 +84,9 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void TaoVongDau()
         {
-            VongDau = new DTO_VongDau(txtMaVongDau.Text, txtVongThiDau.Text);
+            LayMaVongDauMoi();
+
+            VongDau = new DTO_VongDau { MaVongDau = txtMaVongDau.Text };
 
             DataManager<DTO_VongDau> danhSachNhapVongDau = BUS_vongDau.LayDanhSachNhap();
             danhSachNhapVongDau.Add(VongDau.MaVongDau, VongDau);
@@ -156,8 +162,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void CapNhatMaTranDau()
         {
-            pDanhSachTranDau.SuspendLayout();
-
             foreach (var row in pDanhSachTranDau.Controls)
             {
                 if (row is GUI_LapTranDau_RowVersion tranDau)
@@ -165,14 +169,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
                     tranDau.CapNhatMaTranDau();
                 }
             }
-
-            pDanhSachTranDau.ResumeLayout();
         }
 
         private void CapNhatSTT()
         {
-            pDanhSachTranDau.SuspendLayout();
-
             foreach (var row in pDanhSachTranDau.Controls)
             {
                 if(row is GUI_LapTranDau_RowVersion tranDau)
@@ -180,8 +180,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
                     tranDau.CapNhatSTT();
                 }
             }
-
-            pDanhSachTranDau.ResumeLayout();
         }
 
         private void btnThoat_Click(object sender, EventArgs e)

@@ -82,20 +82,22 @@
             // 
             // cbTranDau
             // 
+            tlpFrame.SetColumnSpan(cbTranDau, 2);
             cbTranDau.Dock = DockStyle.Fill;
             cbTranDau.DropDownStyle = ComboBoxStyle.DropDownList;
             cbTranDau.FormattingEnabled = true;
             cbTranDau.Location = new Point(20, 68);
             cbTranDau.Margin = new Padding(10);
             cbTranDau.Name = "cbTranDau";
-            cbTranDau.Size = new Size(154, 33);
+            cbTranDau.Size = new Size(328, 33);
             cbTranDau.TabIndex = 20;
+            cbTranDau.SelectedIndexChanged += cbTranDau_SelectedIndexChanged;
             // 
             // txtTenSan
             // 
             txtTenSan.BorderStyle = BorderStyle.FixedSingle;
             txtTenSan.Dock = DockStyle.Fill;
-            txtTenSan.Location = new Point(368, 68);
+            txtTenSan.Location = new Point(542, 68);
             txtTenSan.Margin = new Padding(10);
             txtTenSan.Name = "txtTenSan";
             txtTenSan.ReadOnly = true;
@@ -106,7 +108,7 @@
             // 
             txtTiSo.BorderStyle = BorderStyle.FixedSingle;
             txtTiSo.Dock = DockStyle.Fill;
-            txtTiSo.Location = new Point(194, 68);
+            txtTiSo.Location = new Point(368, 68);
             txtTiSo.Margin = new Padding(10);
             txtTiSo.Name = "txtTiSo";
             txtTiSo.ReadOnly = true;
@@ -117,7 +119,7 @@
             // 
             txtNgayGio.BorderStyle = BorderStyle.FixedSingle;
             txtNgayGio.Dock = DockStyle.Fill;
-            txtNgayGio.Location = new Point(542, 68);
+            txtNgayGio.Location = new Point(716, 68);
             txtNgayGio.Margin = new Padding(10);
             txtNgayGio.Name = "txtNgayGio";
             txtNgayGio.ReadOnly = true;
@@ -128,7 +130,7 @@
             // 
             lblNgayGio.AutoSize = true;
             lblNgayGio.Dock = DockStyle.Fill;
-            lblNgayGio.Location = new Point(542, 20);
+            lblNgayGio.Location = new Point(716, 20);
             lblNgayGio.Margin = new Padding(10);
             lblNgayGio.Name = "lblNgayGio";
             lblNgayGio.Size = new Size(154, 28);
@@ -140,7 +142,7 @@
             // 
             lblTenSan.AutoSize = true;
             lblTenSan.Dock = DockStyle.Fill;
-            lblTenSan.Location = new Point(368, 20);
+            lblTenSan.Location = new Point(542, 20);
             lblTenSan.Margin = new Padding(10);
             lblTenSan.Name = "lblTenSan";
             lblTenSan.Size = new Size(154, 28);
@@ -159,6 +161,7 @@
             btnThemBanThang.TabIndex = 14;
             btnThemBanThang.Text = "Thêm bàn thắng";
             btnThemBanThang.UseVisualStyleBackColor = true;
+            btnThemBanThang.Click += btnThemBanThang_Click;
             // 
             // btnThoat
             // 
@@ -171,12 +174,13 @@
             btnThoat.TabIndex = 13;
             btnThoat.Text = "Thoát";
             btnThoat.UseVisualStyleBackColor = true;
+            btnThoat.Click += btnThoat_Click;
             // 
             // lblTiSo
             // 
             lblTiSo.AutoSize = true;
             lblTiSo.Dock = DockStyle.Fill;
-            lblTiSo.Location = new Point(194, 20);
+            lblTiSo.Location = new Point(368, 20);
             lblTiSo.Margin = new Padding(10);
             lblTiSo.Name = "lblTiSo";
             lblTiSo.Size = new Size(154, 28);
@@ -187,11 +191,12 @@
             // lblTranDau
             // 
             lblTranDau.AutoSize = true;
+            tlpFrame.SetColumnSpan(lblTranDau, 2);
             lblTranDau.Dock = DockStyle.Fill;
             lblTranDau.Location = new Point(20, 20);
             lblTranDau.Margin = new Padding(10);
             lblTranDau.Name = "lblTranDau";
-            lblTranDau.Size = new Size(154, 28);
+            lblTranDau.Size = new Size(328, 28);
             lblTranDau.TabIndex = 1;
             lblTranDau.Text = "Trận đấu";
             lblTranDau.TextAlign = ContentAlignment.MiddleLeft;
@@ -221,6 +226,7 @@
             btnGhiNhanKetQua.TabIndex = 11;
             btnGhiNhanKetQua.Text = "Ghi nhận";
             btnGhiNhanKetQua.UseVisualStyleBackColor = true;
+            btnGhiNhanKetQua.Click += btnGhiNhanKetQua_Click;
             // 
             // GUI_GhiNhanKetQua
             // 
