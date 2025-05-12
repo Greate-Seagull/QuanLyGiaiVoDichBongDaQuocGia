@@ -1,4 +1,5 @@
-﻿using QuanLyGiaiVoDichBongDaQuocGia.DTO;
+﻿using Mysqlx.Expr;
+using QuanLyGiaiVoDichBongDaQuocGia.DTO;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -52,48 +53,33 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
     public class DataManager<T>
     {
         Dictionary<string, ManagedItem<T>> table = new Dictionary<string, ManagedItem<T>>();
-        private List<DTO_CauThu> items;
-        private Func<DTO_CauThu, string> keySelector;
+
+        Func<T, string> keySelector;
 
         //Write to database
-        public DataManager()
-        { }
+        public DataManager() { }
         //Read from database
-        public DataManager(List<T> items, Func<T, string> KeySelector)
+        public DataManager(List<T> items, Func<T, string> keySelector)
         {
+            this.keySelector = keySelector;
+
             foreach(var item in items)
             {
-                string key = KeySelector(item);
+                string key = keySelector(item);
                 this.Add(key, new ManagedItem<T>(item, DataState.Unchanged));
             }
         }
 
-        public DataManager(List<DTO_CauThu> items, Func<DTO_CauThu, string> keySelector)
-        {
-            this.items = items;
-            this.keySelector = keySelector;
-        }
-
         public int Count { get => table.Count; }
 
-        public List<ManagedItem<T>> ProcessingData
+        public List<T> UpsertData
         {
-            get
-            {
-                List<ManagedItem<T>> items = new List<ManagedItem<T>>();
+            get => Filter(default, dataState => dataState == DataState.New || dataState == DataState.Modified);            
+        }
 
-                foreach(var item in table.Values)
-                {
-                    if(item.State == DataState.New ||
-                       item.State == DataState.Modified ||
-                       item.State == DataState.Deleting)
-                    {
-                        items.Add(item);
-                    }
-                }
-
-                return items;
-            }
+        public List<T> DeleteData
+        {
+            get => Filter(default, dataState => dataState == DataState.Deleting);
         }
 
         public List<ManagedItem<T>> ActiveData
@@ -105,24 +91,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
                 foreach (var item in table.Values)
                 {
                     if (item.State <= DataState.Unchanged)
-                    {
-                        items.Add(item);
-                    }
-                }
-
-                return items;
-            }
-        }
-
-        public List<ManagedItem<T>> UnusedData
-        {
-            get
-            {
-                List<ManagedItem<T>> items = new List<ManagedItem<T>>();
-
-                foreach (var item in table.Values)
-                {
-                    if (item.State != DataState.Using)
                     {
                         items.Add(item);
                     }
@@ -244,18 +212,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
             return items;
         }
 
-        internal void CapNhatDuLieuLoi()
-        {
-            foreach (var item in table.Values)
-            {
-                if (item.State == DataState.New)
-                {
-                    item.State = DataState.Error;
-                }
-            }
-        }
-
-        internal void CapNhatTrangThaiDuLieu()
+        internal void UpdateDataState()
         {
             foreach(var item in table.Values)
             {
@@ -270,9 +227,39 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
             }
         }
 
-        internal void AddOrUpdate(object maBanThang, object output)
+        public List<T> Filter(Func<T, bool>? dataPredicate = default, Func<DataState, bool>? statePredicate = default)
         {
-            throw new NotImplementedException();
+            dataPredicate ??= d => true;
+            statePredicate ??= s => s != DataState.Deleted;
+
+            return table.Values
+                        .Where(item => dataPredicate(item.Data) && statePredicate(item.State))
+                        .Select(item => item.Data)
+                        .ToList();
+        }
+
+        public void Merge(List<T> incomingItems, bool onDuplicateKeyUpdate = false)
+        {
+            foreach(var item in incomingItems)
+            {
+                string key = keySelector(item);
+                var managedData = new ManagedItem<T>(item, DataState.Unchanged);
+                if (onDuplicateKeyUpdate)
+                    AddOrUpdate(key, managedData);
+                else
+                    Add(key, managedData);
+            }
+        }
+
+        public void Merge(DataManager<T> incomingItems, bool onDuplicateKeyUpdate = false)
+        {
+            foreach(var item in incomingItems.table)
+            {
+                if (onDuplicateKeyUpdate)
+                    AddOrUpdate(item.Key, item.Value);
+                else
+                    Add(item.Key, item.Value);
+            }
         }
     }
 }

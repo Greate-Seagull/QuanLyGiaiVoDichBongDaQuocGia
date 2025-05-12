@@ -129,7 +129,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             return databaseHelper.ExecuteNonQuery(query, parameters.ToArray()) > 0;
         }
 
-        public bool XoaDanhSachBanThang(List<DTO_BanThang> deleteList)
+        public bool XoaDanhSach(List<DTO_BanThang> deleteList)
         {
             string query = "UPDATE BANTHANG " +
                            "SET Deleted = 1 " +

@@ -17,7 +17,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
     }
     public class BUS_BanThang
     {
-        DAL_BanThang DAL_banThang = new DAL_BanThang();
+        DAL_BanThang DAL = new DAL_BanThang();
 
         private readonly string READ_BANTHANG = "READ_BANTHANG";
         private readonly string WRITE_BANTHANG = "WRITE_BANTHANG";
@@ -41,7 +41,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             hashed.Add(BanThangColumn.MaBanThang);
 
             return CacheManager.GetOrLoad(READ_BANTHANG,
-                                          () => new DataManager<DTO_BanThang>(DAL_banThang.LayDanhSach(hashed, filters),
+                                          () => new DataManager<DTO_BanThang>(DAL.LayDanhSach(hashed, filters),
                                                                              banThang => banThang.MaBanThang
                                                                              )
                                           );
@@ -49,7 +49,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
         public string LayMaBanThangHienTai()
         {
-            return DAL_banThang.LayMaBanThangHienTai();
+            return DAL.LayMaBanThangHienTai();
         }
 
         public bool GhiNhanBanThang()
@@ -59,32 +59,13 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
         public bool LuuThongTin(params BanThangColumn[] columns)
         {
-            DataManager<DTO_BanThang> danhSachBanThang = this.LayDanhSachNhap();
+            var danhSachNhap = this.LayDanhSachNhap();
 
-            DTO_BanThang banThang;
-            List<DTO_BanThang> upsert = new List<DTO_BanThang>();
-            List<DTO_BanThang> delete = new List<DTO_BanThang>();
+            var upsert = danhSachNhap.UpsertData;
+            var delete = danhSachNhap.DeleteData;
 
-            foreach (var item in danhSachBanThang.ProcessingData)
-            {
-                banThang = item.Data;
-
-                switch (item.State)
-                {
-                    case DataState.New:
-                        upsert.Add(banThang);
-                        break;
-                    case DataState.Modified:
-                        upsert.Add(banThang);
-                        break;
-                    case DataState.Deleting:
-                        delete.Add(banThang);
-                        break;
-                }
-            }
-
-            if (upsert.Count > 0) DAL_banThang.LuuDanhSach(upsert, columns.ToHashSet());
-            if (delete.Count > 0) DAL_banThang.XoaDanhSachBanThang(delete);
+            if (upsert.Count > 0) DAL.LuuDanhSach(upsert, columns.ToHashSet());
+            if (delete.Count > 0) DAL.XoaDanhSach(delete);
 
             return true;
         }

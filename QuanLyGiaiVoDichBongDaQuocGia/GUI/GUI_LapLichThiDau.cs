@@ -112,7 +112,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
                 if (BUS_vongDau.LapLichThiDau())
                 {
                     MaTranDau.XacNhan();
-                    danhSachTranDau.CapNhatTrangThaiDuLieu();                    
+                    danhSachTranDau.UpdateDataState();                    
                     MessageBox.Show("Lập lịch thi đấu thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }

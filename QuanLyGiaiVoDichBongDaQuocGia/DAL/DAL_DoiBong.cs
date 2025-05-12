@@ -108,7 +108,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             return databaseHelper.ExecuteNonQuery(query, parameters.ToArray()) > 0;
         }
 
-        internal bool XoaDanhSachDoiBong(List<DTO_DoiBong> delete)
+        internal bool XoaDanhSach(List<DTO_DoiBong> delete)
         {
             string query = "";
 

@@ -121,7 +121,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             {
                 if (busTranDau.GhiNhanKetQua())
                 {
-                    danhSachBanThang.CapNhatTrangThaiDuLieu();
+                    danhSachBanThang.UpdateDataState();
                     MessageBox.Show("Ghi nhận kết quả thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }

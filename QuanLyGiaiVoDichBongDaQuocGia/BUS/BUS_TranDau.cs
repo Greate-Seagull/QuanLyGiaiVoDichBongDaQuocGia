@@ -23,7 +23,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
     class BUS_TranDau
     {
-        DAL_TranDau DAL_tranDau = new DAL_TranDau();        
+        DAL_TranDau DAL = new DAL_TranDau();        
 
         private readonly string READ_TRANDAU = "READ_TRANDAU";
         private readonly string WRITE_TRANDAU = "WRITE_TRANDAU";
@@ -47,7 +47,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             hashed.Add(TranDauColumn.MaTranDau);
 
             return CacheManager.GetOrLoad(READ_TRANDAU,
-                                          () => new DataManager<DTO_TranDau>(DAL_tranDau.LayDanhSach(hashed, filters),
+                                          () => new DataManager<DTO_TranDau>(DAL.LayDanhSach(hashed, filters),
                                                                              tranDau => tranDau.MaTranDau
                                                                              )
                                           );
@@ -55,7 +55,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
         public string LayMaTranDauHienTai()
         {
-            return DAL_tranDau.LayMaTranDauHienTai();
+            return DAL.LayMaTranDauHienTai();
         }
 
         public bool LapTranDau()
@@ -66,32 +66,13 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
         public bool LuuThongTin(params TranDauColumn[] columns)
         {
-            DataManager<DTO_TranDau> danhSachTranDau = this.LayDanhSachNhap();
+            var danhSachNhap = this.LayDanhSachNhap();
 
-            DTO_TranDau tranDau;
-            List<DTO_TranDau> upsert = new List<DTO_TranDau>();
-            List<DTO_TranDau> delete = new List<DTO_TranDau>();
+            var upsert = danhSachNhap.UpsertData;
+            var delete = danhSachNhap.DeleteData;
 
-            foreach(var item in danhSachTranDau.ProcessingData)
-            {
-                tranDau = item.Data;
-
-                switch(item.State)
-                {
-                    case DataState.New:
-                        upsert.Add(tranDau);
-                        break;
-                    case DataState.Modified:
-                        upsert.Add(tranDau);
-                        break;
-                    case DataState.Deleting:
-                        delete.Add(tranDau);
-                        break;
-                }
-            }
-
-            if (upsert.Count > 0) DAL_tranDau.LuuDanhSach(upsert, columns.ToHashSet());
-            if (delete.Count > 0) DAL_tranDau.XoaDanhSachTranDau(delete);
+            if (upsert.Count > 0) DAL.LuuDanhSach(upsert, columns.ToHashSet());
+            if (delete.Count > 0) DAL.XoaDanhSach(delete);
 
             return true;
         }

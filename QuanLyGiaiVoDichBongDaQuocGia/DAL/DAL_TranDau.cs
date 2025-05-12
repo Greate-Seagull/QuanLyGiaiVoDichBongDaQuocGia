@@ -104,7 +104,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             return finalResult;
         }
 
-        public bool XoaDanhSachTranDau(List<DTO_TranDau> delete)
+        public bool XoaDanhSach(List<DTO_TranDau> delete)
         {
             string query = "";
 

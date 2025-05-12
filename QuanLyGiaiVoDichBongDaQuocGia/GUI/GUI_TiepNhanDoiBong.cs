@@ -103,7 +103,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
                 if (busDoiBong.TiepNhanDoiBong())
                 {
                     maCauThu.XacNhan();
-                    danhSachCauThu.CapNhatTrangThaiDuLieu();                    
+                    danhSachCauThu.UpdateDataState();                    
                     CapNhatMauSacDong();
 
                     MessageBox.Show("Tiếp nhận đội bóng thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);

@@ -82,7 +82,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             return databaseHelper.ExecuteNonQuery(query, parameters.ToArray()) > 0;
         }
 
-        public bool XoaDanhSachCauThu(List<DTO_CauThu> deleteList)
+        public bool XoaDanhSach(List<DTO_CauThu> deleteList)
         {
             string query = "";
 

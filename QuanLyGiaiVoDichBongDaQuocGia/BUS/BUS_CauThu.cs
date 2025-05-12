@@ -21,7 +21,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
     }
     class BUS_CauThu
     {
-        DAL.DAL_CauThu DAL_cauThu = new DAL.DAL_CauThu();
+        DAL_CauThu DAL = new DAL_CauThu();
 
         BUS_ThamSo BUS_thamSo = new BUS_ThamSo();
 
@@ -47,7 +47,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             hashed.Add(CauThuColumn.MaCauThu);
 
             return CacheManager.GetOrLoad(READ_CAUTHU,
-                                          () => new DataManager<DTO_CauThu>(DAL_cauThu.LayDanhSach(hashed, filters),
+                                          () => new DataManager<DTO_CauThu>(DAL.LayDanhSach(hashed, filters),
                                                                              cauThu => cauThu.MaCauThu
                                                                              )
                                           );
@@ -55,7 +55,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
         public string LayMaCauThuHienTai()
         {
-            return DAL_cauThu.LayMaCauThuHienTai();
+            return DAL.LayMaCauThuHienTai();
         }
 
         public bool TiepNhanCauThu()
@@ -66,31 +66,13 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
         public bool LuuCauThu(params CauThuColumn[] columns)
         {
-            DataManager<DTO_CauThu> danhSachCauThu = this.LayDanhSachNhap();
-            DTO.DTO_CauThu cauThu;
-            List<DTO.DTO_CauThu> upsertList = new List<DTO_CauThu>();
-            List<DTO.DTO_CauThu> deleteList = new List<DTO_CauThu>();
+            var danhSachNhap = this.LayDanhSachNhap();
 
-            foreach (var item in danhSachCauThu.ProcessingData)
-            {
-                cauThu = item.Data;
+            var upsert = danhSachNhap.UpsertData;
+            var delete = danhSachNhap.DeleteData;
 
-                switch (item.State)
-                {
-                    case Manager.DataState.New:
-                        upsertList.Add(cauThu);
-                        break;
-                    case Manager.DataState.Modified:
-                        upsertList.Add(cauThu);
-                        break;
-                    case Manager.DataState.Deleting:
-                        deleteList.Add(cauThu);
-                        break;
-                }
-            }
-
-            if (upsertList.Count > 0) DAL_cauThu.LuuDanhSach(upsertList, columns.ToHashSet());
-            if (deleteList.Count > 0) DAL_cauThu.XoaDanhSachCauThu(deleteList);
+            if (upsert.Count > 0) DAL.LuuDanhSach(upsert, columns.ToHashSet());
+            if (delete.Count > 0) DAL.XoaDanhSach(delete);
 
             return true;
         }

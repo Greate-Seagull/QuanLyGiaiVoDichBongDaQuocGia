@@ -19,7 +19,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
     }
     class BUS_DoiBong
     {
-        DAL_DoiBong DAL_doiBong = new DAL.DAL_DoiBong();   
+        DAL_DoiBong DAL = new DAL.DAL_DoiBong();   
 
         BUS_CauThu BUS_cauThu = new BUS_CauThu();
         BUS_LoaiCauThu BUS_loaiCauThu = new BUS_LoaiCauThu();
@@ -46,7 +46,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             hashed.Add(DoiBongColumn.MaDoiBong);
 
             return CacheManager.GetOrLoad(READ_DOIBONG,
-                                          () => new Manager.DataManager<DTO_DoiBong>(DAL_doiBong.LayDanhSach(hashed, filters),
+                                          () => new Manager.DataManager<DTO_DoiBong>(DAL.LayDanhSach(hashed, filters),
                                                                                     doiBong => doiBong.MaDoiBong
                                                                                     )
                                          );
@@ -54,7 +54,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
         public string LayMaDoiBongMoi()
         {
-            return DAL_doiBong.LayMaDoiBongMoi();
+            return DAL.LayMaDoiBongMoi();
         }
 
         public bool TiepNhanDoiBong()
@@ -75,31 +75,13 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
         private bool LuuThongTin(params DoiBongColumn[] columns)
         {
-            DataManager<DTO_DoiBong> danhSachDoiBong = this.LayDanhSachNhap();
-            DTO_DoiBong doiBong;
-            List<DTO_DoiBong> upsert = new List<DTO_DoiBong>();
-            List<DTO_DoiBong> delete = new List<DTO_DoiBong>();
+            var danhSachNhap = this.LayDanhSachNhap();
 
-            foreach (var item in danhSachDoiBong.ProcessingData)
-            {
-                doiBong = item.Data;
+            var upsert = danhSachNhap.UpsertData;
+            var delete = danhSachNhap.DeleteData;
 
-                switch (item.State)
-                {
-                    case DataState.New:
-                        upsert.Add(doiBong);
-                        break;
-                    case DataState.Modified:
-                        upsert.Add(doiBong);
-                        break;
-                    case DataState.Deleting:
-                        delete.Add(doiBong);
-                        break;
-                }
-            }
-
-            if (upsert.Count > 0) DAL_doiBong.LuuDanhSach(upsert, columns.ToHashSet());
-            if (delete.Count > 0) DAL_doiBong.XoaDanhSachDoiBong(delete);
+            if (upsert.Count > 0) DAL.LuuDanhSach(upsert, columns.ToHashSet());
+            if (delete.Count > 0) DAL.XoaDanhSach(delete);
 
             return true;
         }        
