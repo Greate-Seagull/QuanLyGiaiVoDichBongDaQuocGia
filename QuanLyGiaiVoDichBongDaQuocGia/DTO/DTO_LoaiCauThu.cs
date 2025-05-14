@@ -17,11 +17,4 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
             return TenLoaiCauThu;
         }
     }
-
-    public enum LoaiCauThuColumn
-    {
-        MaLoaiCauThu,
-        TenLoaiCauThu,
-        SoLuongCauThuToiDaTheoLoaiCauThu
-    }
 }

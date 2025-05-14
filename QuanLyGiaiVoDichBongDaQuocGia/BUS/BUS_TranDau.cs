@@ -1,10 +1,12 @@
 ﻿using Mysqlx.Crud;
 using QuanLyGiaiVoDichBongDaQuocGia.DAL;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
+using QuanLyGiaiVoDichBongDaQuocGia.FilterHelper;
 using QuanLyGiaiVoDichBongDaQuocGia.Manager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,10 +15,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
     class BUS_TranDau
     {
         DAL_TranDau DAL = new DAL_TranDau();        
-
-        private readonly string READ_TRANDAU = "READ_TRANDAU";
-        private readonly string WRITE_TRANDAU = "WRITE_TRANDAU";
-
+      
         public DataManager<DTO_TranDau> LayDanhSachNhap()
         {
             DataManager<DTO_TranDau> danhSachNhap = CacheManager.Get<DataManager<DTO_TranDau>>(WRITE_TRANDAU);
@@ -30,20 +29,11 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             return danhSachNhap;
         }
 
-        public DataManager<DTO_TranDau> LayDanhSach(string? filters = default, params TranDauColumn[] columns)
+        public DataManager<DTO_TranDau> LayDanhSach(FilterBuilder<DTO_TranDau> filters = default, params TranDauColumn[] columns)
         {
-            var hashed = columns.ToHashSet();
-            hashed.Add(TranDauColumn.MaTranDau);
-
-            var cachedRepository = CacheManager.Get<DataManager<DTO_TranDau>>(READ_TRANDAU);
-            var loadedData = cachedRepository.Filter(dt => dt.)
-
-
-            return CacheManager.GetOrLoad(READ_TRANDAU,
-                                          () => new DataManager<DTO_TranDau>(DAL.LayDanhSach(hashed, filters),
-                                                                             tranDau => tranDau.MaTranDau
-                                                                             )
-                                          );
+            //Convert from Column to Propery
+            var selectedColumns = columns.Select(col => TranDauConverter.Instance[col]).ToList();
+            return DAL.LayDanhSach(selectedColumns, filters);
         }
 
         public string LayMaTranDauHienTai()

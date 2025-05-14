@@ -3,6 +3,7 @@ using QuanLyDaiLy.DAL;
 using QuanLyGiaiVoDichBongDaQuocGia.BUS;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
 using QuanLyGiaiVoDichBongDaQuocGia.FilterHelper;
+using QuanLyGiaiVoDichBongDaQuocGia.Helper;
 using QuanLyGiaiVoDichBongDaQuocGia.Manager;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,9 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
     class DAL_TranDau
     {
         DatabaseHelper databaseHelper = new DatabaseHelper();
+
+        private readonly string READ_TRANDAU = "READ_TRANDAU";
+        private readonly string WRITE_TRANDAU = "WRITE_TRANDAU";
 
         //For lazy retrieve
         Dictionary<TranDauColumn, Action<DTO_TranDau, string, object>> columnsLoader = new Dictionary<TranDauColumn, Action<DTO_TranDau, string, object>>
@@ -135,6 +139,43 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             string query = queryBuilder.ToString();
 
             return databaseHelper.ExecuteNonQuery(query, parameters.ToArray()) > 0;
+        }
+
+        internal DataManager<DTO_TranDau> LayDanhSach(HashSet<TranDauColumn> columns, FilterBuilder<DTO_TranDau> filters)
+        {
+            //Make filter for cache
+            foreach(var col in columns)
+            {
+                filters.And(obj => TranDauConverter.Instance[col](obj) != null);
+            }
+            var cacheFilters = filters.ToFunc();
+
+            //Load data from cache
+            var loadedData = CacheManager.Get<DataManager<DTO_TranDau>>(READ_TRANDAU).Filter(cacheFilters);
+
+            //Make query
+            string query = $"SELECT {string.Join(", ", columns)} " +
+                            "FROM TRANDAU " +
+                           $"WHERE Deleted = 0 AND {sqlValues.Clause}";
+
+            //Prepare for main action
+            var result = databaseHelper.ExecuteQuery(query, sqlValues.Parameters.ToArray());
+
+            //Load into DTO
+            var finalResult = new DataManager<DTO_TranDau>();
+
+            foreach (DataRow row in result.Rows)
+            {
+                DTO_TranDau obj = new DTO_TranDau();
+                finalResult.AddOrUpdate(obj);
+
+                foreach (var col in columns)
+                {
+                    columnsLoader[col](obj, filtersForColumns.GetValueOrDefault(col), row[col.ToString()]);
+                }
+            }
+
+            return finalResult;
         }
     }
 }

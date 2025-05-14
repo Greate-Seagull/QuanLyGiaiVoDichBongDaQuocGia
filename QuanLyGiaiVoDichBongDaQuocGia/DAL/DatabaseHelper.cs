@@ -1,4 +1,6 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Microsoft.EntityFrameworkCore;
+using MySql.Data.MySqlClient;
+using QuanLyGiaiVoDichBongDaQuocGia.DTO;
 using System;
 using System.Collections.Generic;
 using System.Data;

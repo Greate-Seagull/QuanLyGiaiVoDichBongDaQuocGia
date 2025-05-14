@@ -16,10 +16,4 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
             return TenLoaiBanThang;
         }
     }
-
-    public enum LoaiBanThangColumn
-    {
-        MaLoaiBanThang,
-        TenLoaiBanThang
-    }
 }

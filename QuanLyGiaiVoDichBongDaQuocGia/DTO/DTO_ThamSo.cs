@@ -13,15 +13,4 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
         public int SoLuongCauThuToiThieu { get; set; }
         public int SoLuongCauThuToiDa { get; set; }
     }
-
-    public enum ThamSoColumn
-    {
-        TuoiCauThuToiThieu,
-        TuoiCauThuToiDa,
-        SoLuongCauThuToiThieu,
-        SoLuongCauThuToiDa,
-        SoTranDauToiDaCuaMoiDoiTrongVongDau,
-        ThoiDiemGhiBanToiThieu,
-        ThoiDiemGhiBanToiDa
-    }
 }

@@ -19,28 +19,4 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
             return TenVongDau;
         }
     }
-
-    public enum VongDauColumn
-    {
-        MaVongDau,
-        TenVongDau,
-        NgayBatDau,
-        NgayKetThuc
-    }
-
-    public class VongDauConverter: ColumnConverter<VongDauColumn, DTO_VongDau>
-    {
-        private static readonly VongDauConverter _instance = new();
-        public static VongDauConverter Instance => _instance;
-
-        private readonly Dictionary<VongDauColumn, Func<DTO_VongDau, object>> columns = new()
-        {
-            { VongDauColumn.MaVongDau, storer => storer.MaVongDau},
-            { VongDauColumn.TenVongDau, storer => storer.TenVongDau },
-            { VongDauColumn.NgayBatDau, storer => storer.NgayBatDau },
-            { VongDauColumn.NgayKetThuc, storer => storer.NgayKetThuc }
-        };
-
-        public Func<DTO_VongDau, object> this[VongDauColumn col] => columns[col];
-    }
 }

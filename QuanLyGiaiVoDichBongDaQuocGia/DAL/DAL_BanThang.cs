@@ -49,8 +49,8 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             if (string.IsNullOrEmpty(filters) == false)
                 query += "AND " + filters;
 
-            //Prepare for main action
-            var result = databaseHelper.ExecuteQuery(query);                       
+            //Retrieve from database
+            var result = databaseHelper.ExecuteQuery(query);
 
             //Filter for retrieving object from cache
             var filtersForColumns = new Dictionary<BanThangColumn, string>();
