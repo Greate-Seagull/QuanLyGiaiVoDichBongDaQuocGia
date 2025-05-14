@@ -12,7 +12,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
         public string? MaDoiBong { get; set; }
         public string? TenDoiBong { get; set; }
         public string? TenSanNha { get; set; }
-
+        public bool IsDeleted { get; set; }
         public override string ToString()
         {
             return TenDoiBong;

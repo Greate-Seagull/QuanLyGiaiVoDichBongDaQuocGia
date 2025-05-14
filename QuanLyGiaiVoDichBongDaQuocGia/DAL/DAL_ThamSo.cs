@@ -1,53 +1,41 @@
-﻿using QuanLyDaiLy.DAL;
-using QuanLyGiaiVoDichBongDaQuocGia.DTO;
-using QuanLyGiaiVoDichBongDaQuocGia.BUS;
-using System;
-using System.Collections.Generic;
+﻿using QuanLyGiaiVoDichBongDaQuocGia.DTO;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using QuanLyGiaiVoDichBongDaQuocGia.DBContext;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 {
     class DAL_ThamSo
     {
-        DatabaseHelper databaseHelper = new DatabaseHelper();
+        private readonly DBC_ThamSo _context;
 
-        //For lazy retrieve
-        Dictionary<ThamSoColumn, Action<DTO_ThamSo, string?, object>> columnsLoader = new Dictionary<ThamSoColumn, Action<DTO_ThamSo, string?, object>>
+        public DAL_ThamSo(DBC_ThamSo context)
         {
-            { ThamSoColumn.TuoiCauThuToiThieu, (storer, filters, value) => storer.TuoiCauThuToiThieu = (int)value },
-            { ThamSoColumn.TuoiCauThuToiDa, (storer, filters, value) => storer.TuoiCauThuToiDa = (int)value },
-            { ThamSoColumn.SoLuongCauThuToiThieu, (storer, filters, value) => storer.SoLuongCauThuToiThieu = (int)value },
-            { ThamSoColumn.SoLuongCauThuToiDa, (storer, filters, value) => storer.SoLuongCauThuToiDa = (int)value },
-            //{ ThamSoColumn.SoTranDauToiDaCuaMoiDoiTrongVongDau, (storer, filters, value) => storer.SoTranDauToiDaCuaMoiDoiTrongVongDau = (int)value },
-            //{ ThamSoColumn.ThoiDiemGhiBanToiThieu, (storer, filters, value) => storer.ThoiDiemGhiBanToiThieu = (int)value },
-            //{ ThamSoColumn.ThoiDiemGhiBanToiDa, (storer, filters, value) => storer.ThoiDiemGhiBanToiDa = (int)value }
-        };
+            _context = context;
+        }
 
-        public DTO_ThamSo LayThamSo(HashSet<ThamSoColumn> columns)
+        public List<DTO_ThamSo> LayDanhSach(Expression<Func<DTO_ThamSo, DTO_ThamSo>> selector = default, Expression<Func<DTO_ThamSo, bool>> filter = default)
         {
-            string query = $"SELECT {string.Join(", ", columns)} " +
-                            "FROM THAMSO " +
-                            "LIMIT 1 ";
+            var query = _context.LocalRepository.AsQueryable();
 
-            DataTable result = databaseHelper.ExecuteQuery(query);
+            if (filter != null)
+                query = query.Where(filter);
 
-            if(result.Rows.Count == 0)
+            if (selector != null)
+                query = query.Select(selector);
+
+            return query.AsNoTracking().ToList();
+        }
+
+        public void LuuDanhSach(List<DTO_ThamSo> insertList)
+        {
+            foreach (var entity in insertList)
             {
-                return null;
+                _context.LocalRepository.Add(entity);
             }
 
-            //Load into DTO
-            var obj = new DTO_ThamSo();
-
-            foreach (var col in columns)
-            {
-                columnsLoader[col](obj, default, result.Rows[0][col.ToString()]);
-            }
-
-            return obj;
+            _context.SaveChanges();
         }
     }
 }

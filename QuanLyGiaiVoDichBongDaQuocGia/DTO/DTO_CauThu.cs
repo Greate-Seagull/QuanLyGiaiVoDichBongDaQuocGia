@@ -18,7 +18,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
         public string? MaDoiBong { get; set; }
         public DTO_DoiBong? DoiBong { get; set; }
         public string? GhiChu { get; set; }
-
+        public bool IsDeleted { get; set; }
         public override string ToString()
         {
             return TenCauThu;

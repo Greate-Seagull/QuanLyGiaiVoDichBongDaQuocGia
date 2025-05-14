@@ -19,7 +19,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
         public DTO_VongDau? VongDau { get; set; }
         public int TiSoDoi1 { get; set; }
         public int TiSoDoi2 { get; set; }
-
+        public bool IsDeleted { get; set; }
         public override string ToString()
         {
             return $"{DoiBong1} - {DoiBong2}";

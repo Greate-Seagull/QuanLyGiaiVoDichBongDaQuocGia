@@ -17,6 +17,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
         public string? MaLoaiBanThang { get; set; }
         public DTO_LoaiBanThang? LoaiBanThang { get; set; }
         public int ThoiDiemGhiBan { get; set; }
+        public bool IsDeleted { get; set; }
 
         public override string ToString()
         {

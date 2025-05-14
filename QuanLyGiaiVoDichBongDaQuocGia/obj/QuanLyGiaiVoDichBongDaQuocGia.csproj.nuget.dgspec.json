@@ -60,11 +60,11 @@
             },
             "MySql.Data": {
               "target": "Package",
-              "version": "[9.2.0, )"
+              "version": "[9.3.0, )"
             },
             "System.Runtime.Caching": {
               "target": "Package",
-              "version": "[9.0.3, )"
+              "version": "[9.0.5, )"
             }
           },
           "imports": [

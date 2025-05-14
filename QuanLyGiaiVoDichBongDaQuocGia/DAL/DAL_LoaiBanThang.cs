@@ -1,55 +1,50 @@
-﻿using QuanLyDaiLy.DAL;
-using QuanLyGiaiVoDichBongDaQuocGia.BUS;
+﻿using Microsoft.EntityFrameworkCore;
+using QuanLyGiaiVoDichBongDaQuocGia.DBContext;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
-using QuanLyGiaiVoDichBongDaQuocGia.FilterHelper;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 {
     class DAL_LoaiBanThang
     {
-        DatabaseHelper databaseHelper = new DatabaseHelper();
+        private readonly DBC_LoaiBanThang _context;
 
-        //For lazy retrieve
-        Dictionary<LoaiBanThangColumn, Action<DTO_LoaiBanThang, string, object>> columnsLoader = new Dictionary<LoaiBanThangColumn, Action<DTO_LoaiBanThang, string, object>>
+        public DAL_LoaiBanThang(DBC_LoaiBanThang context)
         {
-            { LoaiBanThangColumn.MaLoaiBanThang, (storer, filters, value) => storer.MaLoaiBanThang = value.ToString() },
-            { LoaiBanThangColumn.TenLoaiBanThang, (storer, filters, value) => storer.TenLoaiBanThang = value.ToString() }
-        };
+            _context = context;
+        }
 
-        internal List<DTO_LoaiBanThang> LayDanhSach(HashSet<LoaiBanThangColumn> columns, string? filters)
+        public DTO_LoaiBanThang? LayMaMoiNhat()
         {
-            //Make query
-            string query = $"SELECT {string.Join(", ", columns)} " +
-                            "FROM LOAIBANTHANG " +
-                            "WHERE 1 = 1 ";
+            var query = _context.LocalRepository
+                                .AsNoTracking()
+                                .OrderByDescending(obj => obj.MaLoaiBanThang);
 
-            if (string.IsNullOrEmpty(filters) == false)
-                query += "AND " + filters;
+            return query.FirstOrDefault();
+        }
 
-            //Prepare for main action
-            var result = databaseHelper.ExecuteQuery(query);
+        public List<DTO_LoaiBanThang> LayDanhSach(Expression<Func<DTO_LoaiBanThang, DTO_LoaiBanThang>> selector = default, Expression<Func<DTO_LoaiBanThang, bool>> filter = default)
+        {
+            var query = _context.LocalRepository.AsQueryable();
 
-            //Load into DTO
-            var finalResult = new List<DTO_LoaiBanThang>();
+            if (filter != null)
+                query = query.Where(filter);
 
-            foreach (DataRow row in result.Rows)
+            if (selector != null)
+                query = query.Select(selector);
+
+            return query.AsNoTracking().ToList();
+        }
+
+        public void LuuDanhSach(List<DTO_LoaiBanThang> insertList)
+        {
+            foreach (var entity in insertList)
             {
-                DTO_LoaiBanThang obj = new DTO_LoaiBanThang();
-                finalResult.Add(obj);
-
-                foreach (var col in columns)
-                {
-                    columnsLoader[col](obj, default, row[col.ToString()]);
-                }
+                _context.LocalRepository.Add(entity);
             }
 
-            return finalResult;
+            _context.SaveChanges();
         }
     }
 }

@@ -13,7 +13,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
         public string? TenVongDau { get; set; }
         public DateTime NgayBatDau { get; set; }
         public DateTime NgayKetThuc { get; set; }
-
+        public bool IsDeleted { get; set; }
         public override string ToString()
         {
             return TenVongDau;

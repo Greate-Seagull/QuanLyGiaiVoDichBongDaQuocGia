@@ -1,56 +1,49 @@
-﻿using QuanLyDaiLy.DAL;
-using QuanLyGiaiVoDichBongDaQuocGia.BUS;
+﻿using Microsoft.EntityFrameworkCore;
+using QuanLyGiaiVoDichBongDaQuocGia.DBContext;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
-using QuanLyGiaiVoDichBongDaQuocGia.FilterHelper;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 {
     public class DAL_LoaiCauThu
     {
-        DatabaseHelper databaseHelper = new DatabaseHelper();
+        private readonly DBC_LoaiCauThu _context;
 
-        //For lazy retrieve
-        Dictionary<LoaiCauThuColumn, Action<DTO_LoaiCauThu, string?, object>> columnsLoader = new Dictionary<LoaiCauThuColumn, Action<DTO_LoaiCauThu, string?, object>>
+        public DAL_LoaiCauThu(DBC_LoaiCauThu context)
         {
-            { LoaiCauThuColumn.MaLoaiCauThu, (storer, filters, value) => storer.MaLoaiCauThu = value.ToString() },
-            { LoaiCauThuColumn.TenLoaiCauThu, (storer, filters, value) => storer.TenLoaiCauThu = value.ToString() },
-            { LoaiCauThuColumn.SoLuongCauThuToiDaTheoLoaiCauThu, (storer, filters, value) => storer.SoLuongCauThuToiDaTheoLoaiCauThu = (int)value }
-        };
-
-        internal List<DTO_LoaiCauThu> LayDanhSach(HashSet<LoaiCauThuColumn> columns, string? filters) //Use hashset to prevent duplicates automatically
+            _context = context;
+        }
+        public DTO_LoaiCauThu? LayMaMoiNhat()
         {
-            //Make query
-            string query = $"SELECT {string.Join(", ", columns)} " +
-                            "FROM LOAICAUTHU " +
-                            "WHERE 1 = 1 ";
+            var query = _context.LocalRepository
+                                .AsNoTracking()
+                                .OrderByDescending(obj => obj.MaLoaiCauThu);
 
-            if (string.IsNullOrEmpty(filters) == false)
-                query += "AND " + filters;
+            return query.FirstOrDefault();
+        }
 
-            //Prepare for main action
-            var result = databaseHelper.ExecuteQuery(query);
+        public List<DTO_LoaiCauThu> LayDanhSach(Expression<Func<DTO_LoaiCauThu, DTO_LoaiCauThu>> selector = default, Expression<Func<DTO_LoaiCauThu, bool>> filter = default)
+        {
+            var query = _context.LocalRepository.AsQueryable();
 
-            //Load into DTO
-            var finalResult = new List<DTO_LoaiCauThu>();
+            if (filter != null)
+                query = query.Where(filter);
 
-            foreach (DataRow row in result.Rows)
+            if (selector != null)
+                query = query.Select(selector);
+
+            return query.AsNoTracking().ToList();
+        }
+
+        public void LuuDanhSach(List<DTO_LoaiCauThu> insertList)
+        {
+            foreach (var entity in insertList)
             {
-                DTO_LoaiCauThu obj = new DTO_LoaiCauThu();
-                finalResult.Add(obj);
-
-                foreach (var col in columns)
-                {
-                    columnsLoader[col](obj, default, row[col.ToString()]);
-                }
+                _context.LocalRepository.Add(entity);
             }
 
-            return finalResult;
+            _context.SaveChanges();
         }
     }
 }
