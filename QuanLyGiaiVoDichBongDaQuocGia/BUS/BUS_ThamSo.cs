@@ -1,22 +1,21 @@
-﻿using QuanLyGiaiVoDichBongDaQuocGia.DTO;
-using QuanLyGiaiVoDichBongDaQuocGia.Manager;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using QuanLyGiaiVoDichBongDaQuocGia.DAL;
+using QuanLyGiaiVoDichBongDaQuocGia.DTO;
+using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 {    
     class BUS_ThamSo
     {
-        DAL.DAL_ThamSo DAL_thamSo = new DAL.DAL_ThamSo();
+        private readonly DAL_ThamSo _DAL;
 
-        private readonly string THAMSO = "THAMSO";
-
-        public DTO_ThamSo LayThamSo(params ThamSoColumn[] columns)
+        public BUS_ThamSo(DAL_ThamSo dAL)
         {
-            return CacheManager.GetOrLoad(THAMSO, () => DAL_thamSo.LayThamSo(columns.ToHashSet()));
+            _DAL = dAL;
+        }
+
+        public DTO_ThamSo? LayThamSo(Expression<Func<DTO_ThamSo, DTO_ThamSo>>? selector = default)
+        {
+            return _DAL.LayDanhSach(selector);
         }
     }
 }

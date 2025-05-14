@@ -4,6 +4,7 @@ using QuanLyGiaiVoDichBongDaQuocGia.Manager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,46 +12,16 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 {    
     public class BUS_LoaiCauThu
     {
-        DAL_LoaiCauThu DAL_loaiCauThu = new DAL_LoaiCauThu();
+        private readonly DAL_LoaiCauThu _DAL;
 
-        BUS_CauThu BUS_cauThu = new BUS_CauThu();
-
-        public Manager.DataManager<DTO_LoaiCauThu> LayDanhSach(string? filters = default, params LoaiCauThuColumn[] columns)
+        public BUS_LoaiCauThu(DAL_LoaiCauThu dAL)
         {
-            var hashed = columns.ToHashSet();
-            hashed.Add(LoaiCauThuColumn.MaLoaiCauThu);
-
-            return Manager.CacheManager.GetOrLoad("LOAICAUTHU",
-                                                  () => new Manager.DataManager<DTO_LoaiCauThu>(DAL_loaiCauThu.LayDanhSach(hashed, filters),
-                                                                                                loaiCauThu => loaiCauThu.MaLoaiCauThu)
-                                                 );
-
+            _DAL = dAL;
         }
 
-        public void KiemTraSoLuongCauThuToiDa()
+        public List<DTO_LoaiCauThu> LayDanhSach(Expression<Func<DTO_LoaiCauThu, DTO_LoaiCauThu>>? selector = default, Expression<Func<DTO_LoaiCauThu, bool>>? filter = default, bool isTracking = false)
         {
-            DataManager<DTO_CauThu> danhSachCauThu = BUS_cauThu.LayDanhSachNhap();
-            Dictionary<DTO_LoaiCauThu, int> counter = new Dictionary<DTO_LoaiCauThu, int>();
-
-            foreach(var item in danhSachCauThu.ActiveData)
-            {
-                var cauThu = item.Data;
-
-                if (counter.ContainsKey(cauThu.LoaiCauThu))
-                {
-                    counter[cauThu.LoaiCauThu]++;
-                }
-                else
-                {
-                    counter.Add(cauThu.LoaiCauThu, 1);
-                }
-            }
-
-            foreach(DTO_LoaiCauThu loaiCauThu in counter.Keys)
-            {                
-                if (counter[loaiCauThu] > loaiCauThu.SoLuongCauThuToiDaTheoLoaiCauThu)
-                    throw new Exception($"Vi phạm qui định số lượng cầu thủ tối đa theo loại cầu thủ {loaiCauThu.TenLoaiCauThu}");
-            }
+            return _DAL.LayDanhSach(selector, filter, isTracking);
         }
     }
 }

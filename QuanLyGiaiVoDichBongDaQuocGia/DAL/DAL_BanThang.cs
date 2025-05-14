@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 {
-    class DAL_BanThang
+    public class DAL_BanThang
     {
         private readonly DBC_BanThang _context;
 
@@ -24,7 +24,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             return query.FirstOrDefault();
         }
 
-        public List<DTO_BanThang> LayDanhSach(Expression<Func<DTO_BanThang, DTO_BanThang>> selector = default, Expression<Func<DTO_BanThang, bool>> filter = default)
+        public List<DTO_BanThang> LayDanhSach(Expression<Func<DTO_BanThang, DTO_BanThang>>? selector = default, Expression<Func<DTO_BanThang, bool>>? filter = default, bool isTracking = false)
         {
             var query = _context.LocalRepository.AsQueryable();
 
@@ -33,8 +33,11 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 
             if (selector != null)
                 query = query.Select(selector);
+
+            if (isTracking == false)
+                query = query.AsNoTracking();
                                   
-            return query.AsNoTracking().ToList();
+            return query.ToList();
         }
 
         public void LuuDanhSach(List<DTO_BanThang> insertList)

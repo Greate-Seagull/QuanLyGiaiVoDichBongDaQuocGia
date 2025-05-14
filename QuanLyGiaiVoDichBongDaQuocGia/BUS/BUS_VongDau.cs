@@ -4,6 +4,7 @@ using QuanLyGiaiVoDichBongDaQuocGia.Manager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -11,79 +12,53 @@ using System.Transactions;
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 {          
     class BUS_VongDau
-    {        
-        DAL_VongDau DAL = new DAL_VongDau();
+    {
+        private readonly DAL_VongDau _DAL;
+        private readonly BUS_TranDau _BUS_TranDau;
 
-        private readonly string READ_VONGDAU = "READ_VONGDAU";
-        private readonly string WRITE_VONGDAU = "WRITE_VONGDAU";
-
-        public DataManager<DTO_VongDau> LayDanhSachNhap()
+        public BUS_VongDau(DAL_VongDau dAL, BUS_TranDau bUS_TranDau)
         {
-            DataManager<DTO_VongDau> danhSachNhap = CacheManager.Get<DataManager<DTO_VongDau>>(WRITE_VONGDAU);
-
-            if(danhSachNhap == null)
-            {
-                danhSachNhap = new Manager.DataManager<DTO_VongDau>();
-                Manager.CacheManager.Add(WRITE_VONGDAU, danhSachNhap);
-            }
-
-            return danhSachNhap;
+            _DAL = dAL;
+            _BUS_TranDau = bUS_TranDau;
         }
 
-        public DataManager<DTO_VongDau> LayDanhSach(string? filters = default, params VongDauColumn[] columns)
+        public List<DTO_VongDau> LayDanhSach(Expression<Func<DTO_VongDau, DTO_VongDau>>? selector = default, Expression<Func<DTO_VongDau, bool>>? filter = default, bool isTracking = false)
         {
-            var hashed = columns.ToHashSet();
-            hashed.Add(VongDauColumn.MaVongDau);
-
-            return CacheManager.GetOrLoad(READ_VONGDAU, () => new DataManager<DTO_VongDau>(DAL.LayDanhSach(hashed, filters),
-                                                                                           vongDau => vongDau.MaVongDau)
-                                         );
-
+            return _DAL.LayDanhSach(selector, filter, isTracking);
         }
 
-        public string LayMaVongDauMoi()
+        public DTO_VongDau? LayMaMoiNhat()
         {
-            return DAL.LayMaVongDauMoi();
+            return _DAL.LayMaMoiNhat();
         }
 
-        public bool LapLichThiDau()
+        public bool LapLichThiDau(DTO_VongDau vongDau, List<DTO_TranDau> danhSachTranDau)
         {
-            BUS_TranDau BUS_tranDau = new BUS_TranDau();
+            var danhSachTam = new List<DTO_VongDau> { vongDau };
 
-            this.KiemTraNhapLieu();
-            BUS_tranDau.KiemTraSoLuongTranDauToiThieu();
+            this.KiemTraNhapLieu(danhSachTam);
 
             using(var transaction = new TransactionScope())
             {
-                this.LuuThongTin(VongDauColumn.MaVongDau, VongDauColumn.TenVongDau);
-                BUS_tranDau.LapTranDau();
+                this.LuuThongTin(danhSachTam);
+                _BUS_TranDau.LapTranDau(danhSachTranDau);
 
                 transaction.Complete();
                 return true;
             }
         }
 
-        private bool LuuThongTin(params VongDauColumn[] columns)
+        private bool LuuThongTin(List<DTO_VongDau> danhSachLuu)
         {
-            var danhSachNhap = this.LayDanhSachNhap();
-
-            var upsert = danhSachNhap.UpsertData;
-            var delete = danhSachNhap.DeleteData;
-
-            if (upsert.Count > 0) DAL.LuuDanhSach(upsert, columns.ToHashSet());
-            if (delete.Count > 0) DAL.XoaDanhSach(delete);
-
+            _DAL.LuuDanhSach(danhSachLuu);
             return true;
         }
 
-        private void KiemTraNhapLieu()
+        private void KiemTraNhapLieu(List<DTO_VongDau> danhSachKiemTra)
         {
-            DataManager<DTO_VongDau> danhSachVongDau = this.LayDanhSachNhap();
-
-            foreach (var item in danhSachVongDau.ActiveData)
+            foreach (var entity in danhSachKiemTra)
             {
-                DTO_VongDau vongDau = item.Data;
-                if (string.IsNullOrEmpty(vongDau.TenVongDau))
+                if (string.IsNullOrEmpty(entity.TenVongDau))
                     throw new Exception("Tên vòng đấu không được để trống");
             }
         }

@@ -15,27 +15,14 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             _context = context;
         }
 
-        public List<DTO_ThamSo> LayDanhSach(Expression<Func<DTO_ThamSo, DTO_ThamSo>> selector = default, Expression<Func<DTO_ThamSo, bool>> filter = default)
+        public DTO_ThamSo? LayDanhSach(Expression<Func<DTO_ThamSo, DTO_ThamSo>>? selector = default)
         {
             var query = _context.LocalRepository.AsQueryable();
-
-            if (filter != null)
-                query = query.Where(filter);
 
             if (selector != null)
                 query = query.Select(selector);
 
-            return query.AsNoTracking().ToList();
-        }
-
-        public void LuuDanhSach(List<DTO_ThamSo> insertList)
-        {
-            foreach (var entity in insertList)
-            {
-                _context.LocalRepository.Add(entity);
-            }
-
-            _context.SaveChanges();
+            return query.AsNoTracking().FirstOrDefault();
         }
     }
 }

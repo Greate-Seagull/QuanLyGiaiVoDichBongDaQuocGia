@@ -79,7 +79,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void TaoMaBanThang()
         {
-            MaBanThang = new IDManager(busBanThang.LayMaBanThangHienTai());
+            MaBanThang = new IDManager(busBanThang.LayMaMoiNhat());
         }
 
         private void TaoSTT()

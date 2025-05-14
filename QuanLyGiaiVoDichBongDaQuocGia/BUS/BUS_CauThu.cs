@@ -1,98 +1,47 @@
 ﻿using QuanLyGiaiVoDichBongDaQuocGia.DAL;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
-using QuanLyGiaiVoDichBongDaQuocGia.Manager;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
+using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 {    
     class BUS_CauThu
     {
-        DAL_CauThu DAL = new DAL_CauThu();
+        private readonly DAL_CauThu _DAL;
 
-        BUS_ThamSo BUS_thamSo = new BUS_ThamSo();
-
-        private readonly string READ_CAUTHU = "READ_CAUTHU";
-        private readonly string WRITE_CAUTHU = "WRITE_CAUTHU";
-
-        internal DataManager<DTO_CauThu> LayDanhSachNhap()
+        public BUS_CauThu(DAL_CauThu dAL)
         {
-            DataManager<DTO_CauThu> danhSachNhap = CacheManager.Get<DataManager<DTO_CauThu>>(WRITE_CAUTHU);
-
-            if (danhSachNhap == null)
-            {
-                danhSachNhap = new Manager.DataManager<DTO_CauThu>();
-                Manager.CacheManager.Add(WRITE_CAUTHU, danhSachNhap);
-            }
-
-            return danhSachNhap;
+            _DAL = dAL;
         }
 
-        public DataManager<DTO_CauThu> LayDanhSach(string? filters = default, params CauThuColumn[] columns)
+        public List<DTO_CauThu> LayDanhSach(Expression<Func<DTO_CauThu, DTO_CauThu>>? selector = default, Expression<Func<DTO_CauThu, bool>>? filter = default, bool isTracking = false)
         {
-            var hashed = columns.ToHashSet();
-            hashed.Add(CauThuColumn.MaCauThu);
-
-            return CacheManager.GetOrLoad(READ_CAUTHU,
-                                          () => new DataManager<DTO_CauThu>(DAL.LayDanhSach(hashed, filters),
-                                                                             cauThu => cauThu.MaCauThu
-                                                                             )
-                                          );
+            return _DAL.LayDanhSach(selector, filter, isTracking);
         }
 
-        public string LayMaCauThuHienTai()
+        public DTO_CauThu? LayMaMoiNhat()
         {
-            return DAL.LayMaCauThuHienTai();
+            return _DAL.LayMaMoiNhat();
         }
 
-        public bool TiepNhanCauThu()
+        public bool TiepNhanCauThu(List<DTO_CauThu> danhSachTiepNhan)
         {
-            this.KiemTraNhapLieu();
-            return LuuCauThu(CauThuColumn.MaCauThu, CauThuColumn.TenCauThu, CauThuColumn.MaLoaiCauThu, CauThuColumn.NgaySinh, CauThuColumn.GhiChu);
+            KiemTraNhapLieu(danhSachTiepNhan);
+            return LuuThongTin(danhSachTiepNhan);
         }
 
-        public bool LuuCauThu(params CauThuColumn[] columns)
+        public bool LuuThongTin(List<DTO_CauThu> danhSachLuu)
         {
-            var danhSachNhap = this.LayDanhSachNhap();
-
-            var upsert = danhSachNhap.UpsertData;
-            var delete = danhSachNhap.DeleteData;
-
-            if (upsert.Count > 0) DAL.LuuDanhSach(upsert, columns.ToHashSet());
-            if (delete.Count > 0) DAL.XoaDanhSach(delete);
-
+            _DAL.LuuDanhSach(danhSachLuu);
             return true;
         }
 
-        private void KiemTraNhapLieu()
+        private void KiemTraNhapLieu(List<DTO_CauThu> danhSachTiepNhan)
         {
-            DataManager<DTO_CauThu> danhSachCauThu = this.LayDanhSachNhap();
-            foreach(var item in danhSachCauThu.ActiveData)
+            foreach(var entity in danhSachTiepNhan)
             {
-                DTO_CauThu cauThu = item.Data;
-                if (string.IsNullOrEmpty(cauThu.TenCauThu))
+                if (string.IsNullOrEmpty(entity.TenCauThu))
                     throw new Exception("Tên cầu thủ không được bỏ trống");
             }
         }
-
-        internal void KiemTraSoLuongCauThuToiThieu()
-        {
-            DataManager<DTO_CauThu> danhSachCauThu = this.LayDanhSachNhap();
-            DTO_ThamSo thamSo = BUS_thamSo.LayThamSo();
-            if (danhSachCauThu.CountActive > thamSo.SoLuongCauThuToiDa)
-                throw new Exception($"Vi phạm số lượng cầu thủ tối đa {danhSachCauThu.CountActive} > {thamSo.SoLuongCauThuToiDa}");
-        }
-
-        internal void KiemTraSoLuongCauThuToiDa()
-        {
-            DataManager<DTO_CauThu> danhSachCauThu = this.LayDanhSachNhap();
-            DTO_ThamSo thamSo = BUS_thamSo.LayThamSo();
-            if (danhSachCauThu.CountActive < thamSo.SoLuongCauThuToiThieu)
-                throw new Exception($"Vi phạm số lượng cầu thủ tối thiểu {danhSachCauThu.CountActive} < {thamSo.SoLuongCauThuToiThieu}");
-        }      
     }
 }

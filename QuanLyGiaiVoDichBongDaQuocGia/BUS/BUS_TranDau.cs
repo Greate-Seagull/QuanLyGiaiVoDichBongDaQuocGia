@@ -1,91 +1,57 @@
-﻿using Mysqlx.Crud;
-using QuanLyGiaiVoDichBongDaQuocGia.DAL;
+﻿using QuanLyGiaiVoDichBongDaQuocGia.DAL;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
-using QuanLyGiaiVoDichBongDaQuocGia.FilterHelper;
-using QuanLyGiaiVoDichBongDaQuocGia.Manager;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 {        
     class BUS_TranDau
     {
-        DAL_TranDau DAL = new DAL_TranDau();        
-      
-        public DataManager<DTO_TranDau> LayDanhSachNhap()
+        private readonly DAL_TranDau _DAL;
+        private readonly BUS_BanThang _BUS_BanThang;
+
+        public BUS_TranDau(DAL_TranDau dAL, BUS_BanThang bUS_BanThang)
         {
-            DataManager<DTO_TranDau> danhSachNhap = CacheManager.Get<DataManager<DTO_TranDau>>(WRITE_TRANDAU);
-
-            if (danhSachNhap == null)
-            {
-                danhSachNhap = new DataManager<DTO_TranDau>();
-                CacheManager.Add(WRITE_TRANDAU, danhSachNhap);
-            }
-
-            return danhSachNhap;
+            _DAL = dAL;
+            _BUS_BanThang = bUS_BanThang;
         }
 
-        public DataManager<DTO_TranDau> LayDanhSach(FilterBuilder<DTO_TranDau> filters = default, params TranDauColumn[] columns)
+        public List<DTO_TranDau> LayDanhSach(Expression<Func<DTO_TranDau, DTO_TranDau>>? selector = default, Expression<Func<DTO_TranDau, bool>>? filter = default, bool isTracking = false)
         {
-            //Convert from Column to Propery
-            var selectedColumns = columns.Select(col => TranDauConverter.Instance[col]).ToList();
-            return DAL.LayDanhSach(selectedColumns, filters);
+            return _DAL.LayDanhSach(selector, filter, isTracking);
         }
 
-        public string LayMaTranDauHienTai()
+        public DTO_TranDau? LayMaMoiNhat()
         {
-            return DAL.LayMaTranDauHienTai();
+            return _DAL.LayMaMoiNhat();
         }
 
-        public bool LapTranDau()
+        public bool LapTranDau(List<DTO_TranDau> danhSachTranDau)
         {
-            KiemTraNhapLieu();
-            return LuuThongTin(TranDauColumn.MaTranDau, TranDauColumn.MaVongDau, TranDauColumn.MaDoi1, TranDauColumn.MaDoi2, TranDauColumn.NgayGio);
+            KiemTraNhapLieu(danhSachTranDau);
+            return LuuThongTin(danhSachTranDau);
         }
 
-        public bool LuuThongTin(params TranDauColumn[] columns)
+        public bool LuuThongTin(List<DTO_TranDau> danhSachLuu)
         {
-            var danhSachNhap = this.LayDanhSachNhap();
-
-            var upsert = danhSachNhap.UpsertData;
-            var delete = danhSachNhap.DeleteData;
-
-            if (upsert.Count > 0) DAL.LuuDanhSach(upsert, columns.ToHashSet());
-            if (delete.Count > 0) DAL.XoaDanhSach(delete);
-
+            _DAL.LuuDanhSach(danhSachLuu);
             return true;
         }
 
-        private void KiemTraNhapLieu()
+        private void KiemTraNhapLieu(List<DTO_TranDau> danhSachKiemTra)
         {
-            DataManager<DTO_TranDau> danhSachTranDau = this.LayDanhSachNhap();
-
-            foreach (var item in danhSachTranDau.ActiveData)
+            foreach (var entity in danhSachKiemTra)
             {
-                DTO_TranDau tranDau = item.Data;
-                if (string.IsNullOrEmpty(tranDau.DoiBong1.MaDoiBong))
-                    throw new Exception($"Đội bóng 1 chưa được chọn cho trận đấu {tranDau.MaTranDau}");
-                if (string.IsNullOrEmpty(tranDau.DoiBong2.MaDoiBong))
-                    throw new Exception($"Đội bóng 2 chưa được chọn cho trận đấu {tranDau.MaTranDau}");
+                if (string.IsNullOrEmpty(entity.MaDoi1))
+                    throw new Exception($"Đội bóng 1 chưa được chọn cho trận đấu {entity.MaTranDau}");
+                if (string.IsNullOrEmpty(entity.MaDoi2))
+                    throw new Exception($"Đội bóng 2 chưa được chọn cho trận đấu {entity.MaTranDau}");
             }
         }
 
-        internal void KiemTraSoLuongTranDauToiThieu()
+        internal bool GhiNhanKetQua(List<DTO_BanThang> danhSachBanThang)
         {
-            DataManager<DTO_TranDau> danhSachTranDau = this.LayDanhSachNhap();
-
-            if (danhSachTranDau.CountActive < 1)
-                throw new Exception($"Vi phạm số trận đấu tối thiểu {danhSachTranDau.CountActive} < 1");
-        }
-
-        internal bool GhiNhanKetQua()
-        {
-            new BUS_BanThang().GhiNhanBanThang();
-            return LuuThongTin(TranDauColumn.MaTranDau, TranDauColumn.TiSoDoi1, TranDauColumn.TiSoDoi2);
+            _BUS_BanThang.GhiNhanBanThang(danhSachBanThang);
+            return LuuThongTin(new());
         }
     }
 }

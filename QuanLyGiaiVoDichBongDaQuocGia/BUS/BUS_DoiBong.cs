@@ -1,95 +1,59 @@
-﻿using Org.BouncyCastle.Bcpg.OpenPgp;
-using QuanLyGiaiVoDichBongDaQuocGia.DTO;
+﻿using QuanLyGiaiVoDichBongDaQuocGia.DTO;
 using QuanLyGiaiVoDichBongDaQuocGia.DAL;
-using QuanLyGiaiVoDichBongDaQuocGia.Manager;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Transactions;
+using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 {
     class BUS_DoiBong
     {
-        DAL_DoiBong DAL = new DAL.DAL_DoiBong();   
+        private readonly DAL_DoiBong _DAL;
+        private readonly BUS_CauThu _BUS_CauThu;
 
-        BUS_CauThu BUS_cauThu = new BUS_CauThu();
-        BUS_LoaiCauThu BUS_loaiCauThu = new BUS_LoaiCauThu();
-
-        private readonly string READ_DOIBONG = "READ_DOIBONG";
-        private readonly string WRITE_DOIBONG = "WRITE_DOIBONG";
-
-        public DataManager<DTO_DoiBong> LayDanhSachNhap()
+        public BUS_DoiBong(DAL_DoiBong dAL, BUS_CauThu bUS_CauThu)
         {
-            DataManager<DTO_DoiBong> danhSachNhap = CacheManager.Get<DataManager<DTO_DoiBong>>(WRITE_DOIBONG);
-
-            if (danhSachNhap == null)
-            {
-                danhSachNhap = new Manager.DataManager<DTO_DoiBong>();
-                Manager.CacheManager.Add(WRITE_DOIBONG, danhSachNhap);
-            }
-
-            return danhSachNhap;
+            _DAL = dAL;
+            _BUS_CauThu = bUS_CauThu;
         }
 
-        internal DataManager<DTO_DoiBong> LayDanhSach(string? filters = default, params DoiBongColumn[] columns)
+        internal List<DTO_DoiBong> LayDanhSach(Expression<Func<DTO_DoiBong, DTO_DoiBong>>? selector = default, Expression<Func<DTO_DoiBong, bool>>? filter = default, bool isTracking = false)
         {
-            var hashed = columns.ToHashSet();
-            hashed.Add(DoiBongColumn.MaDoiBong);
-
-            return CacheManager.GetOrLoad(READ_DOIBONG,
-                                          () => new Manager.DataManager<DTO_DoiBong>(DAL.LayDanhSach(hashed, filters),
-                                                                                    doiBong => doiBong.MaDoiBong
-                                                                                    )
-                                         );
+            return _DAL.LayDanhSach(selector, filter, isTracking);
         }
 
-        public string LayMaDoiBongMoi()
+        public DTO_DoiBong? LayMaMoiNhat()
         {
-            return DAL.LayMaDoiBongMoi();
+            return _DAL.LayMaMoiNhat();
         }
 
-        public bool TiepNhanDoiBong()
+        public bool TiepNhanDoiBong(DTO_DoiBong doiBongTiepNhan, List<DTO_CauThu> danhSachCauThuTiepNhan)
         {
-            this.KiemTraNhapLieu();
-            BUS_cauThu.KiemTraSoLuongCauThuToiThieu();
-            BUS_cauThu.KiemTraSoLuongCauThuToiDa();
-            BUS_loaiCauThu.KiemTraSoLuongCauThuToiDa();
+            var danhSachTam = new List<DTO_DoiBong>(){ doiBongTiepNhan };
+
+            this.KiemTraNhapLieu(danhSachTam);
 
             using (var transaction = new TransactionScope())
             {
-                this.LuuThongTin(DoiBongColumn.MaDoiBong, DoiBongColumn.TenDoiBong, DoiBongColumn.TenSanNha);
-                BUS_cauThu.TiepNhanCauThu();
+                this.LuuThongTin(danhSachTam);
+                _BUS_CauThu.TiepNhanCauThu(danhSachCauThuTiepNhan);
                 transaction.Complete();
                 return true;
             }            
         }
 
-        private bool LuuThongTin(params DoiBongColumn[] columns)
+        public bool LuuThongTin(List<DTO_DoiBong> danhSachLuu)
         {
-            var danhSachNhap = this.LayDanhSachNhap();
-
-            var upsert = danhSachNhap.UpsertData;
-            var delete = danhSachNhap.DeleteData;
-
-            if (upsert.Count > 0) DAL.LuuDanhSach(upsert, columns.ToHashSet());
-            if (delete.Count > 0) DAL.XoaDanhSach(delete);
-
+            _DAL.LuuDanhSach(danhSachLuu);
             return true;
-        }        
+        }
 
-        private void KiemTraNhapLieu()
+        private void KiemTraNhapLieu(List<DTO_DoiBong> danhSachKiemTra)
         {
-            DataManager<DTO_DoiBong> danhSachDoiBong = this.LayDanhSachNhap();
-
-            foreach(var item in danhSachDoiBong.ActiveData)
+            foreach(var entity in danhSachKiemTra)
             {
-                DTO_DoiBong doiBong = item.Data;
-                if (string.IsNullOrEmpty(doiBong.TenDoiBong))
+                if (string.IsNullOrEmpty(entity.TenDoiBong))
                     throw new Exception("Tên đội bóng không được để trống");
-                if (string.IsNullOrEmpty(doiBong.TenSanNha))
+                if (string.IsNullOrEmpty(entity.TenSanNha))
                     throw new Exception("Tên sân nhà không được để trống");
             }
         }        

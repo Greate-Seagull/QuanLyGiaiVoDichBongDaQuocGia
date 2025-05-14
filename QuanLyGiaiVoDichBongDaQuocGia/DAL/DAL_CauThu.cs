@@ -34,7 +34,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             _context.SaveChanges();
         }
 
-        internal List<DTO_CauThu> LayDanhSach(Expression<Func<DTO_CauThu, DTO_CauThu>> selector = default, Expression<Func<DTO_CauThu, bool>> filter = default)
+        internal List<DTO_CauThu> LayDanhSach(Expression<Func<DTO_CauThu, DTO_CauThu>>? selector = default, Expression<Func<DTO_CauThu, bool>>? filter = default, bool isTracking = false)
         {
             var query = _context.LocalRepository
                                 .AsQueryable();
@@ -45,7 +45,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             if (selector != null)
                 query = query.Select(selector);
 
-            return query.AsNoTracking().ToList();
+            if (isTracking == false)
+                query = query.AsNoTracking();
+
+            return query.ToList();
         }
     }
 }

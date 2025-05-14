@@ -24,7 +24,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             return query.FirstOrDefault();
         }
 
-        public List<DTO_LoaiBanThang> LayDanhSach(Expression<Func<DTO_LoaiBanThang, DTO_LoaiBanThang>> selector = default, Expression<Func<DTO_LoaiBanThang, bool>> filter = default)
+        public List<DTO_LoaiBanThang> LayDanhSach(Expression<Func<DTO_LoaiBanThang, DTO_LoaiBanThang>>? selector = default, Expression<Func<DTO_LoaiBanThang, bool>>? filter = default, bool isTracking = false)
         {
             var query = _context.LocalRepository.AsQueryable();
 
@@ -34,7 +34,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             if (selector != null)
                 query = query.Select(selector);
 
-            return query.AsNoTracking().ToList();
+            if (isTracking == false)
+                query = query.AsNoTracking();
+
+            return query.ToList();
         }
 
         public void LuuDanhSach(List<DTO_LoaiBanThang> insertList)
