@@ -6,52 +6,48 @@ using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 {
-    public class DAL_DoiBong
+    public class DAL_DoiBong: IDoiBongRepository
     {
-        private readonly MySqlDbContext _mySqlContext;
+        private readonly MySqlDbContext _context;
 
         public DAL_DoiBong(MySqlDbContext context)
         {
-            _mySqlContext = context;
+            _context = context;
         }
 
-        public DTO_DoiBong LayMaMoiNhat()
+        public string GetLastID()
         {
-            var query = _mySqlContext.DoiBongRepository
-                                .Where(obj => obj.Deleted == false)
+            var query = _context.DoiBongRepository
+                                .IgnoreQueryFilters()
                                 .AsNoTracking()
                                 .OrderByDescending(obj => obj.MaDoiBong);
 
             var result = query.FirstOrDefault();
-            result ??= new DTO_DoiBong { MaDoiBong = "DB000" };
-            return result;
+
+            if (result != null)
+                return result.MaDoiBong;
+            else
+                return "DB000";
         }
 
-        internal List<DTO_DoiBong> LayDanhSach(Expression<Func<DTO_DoiBong, DTO_DoiBong>>? selector = default, Expression<Func<DTO_DoiBong, bool>>? filter = default, bool isTracking = false)
-        {
-            var query = _mySqlContext.DoiBongRepository
-                                .AsQueryable();
+        //Add methods
+        public void Add(DTO_DoiBong entity) => _context.DoiBongRepository.Add(entity);
+        public void AddRange(IEnumerable<DTO_DoiBong> entities) => _context.DoiBongRepository.AddRange(entities);
 
-            if (filter != null)
-                query = query.Where(filter);
+        //Get methods
+        public DTO_DoiBong GetById(object id) => _context.DoiBongRepository.Find(id);
+        public IEnumerable<DTO_DoiBong> GetAll() => _context.DoiBongRepository.ToList();
+        public IEnumerable<DTO_DoiBong> Find(Expression<Func<DTO_DoiBong, DTO_DoiBong>> selector, Expression<Func<DTO_DoiBong, bool>> filter)
+            => _context.DoiBongRepository.Where(filter).Select(selector);
 
-            if (selector != null)
-                query = query.Select(selector);
+        //Update methods
+        public void Update(DTO_DoiBong entity) => _context.DoiBongRepository.Update(entity);
 
-            if (isTracking == false)
-                query = query.AsNoTracking();
+        //Delete methods
+        public void Remove(DTO_DoiBong entity) => _context.DoiBongRepository.Remove(entity);
+        public void RemoveRange(IEnumerable<DTO_DoiBong> entities) => _context.DoiBongRepository.RemoveRange(entities);
 
-            return query.ToList();
-        }
-
-        internal void LuuDanhSach(List<DTO_DoiBong> insertList)
-        {
-            foreach(var entity in insertList)
-            {
-                _mySqlContext.DoiBongRepository.Add(entity);
-            }
-
-            _mySqlContext.SaveChanges();
-        }
+        //Save changes
+        public void SaveChanges() => _context.SaveChanges();
     }
 }

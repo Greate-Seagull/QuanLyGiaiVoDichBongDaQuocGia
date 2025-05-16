@@ -8,48 +8,45 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 {
     class DAL_VongDau
     {
-        private readonly MySqlDbContext _mySqlContext;
+        private readonly MySqlDbContext _context;
         public DAL_VongDau(MySqlDbContext context)
         {
-            _mySqlContext = context;
+            _context = context;
         }
 
-        public DTO_VongDau LayMaMoiNhat()
+        public string GetLastID()
         {
-            var query = _mySqlContext.VongDauRepository
-                                .Where(obj => obj.Deleted == false)
+            var query = _context.VongDauRepository
+                                .IgnoreQueryFilters()
                                 .AsNoTracking()
                                 .OrderByDescending(obj => obj.MaVongDau);
 
             var result = query.FirstOrDefault();
-            result ??= new DTO_VongDau { MaVongDau = "VD000" };
-            return result;
+
+            if (result != null)
+                return result.MaVongDau;
+            else
+                return "VD000";
         }
 
-        public List<DTO_VongDau> LayDanhSach(Expression<Func<DTO_VongDau, DTO_VongDau>>? selector = default, Expression<Func<DTO_VongDau, bool>>? filter = default, bool isTracking = false)
-        {
-            var query = _mySqlContext.VongDauRepository.AsQueryable();
+        //Add methods
+        public void Add(DTO_VongDau entity) => _context.VongDauRepository.Add(entity);
+        public void AddRange(IEnumerable<DTO_VongDau> entities) => _context.VongDauRepository.AddRange(entities);
 
-            if (filter != null)
-                query = query.Where(filter);
+        //Get methods
+        public DTO_VongDau GetById(object id) => _context.VongDauRepository.Find(id);
+        public IEnumerable<DTO_VongDau> GetAll() => _context.VongDauRepository.ToList();
+        public IEnumerable<DTO_VongDau> Find(Expression<Func<DTO_VongDau, DTO_VongDau>> selector, Expression<Func<DTO_VongDau, bool>> filter)
+            => _context.VongDauRepository.Where(filter).Select(selector);
 
-            if (selector != null)
-                query = query.Select(selector);
+        //Update methods
+        public void Update(DTO_VongDau entity) => _context.VongDauRepository.Update(entity);
 
-            if (isTracking == false)
-                query = query.AsNoTracking();
+        //Delete methods
+        public void Remove(DTO_VongDau entity) => _context.VongDauRepository.Remove(entity);
+        public void RemoveRange(IEnumerable<DTO_VongDau> entities) => _context.VongDauRepository.RemoveRange(entities);
 
-            return query.ToList();
-        }
-
-        public void LuuDanhSach(List<DTO_VongDau> insertList)
-        {
-            foreach (var entity in insertList)
-            {
-                _mySqlContext.VongDauRepository.Add(entity);
-            }
-
-            _mySqlContext.SaveChanges();
-        }
+        //Save changes
+        public void SaveChanges() => _context.SaveChanges();
     }
 }

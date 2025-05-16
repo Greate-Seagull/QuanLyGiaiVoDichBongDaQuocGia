@@ -6,52 +6,48 @@ using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 {
-    public class DAL_CauThu
+    public class DAL_CauThu: ICauThuRepository
     {
-        private readonly MySqlDbContext _mySqlContext;
+        private readonly MySqlDbContext _context;
 
         public DAL_CauThu(MySqlDbContext context)
         {
-            _mySqlContext = context;
+            _context = context;
         }
 
-        public DTO_CauThu LayMaMoiNhat()
+        public string GetLastID()
         {
-            var query = _mySqlContext.CauThuRepository
-                                .Where(obj => obj.Deleted == false)
+            var query = _context.CauThuRepository
+                                .IgnoreQueryFilters()
                                 .AsNoTracking()
                                 .OrderByDescending(obj => obj.MaCauThu);
 
             var result = query.FirstOrDefault();
-            result ??= new DTO_CauThu { MaCauThu = "CT000" };
-            return result;
+
+            if (result != null)
+                return result.MaCauThu;
+            else
+                return "CT000";
         }
 
-        public void LuuDanhSach(List<DTO_CauThu> insertList)
-        {
-            foreach(var entity in insertList)
-            {
-                _mySqlContext.CauThuRepository.Add(entity);
-            }
+        //Add methods
+        public void Add(DTO_CauThu entity) => _context.CauThuRepository.Add(entity);
+        public void AddRange(IEnumerable<DTO_CauThu> entities) => _context.CauThuRepository.AddRange(entities);
 
-            _mySqlContext.SaveChanges();
-        }
+        //Get methods
+        public DTO_CauThu GetById(object id) => _context.CauThuRepository.Find(id);
+        public IEnumerable<DTO_CauThu> GetAll() => _context.CauThuRepository.ToList();
+        public IEnumerable<DTO_CauThu> Find(Expression<Func<DTO_CauThu, DTO_CauThu>> selector, Expression<Func<DTO_CauThu, bool>> filter)
+            => _context.CauThuRepository.Where(filter).Select(selector);
 
-        internal List<DTO_CauThu> LayDanhSach(Expression<Func<DTO_CauThu, DTO_CauThu>>? selector = default, Expression<Func<DTO_CauThu, bool>>? filter = default, bool isTracking = false)
-        {
-            var query = _mySqlContext.CauThuRepository
-                                .AsQueryable();
+        //Update methods
+        public void Update(DTO_CauThu entity) => _context.CauThuRepository.Update(entity);
 
-            if (filter != null)
-                query = query.Where(filter);
+        //Delete methods
+        public void Remove(DTO_CauThu entity) => _context.CauThuRepository.Remove(entity);
+        public void RemoveRange(IEnumerable<DTO_CauThu> entities) => _context.CauThuRepository.RemoveRange(entities);
 
-            if (selector != null)
-                query = query.Select(selector);
-
-            if (isTracking == false)
-                query = query.AsNoTracking();
-
-            return query.ToList();
-        }
+        //Save changes
+        public void SaveChanges() => _context.SaveChanges();
     }
 }

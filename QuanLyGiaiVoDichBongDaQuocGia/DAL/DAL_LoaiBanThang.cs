@@ -6,50 +6,48 @@ using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 {
-    class DAL_LoaiBanThang
+    class DAL_LoaiBanThang: ILoaiBanThangRepository
     {
-        private readonly MySqlDbContext _mySqlContext;
+        private readonly MySqlDbContext _context;
 
         public DAL_LoaiBanThang(MySqlDbContext context)
         {
-            _mySqlContext = context;
+            _context = context;
         }
 
-        public DTO_LoaiBanThang LayMaMoiNhat()
+        public string GetLastID()
         {
-            var query = _mySqlContext.LoaiBanThangRepository
+            var query = _context.LoaiBanThangRepository
+                                .IgnoreQueryFilters()
                                 .AsNoTracking()
                                 .OrderByDescending(obj => obj.MaLoaiBanThang);
 
             var result = query.FirstOrDefault();
-            result ??= new DTO_LoaiBanThang { MaLoaiBanThang = "LBT00" };
-            return result;
+
+            if (result != null)
+                return result.MaLoaiBanThang;
+            else
+                return "LBT00";
         }
 
-        public List<DTO_LoaiBanThang> LayDanhSach(Expression<Func<DTO_LoaiBanThang, DTO_LoaiBanThang>>? selector = default, Expression<Func<DTO_LoaiBanThang, bool>>? filter = default, bool isTracking = false)
-        {
-            var query = _mySqlContext.LoaiBanThangRepository.AsQueryable();
+        //Add methods
+        public void Add(DTO_LoaiBanThang entity) => _context.LoaiBanThangRepository.Add(entity);
+        public void AddRange(IEnumerable<DTO_LoaiBanThang> entities) => _context.LoaiBanThangRepository.AddRange(entities);
 
-            if (filter != null)
-                query = query.Where(filter);
+        //Get methods
+        public DTO_LoaiBanThang GetById(object id) => _context.LoaiBanThangRepository.Find(id);
+        public IEnumerable<DTO_LoaiBanThang> GetAll() => _context.LoaiBanThangRepository.ToList();
+        public IEnumerable<DTO_LoaiBanThang> Find(Expression<Func<DTO_LoaiBanThang, DTO_LoaiBanThang>> selector, Expression<Func<DTO_LoaiBanThang, bool>> filter)
+            => _context.LoaiBanThangRepository.Where(filter).Select(selector);
 
-            if (selector != null)
-                query = query.Select(selector);
+        //Update methods
+        public void Update(DTO_LoaiBanThang entity) => _context.LoaiBanThangRepository.Update(entity);
 
-            if (isTracking == false)
-                query = query.AsNoTracking();
+        //Delete methods
+        public void Remove(DTO_LoaiBanThang entity) => _context.LoaiBanThangRepository.Remove(entity);
+        public void RemoveRange(IEnumerable<DTO_LoaiBanThang> entities) => _context.LoaiBanThangRepository.RemoveRange(entities);
 
-            return query.ToList();
-        }
-
-        public void LuuDanhSach(List<DTO_LoaiBanThang> insertList)
-        {
-            foreach (var entity in insertList)
-            {
-                _mySqlContext.LoaiBanThangRepository.Add(entity);
-            }
-
-            _mySqlContext.SaveChanges();
-        }
+        //Save changes
+        public void SaveChanges() => _context.SaveChanges();
     }
 }

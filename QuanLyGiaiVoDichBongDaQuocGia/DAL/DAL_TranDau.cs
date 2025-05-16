@@ -6,51 +6,48 @@ using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 {
-    class DAL_TranDau
+    class DAL_TranDau: ITranDauRepository
     {
-        private readonly MySqlDbContext _mySqlContext;
+        private readonly MySqlDbContext _context;
 
         public DAL_TranDau(MySqlDbContext context)
         {
-            _mySqlContext = context;
+            _context = context;
         }
 
-        public DTO_TranDau LayMaMoiNhat()
+        public string GetLastID()
         {
-            var query = _mySqlContext.TranDauRepository
-                                .Where(obj => obj.Deleted == false)
+            var query = _context.TranDauRepository
+                                .IgnoreQueryFilters()
                                 .AsNoTracking()
                                 .OrderByDescending(obj => obj.MaTranDau);
 
             var result = query.FirstOrDefault();
-            result ??= new DTO_TranDau { MaTranDau = "TD000" };
-            return result;
+
+            if (result != null)
+                return result.MaTranDau;
+            else
+                return "TD000";
         }
 
-        public List<DTO_TranDau> LayDanhSach(Expression<Func<DTO_TranDau, DTO_TranDau>>? selector = default, Expression<Func<DTO_TranDau, bool>>? filter = default, bool isTracking = false)
-        {
-            var query = _mySqlContext.TranDauRepository.AsQueryable();
+        //Add methods
+        public void Add(DTO_TranDau entity) => _context.TranDauRepository.Add(entity);
+        public void AddRange(IEnumerable<DTO_TranDau> entities) => _context.TranDauRepository.AddRange(entities);
 
-            if (filter != null)
-                query = query.Where(filter);
+        //Get methods
+        public DTO_TranDau GetById(object id) => _context.TranDauRepository.Find(id);
+        public IEnumerable<DTO_TranDau> GetAll() => _context.TranDauRepository.ToList();
+        public IEnumerable<DTO_TranDau> Find(Expression<Func<DTO_TranDau, DTO_TranDau>> selector, Expression<Func<DTO_TranDau, bool>> filter)
+            => _context.TranDauRepository.Where(filter).Select(selector);
 
-            if (selector != null)
-                query = query.Select(selector);
+        //Update methods
+        public void Update(DTO_TranDau entity) => _context.TranDauRepository.Update(entity);
 
-            if (isTracking == false)
-                query = query.AsNoTracking();
+        //Delete methods
+        public void Remove(DTO_TranDau entity) => _context.TranDauRepository.Remove(entity);
+        public void RemoveRange(IEnumerable<DTO_TranDau> entities) => _context.TranDauRepository.RemoveRange(entities);
 
-            return query.ToList();
-        }
-
-        public void LuuDanhSach(List<DTO_TranDau> insertList)
-        {
-            foreach (var entity in insertList)
-            {
-                _mySqlContext.TranDauRepository.Add(entity);
-            }
-
-            _mySqlContext.SaveChanges();
-        }
+        //Save changes
+        public void SaveChanges() => _context.SaveChanges();
     }
 }

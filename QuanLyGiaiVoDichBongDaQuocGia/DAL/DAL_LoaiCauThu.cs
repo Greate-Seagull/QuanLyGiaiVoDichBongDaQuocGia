@@ -6,49 +6,47 @@ using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 {
-    public class DAL_LoaiCauThu
+    public class DAL_LoaiCauThu: ILoaiCauThuRepository
     {
-        private readonly MySqlDbContext _mySqlContext;
+        private readonly MySqlDbContext _context;
 
         public DAL_LoaiCauThu(MySqlDbContext context)
         {
-            _mySqlContext = context;
+            _context = context;
         }
-        public DTO_LoaiCauThu LayMaMoiNhat()
+        public string GetLastID()
         {
-            var query = _mySqlContext.LoaiCauThuRepository
+            var query = _context.LoaiCauThuRepository
+                                .IgnoreQueryFilters()
                                 .AsNoTracking()
                                 .OrderByDescending(obj => obj.MaLoaiCauThu);
 
             var result = query.FirstOrDefault();
-            result ??= new DTO_LoaiCauThu { MaLoaiCauThu = "LCT00" };
-            return result;
+
+            if (result != null)
+                return result.MaLoaiCauThu;
+            else
+                return "LCT00";
         }
 
-        public List<DTO_LoaiCauThu> LayDanhSach(Expression<Func<DTO_LoaiCauThu, DTO_LoaiCauThu>>? selector = default, Expression<Func<DTO_LoaiCauThu, bool>>? filter = default, bool isTracking = false)
-        {
-            var query = _mySqlContext.LoaiCauThuRepository.AsQueryable();
+        //Add methods
+        public void Add(DTO_LoaiCauThu entity) => _context.LoaiCauThuRepository.Add(entity);
+        public void AddRange(IEnumerable<DTO_LoaiCauThu> entities) => _context.LoaiCauThuRepository.AddRange(entities);
 
-            if (filter != null)
-                query = query.Where(filter);
+        //Get methods
+        public DTO_LoaiCauThu GetById(object id) => _context.LoaiCauThuRepository.Find(id);
+        public IEnumerable<DTO_LoaiCauThu> GetAll() => _context.LoaiCauThuRepository.ToList();
+        public IEnumerable<DTO_LoaiCauThu> Find(Expression<Func<DTO_LoaiCauThu, DTO_LoaiCauThu>> selector, Expression<Func<DTO_LoaiCauThu, bool>> filter)
+            => _context.LoaiCauThuRepository.Where(filter).Select(selector);
 
-            if (selector != null)
-                query = query.Select(selector);
+        //Update methods
+        public void Update(DTO_LoaiCauThu entity) => _context.LoaiCauThuRepository.Update(entity);
 
-            if (isTracking == false)
-                query = query.AsNoTracking();
+        //Delete methods
+        public void Remove(DTO_LoaiCauThu entity) => _context.LoaiCauThuRepository.Remove(entity);
+        public void RemoveRange(IEnumerable<DTO_LoaiCauThu> entities) => _context.LoaiCauThuRepository.RemoveRange(entities);
 
-            return query.ToList();
-        }
-
-        public void LuuDanhSach(List<DTO_LoaiCauThu> insertList)
-        {
-            foreach (var entity in insertList)
-            {
-                _mySqlContext.LoaiCauThuRepository.Add(entity);
-            }
-
-            _mySqlContext.SaveChanges();
-        }
+        //Save changes
+        public void SaveChanges() => _context.SaveChanges();
     }
 }

@@ -6,51 +6,48 @@ using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 {
-    public class DAL_BanThang
+    public class DAL_BanThang: IBanThangRepository
     {
-        private readonly MySqlDbContext _mySqlContext;
+        private readonly MySqlDbContext _context;
 
         public DAL_BanThang(MySqlDbContext context)
         {
-            _mySqlContext = context;
+            _context = context;
         }
 
-        public DTO_BanThang LayMaMoiNhat()
+        public string GetLastID()
         {
-            var query = _mySqlContext.BanThangRepository
-                                .Where(obj => obj.Deleted == false)
+            var query = _context.BanThangRepository
+                                .IgnoreQueryFilters()
                                 .AsNoTracking()
                                 .OrderByDescending(obj => obj.MaBanThang);
 
             var result = query.FirstOrDefault();
-            result ??= new DTO_BanThang { MaBanThang = "BT000" };
-            return result;
+
+            if (result != null)
+                return result.MaBanThang;
+            else
+                return "BT000";
         }
 
-        public List<DTO_BanThang> LayDanhSach(Expression<Func<DTO_BanThang, DTO_BanThang>>? selector = default, Expression<Func<DTO_BanThang, bool>>? filter = default, bool isTracking = false)
-        {
-            var query = _mySqlContext.BanThangRepository.AsQueryable();
+        //Add methods
+        public void Add(DTO_BanThang entity) => _context.BanThangRepository.Add(entity);
+        public void AddRange(IEnumerable<DTO_BanThang> entities) => _context.BanThangRepository.AddRange(entities);
 
-            if (filter != null)
-                query = query.Where(filter);
+        //Get methods
+        public DTO_BanThang GetById(object id) => _context.BanThangRepository.Find(id);
+        public IEnumerable<DTO_BanThang> GetAll() => _context.BanThangRepository.ToList();
+        public IEnumerable<DTO_BanThang> Find(Expression<Func<DTO_BanThang, DTO_BanThang>> selector, Expression<Func<DTO_BanThang, bool>> filter)
+            => _context.BanThangRepository.Where(filter).Select(selector);
 
-            if (selector != null)
-                query = query.Select(selector);
+        //Update methods
+        public void Update(DTO_BanThang entity) => _context.BanThangRepository.Update(entity);
 
-            if (isTracking == false)
-                query = query.AsNoTracking();
-                                  
-            return query.ToList();
-        }
+        //Delete methods
+        public void Remove(DTO_BanThang entity) => _context.BanThangRepository.Remove(entity);
+        public void RemoveRange(IEnumerable<DTO_BanThang> entities) => _context.BanThangRepository.RemoveRange(entities);
 
-        public void LuuDanhSach(List<DTO_BanThang> insertList)
-        {
-            foreach(var entity in insertList)
-            {
-                _mySqlContext.BanThangRepository.Add(entity);
-            }
-
-            _mySqlContext.SaveChanges();
-        }
+        //Save changes
+        public void SaveChanges() => _context.SaveChanges();
     }
 }
