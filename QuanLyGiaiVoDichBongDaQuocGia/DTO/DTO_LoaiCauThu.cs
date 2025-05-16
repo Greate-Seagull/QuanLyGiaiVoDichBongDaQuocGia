@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
 {
     public class DTO_LoaiCauThu
     {
+        [Key, MaxLength(5)]
         public string? MaLoaiCauThu { get; set; }
+
+        [Required, MaxLength(50)]
         public string? TenLoaiCauThu { get; set; }
         public int SoLuongCauThuToiDaTheoLoaiCauThu { get; set; }
 

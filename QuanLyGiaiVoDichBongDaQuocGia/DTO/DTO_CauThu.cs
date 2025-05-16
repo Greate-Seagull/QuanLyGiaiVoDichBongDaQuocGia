@@ -1,24 +1,27 @@
-﻿using QuanLyGiaiVoDichBongDaQuocGia.Helper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ZstdSharp.Unsafe;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
 {
     public class DTO_CauThu
     {
+        [Key, MaxLength(5)]
         public string? MaCauThu { get; set; }
+
+        [Required, MaxLength(50)]
         public string? TenCauThu { get; set; }
+
+        [Required]
         public DateTime NgaySinh { get; set; }
+
+        [Required, MaxLength(5)]
         public string? MaLoaiCauThu { get; set; }
-        public DTO_LoaiCauThu? LoaiCauThu { get; set; }
+
+        [Required, MaxLength(5)]
         public string? MaDoiBong { get; set; }
-        public DTO_DoiBong? DoiBong { get; set; }
+
+        [MaxLength(300)]
         public string? GhiChu { get; set; }
-        public bool IsDeleted { get; set; }
+        public bool Deleted { get; set; } = false;
         public override string ToString()
         {
             return TenCauThu;

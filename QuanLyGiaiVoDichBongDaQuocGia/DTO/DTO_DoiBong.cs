@@ -1,18 +1,18 @@
-﻿using QuanLyGiaiVoDichBongDaQuocGia.Helper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
 {
     public class DTO_DoiBong
     {
+        [Key, MaxLength(5)]
         public string? MaDoiBong { get; set; }
+
+        [Required, MaxLength(50)]
         public string? TenDoiBong { get; set; }
+
+        [Required, MaxLength(50)]
         public string? TenSanNha { get; set; }
-        public bool IsDeleted { get; set; }
+        public bool Deleted { get; set; } = false;
         public override string ToString()
         {
             return TenDoiBong;

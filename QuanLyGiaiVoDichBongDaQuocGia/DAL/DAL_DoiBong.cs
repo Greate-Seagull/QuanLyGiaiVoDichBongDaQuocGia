@@ -6,27 +6,30 @@ using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 {
-    class DAL_DoiBong
+    public class DAL_DoiBong
     {
-        private readonly DBC_DoiBong _context;
+        private readonly MySqlDbContext _mySqlContext;
 
-        public DAL_DoiBong(DBC_DoiBong context)
+        public DAL_DoiBong(MySqlDbContext context)
         {
-            _context = context;
+            _mySqlContext = context;
         }
 
-        public DTO_DoiBong? LayMaMoiNhat()
+        public DTO_DoiBong LayMaMoiNhat()
         {
-            var query = _context.LocalRepository
+            var query = _mySqlContext.DoiBongRepository
+                                .Where(obj => obj.Deleted == false)
                                 .AsNoTracking()
                                 .OrderByDescending(obj => obj.MaDoiBong);
 
-            return query.FirstOrDefault();
+            var result = query.FirstOrDefault();
+            result ??= new DTO_DoiBong { MaDoiBong = "DB000" };
+            return result;
         }
 
         internal List<DTO_DoiBong> LayDanhSach(Expression<Func<DTO_DoiBong, DTO_DoiBong>>? selector = default, Expression<Func<DTO_DoiBong, bool>>? filter = default, bool isTracking = false)
         {
-            var query = _context.LocalRepository
+            var query = _mySqlContext.DoiBongRepository
                                 .AsQueryable();
 
             if (filter != null)
@@ -45,10 +48,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
         {
             foreach(var entity in insertList)
             {
-                _context.LocalRepository.Add(entity);
+                _mySqlContext.DoiBongRepository.Add(entity);
             }
 
-            _context.SaveChanges();
+            _mySqlContext.SaveChanges();
         }
     }
 }

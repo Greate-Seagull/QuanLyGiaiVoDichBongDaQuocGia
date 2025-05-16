@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 {    
-    class BUS_CauThu
+    public class BUS_CauThu
     {
         private readonly DAL_CauThu _DAL;
 
@@ -18,7 +18,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             return _DAL.LayDanhSach(selector, filter, isTracking);
         }
 
-        public DTO_CauThu? LayMaMoiNhat()
+        public DTO_CauThu LayMaMoiNhat()
         {
             return _DAL.LayMaMoiNhat();
         }

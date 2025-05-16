@@ -8,24 +8,27 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 {
     class DAL_VongDau
     {
-        private readonly DBC_VongDau _context;
-        public DAL_VongDau(DBC_VongDau context)
+        private readonly MySqlDbContext _mySqlContext;
+        public DAL_VongDau(MySqlDbContext context)
         {
-            _context = context;
+            _mySqlContext = context;
         }
 
-        public DTO_VongDau? LayMaMoiNhat()
+        public DTO_VongDau LayMaMoiNhat()
         {
-            var query = _context.LocalRepository
+            var query = _mySqlContext.VongDauRepository
+                                .Where(obj => obj.Deleted == false)
                                 .AsNoTracking()
                                 .OrderByDescending(obj => obj.MaVongDau);
 
-            return query.FirstOrDefault();
+            var result = query.FirstOrDefault();
+            result ??= new DTO_VongDau { MaVongDau = "VD000" };
+            return result;
         }
 
         public List<DTO_VongDau> LayDanhSach(Expression<Func<DTO_VongDau, DTO_VongDau>>? selector = default, Expression<Func<DTO_VongDau, bool>>? filter = default, bool isTracking = false)
         {
-            var query = _context.LocalRepository.AsQueryable();
+            var query = _mySqlContext.VongDauRepository.AsQueryable();
 
             if (filter != null)
                 query = query.Where(filter);
@@ -43,10 +46,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
         {
             foreach (var entity in insertList)
             {
-                _context.LocalRepository.Add(entity);
+                _mySqlContext.VongDauRepository.Add(entity);
             }
 
-            _context.SaveChanges();
+            _mySqlContext.SaveChanges();
         }
     }
 }

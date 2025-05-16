@@ -64,7 +64,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void TaoSTT()
         {
-            stt = lichThiDau.STT.LayID();
+            stt = lichThiDau.STT.GetNewID();
         }
 
         public void CapNhatMaTranDau()
@@ -74,7 +74,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void TaoMaTranDau()
         {
-            maTranDau = lichThiDau.MaTranDau.LayID();
+            maTranDau = lichThiDau.MaTranDau.GetNewID();
         }
 
         private void TaoTranDau()
@@ -123,10 +123,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         private void btnXoa_Click(object sender, EventArgs e)
         {
             //Huy STT
-            lichThiDau.STT.HuyID(stt);            
+            lichThiDau.STT.CancelID(stt);            
 
             //Huy ma tran dau
-            lichThiDau.MaTranDau.HuyID(maTranDau);
+            lichThiDau.MaTranDau.CancelID(maTranDau);
 
             //Remove Owner from Owner manager
             lichThiDau.DanhSachDoiBong.RemoveOwner(cbTenDoi1_oldSelectedItem, cbTenDoi1);

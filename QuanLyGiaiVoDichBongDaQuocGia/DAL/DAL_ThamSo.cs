@@ -6,18 +6,18 @@ using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 {
-    class DAL_ThamSo
+    public class DAL_ThamSo
     {
-        private readonly DBC_ThamSo _context;
+        private readonly MySqlDbContext _mySqlContext;
 
-        public DAL_ThamSo(DBC_ThamSo context)
+        public DAL_ThamSo(MySqlDbContext context)
         {
-            _context = context;
+            _mySqlContext = context;
         }
 
         public DTO_ThamSo? LayDanhSach(Expression<Func<DTO_ThamSo, DTO_ThamSo>>? selector = default)
         {
-            var query = _context.LocalRepository.AsQueryable();
+            var query = _mySqlContext.ThamSoRepository.AsQueryable();
 
             if (selector != null)
                 query = query.Select(selector);

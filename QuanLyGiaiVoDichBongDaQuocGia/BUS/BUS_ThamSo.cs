@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 {    
-    class BUS_ThamSo
+    public class BUS_ThamSo
     {
         private readonly DAL_ThamSo _DAL;
 

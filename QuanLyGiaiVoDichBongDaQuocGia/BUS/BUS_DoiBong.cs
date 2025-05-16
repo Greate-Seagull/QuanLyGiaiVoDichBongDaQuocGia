@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 {
-    class BUS_DoiBong
+    public class BUS_DoiBong
     {
         private readonly DAL_DoiBong _DAL;
         private readonly BUS_CauThu _BUS_CauThu;
@@ -21,7 +21,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             return _DAL.LayDanhSach(selector, filter, isTracking);
         }
 
-        public DTO_DoiBong? LayMaMoiNhat()
+        public DTO_DoiBong LayMaMoiNhat()
         {
             return _DAL.LayMaMoiNhat();
         }

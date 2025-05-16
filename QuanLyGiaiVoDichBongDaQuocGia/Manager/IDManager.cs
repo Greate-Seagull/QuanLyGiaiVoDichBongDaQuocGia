@@ -42,13 +42,18 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
             maDaPhat = new List<ID>();
         }
 
-        public ID LayID()
+        public ID GetNewID()
         {
-            maDaPhat.Add(this.TaoID(maGoc, maDaPhat.Count + 1));
+            maDaPhat.Add(this.CreateID(maDaPhat.Count + 1));
             return maDaPhat[^1];
         }
 
-        public void HuyID(ID iD)
+        public ID GetCurrentID()
+        {
+            return maDaPhat[^1];
+        }
+
+        public void CancelID(ID iD)
         {
             if(iD.IsConfirm == false)
             {
@@ -61,17 +66,17 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
             }
         }
 
-        private ID TaoID(string iD, int v)
+        public ID CreateID(int v)
         {
-            string kyTu = Regex.Replace(iD, "[^A-Za-z]", "");
-            string so = Regex.Replace(iD, "[^0-9]", "");
+            string kyTu = Regex.Replace(maGoc, "[^A-Za-z]", "");
+            string so = Regex.Replace(maGoc, "[^0-9]", "");
             int soMoi = int.Parse(so) + v;
-            int soLuongKyTuSo = iD.Length - kyTu.Length;
+            int soLuongKyTuSo = maGoc.Length - kyTu.Length;
             string maMoi = kyTu + soMoi.ToString($"D{soLuongKyTuSo}");
             return new ID(maMoi);
         }
 
-        public void XacNhan()
+        public void Confirm()
         {
             foreach(var id in maDaPhat)
             {

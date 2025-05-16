@@ -1,29 +1,18 @@
 ﻿using QuanLyGiaiVoDichBongDaQuocGia.BUS;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
 using QuanLyGiaiVoDichBongDaQuocGia.Manager;
-using QuanLyGiaiVoDichBongDaQuocGia.FilterHelper;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Runtime.Serialization.Json;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 {
     public partial class GUI_LapLichThiDau : Form
     {
-        BUS_VongDau BUS_vongDau = new BUS_VongDau();
-        BUS_TranDau BUS_tranDau = new BUS_TranDau();
-        BUS_DoiBong BUS_doiBong = new BUS_DoiBong();
+        private readonly BUS_VongDau _BUS_VongDau;
+        private readonly BUS_TranDau _BUS_TranDau;
+        private readonly BUS_DoiBong _BUS_DoiBong;
 
         //Xu ly
         DTO_VongDau vongDau;
-        DataManager<DTO_TranDau> danhSachTranDau;
+        List<DTO_TranDau> danhSachTranDau;
 
         //KiemTra
         List<DTO_TranDau> danhSachCapDau;
@@ -64,22 +53,17 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void LayDanhSachCapDau()
         {
-            var filters = FilterBuilder<TranDauColumn>
-                .Where(TranDauColumn.MaVongDau).NotEqualsTo(VongDau.MaVongDau)
-                .Build();
-
-            danhSachCapDau = BUS_tranDau.LayDanhSach(filters, TranDauColumn.MaDoi1, TranDauColumn.MaDoi2).GetReadData();
+            danhSachCapDau = _BUS_TranDau.LayDanhSach();
         }
 
         private void LayDanhSachDoiBong()
         {
-            danhSachDoiBong = new OwnerManager<DTO_DoiBong, ComboBox>(BUS_doiBong.LayDanhSach(default, DoiBongColumn.TenDoiBong, DoiBongColumn.TenSanNha));
             danhSachDoiBong.AddData(cbTenDoi_DefaultItem, 100);
         }
 
         private void TaoDanhSachTranDau()
         {            
-            danhSachTranDau = BUS_tranDau.LayDanhSachNhap();
+            danhSachTranDau = new();
         }
 
         private void TaoVongDau()
@@ -87,19 +71,16 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             LayMaVongDauMoi();
 
             VongDau = new DTO_VongDau { MaVongDau = txtMaVongDau.Text };
-
-            DataManager<DTO_VongDau> danhSachNhapVongDau = BUS_vongDau.LayDanhSachNhap();
-            danhSachNhapVongDau.Add(VongDau.MaVongDau, VongDau);
         }
 
         private void TaoMaTranDau()
         {
-            MaTranDau = new IDManager(BUS_tranDau.LayMaTranDauHienTai());
+            MaTranDau = new IDManager(_BUS_TranDau.LayMaMoiNhat().MaTranDau);
         }
 
         private void LayMaVongDauMoi()
         {
-            txtMaVongDau.Text = BUS_vongDau.LayMaVongDauMoi();
+            txtMaVongDau.Text = _BUS_VongDau.LayMaMoiNhat().MaVongDau;
         }
 
         private void btnLapLichThiDau_Click(object sender, EventArgs e)
@@ -109,10 +90,9 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
             try
             {
-                if (BUS_vongDau.LapLichThiDau())
+                if (_BUS_VongDau.LapLichThiDau(vongDau, danhSachTranDau))
                 {
-                    MaTranDau.XacNhan();
-                    danhSachTranDau.UpdateDataState();                    
+                    MaTranDau.Confirm();
                     MessageBox.Show("Lập lịch thi đấu thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
@@ -127,7 +107,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             foreach (GUI_LapTranDau_RowVersion row in pDanhSachTranDau.Controls)
             {
                 row.CapNhatThongTinTranDau();
-                danhSachTranDau.AddOrUpdate(row.TranDau.MaTranDau, row.Output);
             }
         }
 
@@ -153,7 +132,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             pDanhSachTranDau.SuspendLayout();
 
             pDanhSachTranDau.Controls.Remove(GUI_lapTranDau_RowVersion);           
-            danhSachTranDau.Delete(GUI_lapTranDau_RowVersion.TranDau.MaTranDau);
             CapNhatSTT();
             CapNhatMaTranDau();
 

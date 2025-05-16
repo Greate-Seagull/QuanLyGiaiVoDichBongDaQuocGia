@@ -27,7 +27,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             return _DAL.LayDanhSach(selector, filter, isTracking);
         }
 
-        public DTO_VongDau? LayMaMoiNhat()
+        public DTO_VongDau LayMaMoiNhat()
         {
             return _DAL.LayMaMoiNhat();
         }

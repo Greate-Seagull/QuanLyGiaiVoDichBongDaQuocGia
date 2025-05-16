@@ -1,6 +1,7 @@
 ﻿using QuanLyGiaiVoDichBongDaQuocGia.BUS;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
 using QuanLyGiaiVoDichBongDaQuocGia.Manager;
+using Syncfusion.WinForms.DataGrid;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,96 +16,115 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 {
     public partial class GUI_TiepNhanDoiBong : Form
     {
-        BUS_ThamSo busThamSo = new BUS_ThamSo();
-        BUS_DoiBong busDoiBong = new BUS_DoiBong();
-        BUS_CauThu busCauThu = new BUS_CauThu();
-        BUS_LoaiCauThu busLoaiCauThu = new BUS_LoaiCauThu();
+        private readonly BUS_ThamSo _BUS_ThamSo;
+        private readonly BUS_DoiBong _BUS_DoiBong;
+        private readonly BUS_CauThu _BUS_CauThu;
+        private readonly BUS_LoaiCauThu _BUS_LoaiCauThu;
 
         //Xu ly
-        DTO_DoiBong doiBong;
-        DataManager<DTO_CauThu> danhSachCauThu;
+        DTO_DoiBong doiBongTiepNhan;
+        BindingList<DTO_CauThu> danhSachCauThuTiepNhan;
 
         //Hien thi
         DTO_ThamSo thamSo;
         List<DTO_LoaiCauThu> danhSachLoaiCauThu;
 
         //Quan ly
-        IDManager stt;
-        IDManager maCauThu;
+        IDManager maDoiBong;
+        IDManager maCauThuQuanLy;
 
-        public DTO_ThamSo ThamSo { get => thamSo; set => thamSo = value; }
-        public DTO_DoiBong DoiBong { get => doiBong; }
-        public List<DTO_LoaiCauThu> DanhSachLoaiCauThu { get => danhSachLoaiCauThu; }
-        public IDManager STT { get => stt; set => stt = value; }
-        public IDManager MaCauThu { get => maCauThu; set => maCauThu = value; }
-
-        public GUI_TiepNhanDoiBong()
+        public GUI_TiepNhanDoiBong(BUS_ThamSo bUS_ThamSo, BUS_DoiBong bUS_DoiBong, BUS_CauThu bUS_CauThu, BUS_LoaiCauThu bUS_LoaiCauThu)
         {
             InitializeComponent();
+
+            //Dependencies
+            _BUS_ThamSo = bUS_ThamSo;
+            _BUS_DoiBong = bUS_DoiBong;
+            _BUS_CauThu = bUS_CauThu;
+            _BUS_LoaiCauThu = bUS_LoaiCauThu;
         }
 
         private void GUI_TiepNhanDoiBong_Load(object sender, EventArgs e)
         {
-            LayThamSo();            
-            TaoSTT();     
+            LayThamSo();
             TaoDoiBong();
             TaoDanhSachCauThu();
             LayDanhSachLoaiCauThu();
+
+            UILoad();
         }
 
-        private void TaoSTT()
+        private void UILoad()
         {
-            stt = new IDManager("0");
+            //Configure DataGrid
+            dgDanhSachCauThu.DataSource = danhSachCauThuTiepNhan;
+
+            //Configure column MaLoaiCauThu on DataGrid
+            var MaLoaiCauThuCol = dgDanhSachCauThu.Columns["MaLoaiCauThu"] as GridComboBoxColumn;
+            MaLoaiCauThuCol.DataSource = danhSachLoaiCauThu;            
+
+            //Configure column NgaySinh on DataGrid
+            var NgaySinhCol = dgDanhSachCauThu.Columns["NgaySinh"] as GridDateTimeColumn;
+            NgaySinhCol.MinDateTime = new DateTime(DateTime.Now.Year - thamSo.TuoiCauThuToiDa, DateTime.Now.Month, DateTime.Now.Day);
+            NgaySinhCol.MaxDateTime = new DateTime(DateTime.Now.Year - thamSo.TuoiCauThuToiThieu, DateTime.Now.Month, DateTime.Now.Day);
         }
 
         private void LayThamSo()
         {
-            ThamSo = busThamSo.LayThamSo();
+            thamSo = _BUS_ThamSo.LayThamSo();
         }
 
         private void TaoDanhSachCauThu()
         {
             TaoMaCauThu();
-            danhSachCauThu = busCauThu.LayDanhSachNhap();
+
+            danhSachCauThuTiepNhan = new();
+            for (int i = 0; i < thamSo.SoLuongCauThuToiThieu; i++)
+            {
+                danhSachCauThuTiepNhan.Add(new DTO_CauThu{MaDoiBong = doiBongTiepNhan.MaDoiBong});
+            }
+
+            CapNhatMaCauThu();
         }
 
         private void TaoDoiBong()
         {
             LayMaDoiBongMoi();
+            CapNhatMaDoiBong();
 
-            doiBong = new DTO_DoiBong { MaDoiBong = txtMaDoiBong.Text };
+            doiBongTiepNhan = new DTO_DoiBong { MaDoiBong = maDoiBong.GetCurrentID().ToString() };
+        }
 
-            DataManager<DTO_DoiBong> danhSachDoiBong = busDoiBong.LayDanhSachNhap();
-            danhSachDoiBong.Add(doiBong.MaDoiBong, doiBong);
+        private void CapNhatMaDoiBong()
+        {
+            txtMaDoiBong.Text = maDoiBong.GetNewID().ToString();
         }
 
         private void TaoMaCauThu()
         {
-            maCauThu = new IDManager(busCauThu.LayMaCauThuHienTai());
+            maCauThuQuanLy = new(_BUS_CauThu.LayMaMoiNhat().MaCauThu);
         }
 
         private void LayDanhSachLoaiCauThu()
         {
-            danhSachLoaiCauThu = busLoaiCauThu.LayDanhSach(default, LoaiCauThuColumn.TenLoaiCauThu, LoaiCauThuColumn.SoLuongCauThuToiDaTheoLoaiCauThu).GetReadData();
+            danhSachLoaiCauThu = _BUS_LoaiCauThu.LayDanhSach();
         }
 
         private void LayMaDoiBongMoi()
         {
-            txtMaDoiBong.Text = busDoiBong.LayMaDoiBongMoi();
+            maDoiBong = new(_BUS_DoiBong.LayMaMoiNhat().MaDoiBong);
         }
 
         private void btnTiepNhanDoiBong_Click(object sender, EventArgs e)
         {
-            LayThongTinDoiBong();
-            LayDanhSachThongTinCauThu();
+            CapNhatThongTinDoiBong();
 
             try
             {
-                if (busDoiBong.TiepNhanDoiBong())
+                if (_BUS_DoiBong.TiepNhanDoiBong(doiBongTiepNhan, danhSachCauThuTiepNhan.ToList()))
                 {
-                    maCauThu.XacNhan();
-                    danhSachCauThu.UpdateDataState();                    
-                    CapNhatMauSacDong();
+                    maCauThuQuanLy.Confirm();
+                    LamMoiDanhSachCauThu();
 
                     MessageBox.Show("Tiếp nhận đội bóng thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.DialogResult = DialogResult.OK;
@@ -117,41 +137,27 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         }
 
-        private void CapNhatMauSacDong()
+        private void CapNhatThongTinDoiBong()
         {
-            foreach(GUI_TiepNhanCauThu_RowVersion row in pDanhSachCauThu.Controls)
-            {
-                row.CapNhatMauSac();
-            }
+            if (doiBongTiepNhan.TenDoiBong != txtTenDoiBong.Text) doiBongTiepNhan.TenDoiBong = txtTenDoiBong.Text;
+            if (doiBongTiepNhan.TenSanNha != txtTenSanNha.Text) doiBongTiepNhan.TenSanNha = txtTenSanNha.Text;
         }
 
-        private void LayDanhSachThongTinCauThu()
+        private void LamMoiDanhSachCauThu()
         {
-            foreach (GUI_TiepNhanCauThu_RowVersion cauThuRow in pDanhSachCauThu.Controls)
-            {
-                cauThuRow.CapNhatThongTinCauThu();
-                danhSachCauThu.AddOrUpdate(cauThuRow.CauThu.MaCauThu, cauThuRow.Output);
-            }
-        }
-
-        private void LayThongTinDoiBong()
-        {
-            doiBong.MaDoiBong = txtMaDoiBong.Text;
-            doiBong.TenDoiBong = txtTenDoiBong.Text;
-            doiBong.TenSanNha = txtTenSanNha.Text;
+            danhSachCauThuTiepNhan.Clear();
         }
 
         private void btnThemCauThu_Click(object sender, EventArgs e)
         {
-            pDanhSachCauThu.SuspendLayout();
-
-            if (pDanhSachCauThu.Controls.Count < ThamSo.SoLuongCauThuToiDa)
+            if (danhSachCauThuTiepNhan.Count < thamSo.SoLuongCauThuToiDa)
             {
-                GUI_TiepNhanCauThu_RowVersion newRow = new GUI_TiepNhanCauThu_RowVersion(this);
-                pDanhSachCauThu.Controls.Add(newRow);                
+                danhSachCauThuTiepNhan.Add(new DTO_CauThu
+                {
+                    MaCauThu = maCauThuQuanLy.CreateID(danhSachCauThuTiepNhan.Count + 1).ToString(),
+                    MaDoiBong = doiBongTiepNhan.MaDoiBong
+                });
             }
-
-            pDanhSachCauThu.ResumeLayout();
         }
 
         private void btnThoat_Click(object sender, EventArgs e)
@@ -160,46 +166,24 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             this.Close();
         }
 
-        internal void XoaCauThu(GUI_TiepNhanCauThu_RowVersion row)
-        {
-            pDanhSachCauThu.SuspendLayout();
-
-            danhSachCauThu.Delete(row.CauThu.MaCauThu);
-            pDanhSachCauThu.Controls.Remove(row);
-            CapNhatSTT();
-            CapNhatMaCauThu();
-
-            pDanhSachCauThu.ResumeLayout();
-        }
-
-        private void CapNhatSTT()
-        {
-            pDanhSachCauThu.SuspendLayout();
-
-            foreach (var row in pDanhSachCauThu.Controls)
-            {
-                if(row is GUI_TiepNhanCauThu_RowVersion cauThu)
-                {
-                    cauThu.CapNhatSTT();
-                }
-            }
-
-            pDanhSachCauThu.ResumeLayout();
-        }
-
         private void CapNhatMaCauThu()
         {
-            pDanhSachCauThu.SuspendLayout();
-
-            foreach (var row in pDanhSachCauThu.Controls)
+            int iDOffset = 1;
+            foreach (var entity in danhSachCauThuTiepNhan)
             {
-                if (row is GUI_TiepNhanCauThu_RowVersion cauThu)
-                {
-                    cauThu.CapNhatMaCauThu();
-                }
+                entity.MaCauThu = maCauThuQuanLy.CreateID(iDOffset++).ToString();
             }
+        }
 
-            pDanhSachCauThu.ResumeLayout();
+        private void dgDanhSachCauThu_RecordDeleted(object sender, Syncfusion.WinForms.DataGrid.Events.RecordDeletedEventArgs e)
+        {
+            CapNhatMaCauThu();
+        }
+
+        private void dgDanhSachCauThu_RecordDeleting(object sender, Syncfusion.WinForms.DataGrid.Events.RecordDeletingEventArgs e)
+        {
+            if (danhSachCauThuTiepNhan.Count <= thamSo.SoLuongCauThuToiThieu)
+                e.Cancel = true;
         }
     }
 }

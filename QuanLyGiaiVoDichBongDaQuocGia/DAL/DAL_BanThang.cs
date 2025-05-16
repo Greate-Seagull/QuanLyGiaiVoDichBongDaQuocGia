@@ -8,25 +8,28 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 {
     public class DAL_BanThang
     {
-        private readonly DBC_BanThang _context;
+        private readonly MySqlDbContext _mySqlContext;
 
-        public DAL_BanThang(DBC_BanThang context)
+        public DAL_BanThang(MySqlDbContext context)
         {
-            _context = context;
+            _mySqlContext = context;
         }
 
-        public DTO_BanThang? LayMaMoiNhat()
+        public DTO_BanThang LayMaMoiNhat()
         {
-            var query = _context.LocalRepository
+            var query = _mySqlContext.BanThangRepository
+                                .Where(obj => obj.Deleted == false)
                                 .AsNoTracking()
                                 .OrderByDescending(obj => obj.MaBanThang);
 
-            return query.FirstOrDefault();
+            var result = query.FirstOrDefault();
+            result ??= new DTO_BanThang { MaBanThang = "BT000" };
+            return result;
         }
 
         public List<DTO_BanThang> LayDanhSach(Expression<Func<DTO_BanThang, DTO_BanThang>>? selector = default, Expression<Func<DTO_BanThang, bool>>? filter = default, bool isTracking = false)
         {
-            var query = _context.LocalRepository.AsQueryable();
+            var query = _mySqlContext.BanThangRepository.AsQueryable();
 
             if (filter != null)
                 query = query.Where(filter);
@@ -44,10 +47,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
         {
             foreach(var entity in insertList)
             {
-                _context.LocalRepository.Add(entity);
+                _mySqlContext.BanThangRepository.Add(entity);
             }
 
-            _context.SaveChanges();
+            _mySqlContext.SaveChanges();
         }
     }
 }

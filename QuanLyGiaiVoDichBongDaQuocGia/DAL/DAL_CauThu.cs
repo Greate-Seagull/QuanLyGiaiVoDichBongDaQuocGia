@@ -6,37 +6,40 @@ using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 {
-    class DAL_CauThu
+    public class DAL_CauThu
     {
-        private readonly DBC_CauThu _context;
+        private readonly MySqlDbContext _mySqlContext;
 
-        public DAL_CauThu(DBC_CauThu context)
+        public DAL_CauThu(MySqlDbContext context)
         {
-            _context = context;
+            _mySqlContext = context;
         }
 
-        public DTO_CauThu? LayMaMoiNhat()
+        public DTO_CauThu LayMaMoiNhat()
         {
-            var query = _context.LocalRepository
+            var query = _mySqlContext.CauThuRepository
+                                .Where(obj => obj.Deleted == false)
                                 .AsNoTracking()
                                 .OrderByDescending(obj => obj.MaCauThu);
 
-            return query.FirstOrDefault();
+            var result = query.FirstOrDefault();
+            result ??= new DTO_CauThu { MaCauThu = "CT000" };
+            return result;
         }
 
         public void LuuDanhSach(List<DTO_CauThu> insertList)
         {
             foreach(var entity in insertList)
             {
-                _context.LocalRepository.Add(entity);
+                _mySqlContext.CauThuRepository.Add(entity);
             }
 
-            _context.SaveChanges();
+            _mySqlContext.SaveChanges();
         }
 
         internal List<DTO_CauThu> LayDanhSach(Expression<Func<DTO_CauThu, DTO_CauThu>>? selector = default, Expression<Func<DTO_CauThu, bool>>? filter = default, bool isTracking = false)
         {
-            var query = _context.LocalRepository
+            var query = _mySqlContext.CauThuRepository
                                 .AsQueryable();
 
             if (filter != null)

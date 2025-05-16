@@ -1,27 +1,23 @@
-﻿using QuanLyGiaiVoDichBongDaQuocGia.Helper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
 {
     public class DTO_BanThang
-    {   
+    {
+        [Key, MaxLength(5)]
         public string? MaBanThang { get; set; }
-        public string? MaTranDau { get; set; }
-        public DTO_TranDau? TranDau { get; set; }
-        public string? MaCauThu { get; set; }
-        public DTO_CauThu? CauThu { get; set; }
-        public string? MaLoaiBanThang { get; set; }
-        public DTO_LoaiBanThang? LoaiBanThang { get; set; }
-        public int ThoiDiemGhiBan { get; set; }
-        public bool IsDeleted { get; set; }
 
-        public override string ToString()
-        {
-            return $"{CauThu} - {CauThu?.DoiBong} - {TranDau} - {LoaiBanThang} - {ThoiDiemGhiBan}";
-        }
+        [Required, MaxLength(5)]
+        public string? MaTranDau { get; set; }
+
+        [Required, MaxLength(5)]
+        public string? MaCauThu { get; set; }
+
+        [Required, MaxLength(5)]
+        public string? MaLoaiBanThang { get; set; }
+
+        public int ThoiDiemGhiBan { get; set; }
+        public bool Deleted { get; set; } = false;
     }
 }

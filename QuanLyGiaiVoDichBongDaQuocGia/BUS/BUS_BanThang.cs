@@ -15,10 +15,11 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
         public List<DTO_BanThang> LayDanhSach(Expression<Func<DTO_BanThang, DTO_BanThang>>? selector = default, Expression<Func<DTO_BanThang, bool>>? filter = default, bool isTracking = false)
         {
+            //Add obj => obj.Deleted == false
             return _DAL.LayDanhSach(selector, filter, isTracking);
         }
 
-        public DTO_BanThang? LayMaMoiNhat()
+        public DTO_BanThang LayMaMoiNhat()
         {
             return _DAL.LayMaMoiNhat();
         }

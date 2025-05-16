@@ -8,24 +8,26 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 {
     public class DAL_LoaiCauThu
     {
-        private readonly DBC_LoaiCauThu _context;
+        private readonly MySqlDbContext _mySqlContext;
 
-        public DAL_LoaiCauThu(DBC_LoaiCauThu context)
+        public DAL_LoaiCauThu(MySqlDbContext context)
         {
-            _context = context;
+            _mySqlContext = context;
         }
-        public DTO_LoaiCauThu? LayMaMoiNhat()
+        public DTO_LoaiCauThu LayMaMoiNhat()
         {
-            var query = _context.LocalRepository
+            var query = _mySqlContext.LoaiCauThuRepository
                                 .AsNoTracking()
                                 .OrderByDescending(obj => obj.MaLoaiCauThu);
 
-            return query.FirstOrDefault();
+            var result = query.FirstOrDefault();
+            result ??= new DTO_LoaiCauThu { MaLoaiCauThu = "LCT00" };
+            return result;
         }
 
         public List<DTO_LoaiCauThu> LayDanhSach(Expression<Func<DTO_LoaiCauThu, DTO_LoaiCauThu>>? selector = default, Expression<Func<DTO_LoaiCauThu, bool>>? filter = default, bool isTracking = false)
         {
-            var query = _context.LocalRepository.AsQueryable();
+            var query = _mySqlContext.LoaiCauThuRepository.AsQueryable();
 
             if (filter != null)
                 query = query.Where(filter);
@@ -43,10 +45,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
         {
             foreach (var entity in insertList)
             {
-                _context.LocalRepository.Add(entity);
+                _mySqlContext.LoaiCauThuRepository.Add(entity);
             }
 
-            _context.SaveChanges();
+            _mySqlContext.SaveChanges();
         }
     }
 }

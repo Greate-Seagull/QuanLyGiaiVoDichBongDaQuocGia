@@ -1,29 +1,21 @@
 ﻿using QuanLyGiaiVoDichBongDaQuocGia.BUS;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
 using QuanLyGiaiVoDichBongDaQuocGia.Manager;
-using QuanLyGiaiVoDichBongDaQuocGia.FilterHelper;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 {
     public partial class GUI_GhiNhanKetQua : Form
     {
-        BUS_BanThang busBanThang = new BUS_BanThang();
-        BUS_TranDau busTranDau = new BUS_TranDau();
-        BUS_CauThu busCauThu = new BUS_CauThu();
-        BUS_LoaiBanThang busLoaiBanThang = new BUS_LoaiBanThang();
+        private readonly BUS_BanThang _BUS_BanThang;
+        private readonly BUS_TranDau _BUS_TranDau;
+        private readonly BUS_CauThu _BUS_CauThu;
+        private readonly BUS_LoaiBanThang _BUS_LoaiBanThang;
 
         //Xu ly
         //DTO_TranDau tranDau;
-        DataManager<DTO_BanThang> danhSachBanThang;
+        List<DTO_BanThang> danhSachBanThang;
 
         //Quan ly
         IDManager stt;
@@ -48,38 +40,28 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             TaoSTT();
             TaoMaBanThang();
             LayDanhSachTranDau();
-            TaoDanhSachBanThang();
             LayDanhSachLoaiBanThang();
             CapNhatTiSo();
         }
 
         private void LayDanhSachLoaiBanThang()
         {
-            DanhSachLoaiBanThang = busLoaiBanThang.LayDanhSach(default, LoaiBanThangColumn.TenLoaiBanThang).GetReadData();
+            DanhSachLoaiBanThang = _BUS_LoaiBanThang.LayDanhSach();
         }
 
         private void LayDanhSachCauThuThuocHaiDoi()
         {
-            var filters = FilterBuilder<CauThuColumn>
-                .Where(CauThuColumn.MaDoiBong).In(TranDau.DoiBong1.MaDoiBong, TranDau.DoiBong2.MaDoiBong)
-                .Build();
-
-            danhSachCauThuThuocHaiDoi = busCauThu.LayDanhSach(filters, CauThuColumn.TenCauThu, CauThuColumn.MaDoiBong).GetReadData();
-        }
-
-        private void TaoDanhSachBanThang()
-        {
-            danhSachBanThang = busBanThang.LayDanhSachNhap();
+            danhSachCauThuThuocHaiDoi = _BUS_CauThu.LayDanhSach();
         }
 
         private void LayDanhSachTranDau()
         {
-            cbTranDau.DataSource = busTranDau.LayDanhSach(default, TranDauColumn.MaDoi1, TranDauColumn.MaDoi2, TranDauColumn.NgayGio).GetReadData();
+            cbTranDau.DataSource = _BUS_TranDau.LayDanhSach();
         }
 
         private void TaoMaBanThang()
         {
-            MaBanThang = new IDManager(busBanThang.LayMaMoiNhat());
+            MaBanThang = new IDManager(_BUS_BanThang.LayMaMoiNhat().MaBanThang);
         }
 
         private void TaoSTT()
@@ -119,9 +101,8 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
             try
             {
-                if (busTranDau.GhiNhanKetQua())
+                if (_BUS_TranDau.GhiNhanKetQua(danhSachBanThang))
                 {
-                    danhSachBanThang.UpdateDataState();
                     MessageBox.Show("Ghi nhận kết quả thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
@@ -136,7 +117,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             foreach (GUI_GhiNhanBanThang_RowVersion row in pDanhSachBanThang.Controls)
             {
                 row.CapNhatThongTinBanThang();
-                danhSachBanThang.AddOrUpdate(row.BanThang.MaBanThang, row.Output);
             }
         }
 
@@ -155,7 +135,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             pDanhSachBanThang.SuspendLayout();
 
             pDanhSachBanThang.Controls.Remove(GUI_ghiNhanBanThang_RowVersion);
-            danhSachBanThang.Delete(GUI_ghiNhanBanThang_RowVersion.BanThang.MaBanThang);
             CapNhatSTT();
             CapNhatMaBanThang();
 

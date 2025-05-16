@@ -95,12 +95,12 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void TaoSTT()
         {
-            stt = ketQuaTranDau.STT.LayID();
+            stt = ketQuaTranDau.STT.GetNewID();
         }
 
         private void TaoMaBanThang()
         {
-            maBanThang = ketQuaTranDau.MaBanThang.LayID();
+            maBanThang = ketQuaTranDau.MaBanThang.GetNewID();
         }
         internal void CapNhatThongTinBanThang()
         {
@@ -112,8 +112,8 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         }
         private void btnXoa_Click(object sender, EventArgs e)
         {
-            ketQuaTranDau.STT.HuyID(stt);
-            ketQuaTranDau.MaBanThang.HuyID(maBanThang);
+            ketQuaTranDau.STT.CancelID(stt);
+            ketQuaTranDau.MaBanThang.CancelID(maBanThang);
             ketQuaTranDau.XoaBanThang(this);
             this.Dispose();
         }
