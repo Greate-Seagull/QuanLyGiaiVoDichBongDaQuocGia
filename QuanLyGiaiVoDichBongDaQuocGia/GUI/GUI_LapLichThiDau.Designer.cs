@@ -28,7 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            Syncfusion.WinForms.DataGrid.GridTextColumn gridTextColumn1 = new Syncfusion.WinForms.DataGrid.GridTextColumn();
+            Syncfusion.WinForms.DataGrid.GridTextColumn gridTextColumn2 = new Syncfusion.WinForms.DataGrid.GridTextColumn();
+            Syncfusion.WinForms.DataGrid.GridComboBoxColumn gridComboBoxColumn1 = new Syncfusion.WinForms.DataGrid.GridComboBoxColumn();
+            Syncfusion.WinForms.DataGrid.GridDateTimeColumn gridDateTimeColumn1 = new Syncfusion.WinForms.DataGrid.GridDateTimeColumn();
+            Syncfusion.WinForms.DataGrid.GridTextColumn gridTextColumn3 = new Syncfusion.WinForms.DataGrid.GridTextColumn();
             tlpFrame = new TableLayoutPanel();
+            dgDanhSachTranDau = new Syncfusion.WinForms.DataGrid.SfDataGrid();
             txtNgayKetThuc = new TextBox();
             txtNgayBatDau = new TextBox();
             lblNgayKetThuc = new Label();
@@ -39,9 +45,9 @@
             lblMaVongDau = new Label();
             txtMaVongDau = new TextBox();
             txtVongThiDau = new TextBox();
-            pDanhSachTranDau = new Panel();
             btnLapLichThiDau = new Button();
             tlpFrame.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgDanhSachTranDau).BeginInit();
             SuspendLayout();
             // 
             // tlpFrame
@@ -55,6 +61,7 @@
             tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
             tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
             tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
+            tlpFrame.Controls.Add(dgDanhSachTranDau, 0, 2);
             tlpFrame.Controls.Add(txtNgayKetThuc, 4, 1);
             tlpFrame.Controls.Add(txtNgayBatDau, 3, 1);
             tlpFrame.Controls.Add(lblNgayKetThuc, 4, 0);
@@ -65,7 +72,6 @@
             tlpFrame.Controls.Add(lblMaVongDau, 0, 0);
             tlpFrame.Controls.Add(txtMaVongDau, 0, 1);
             tlpFrame.Controls.Add(txtVongThiDau, 1, 1);
-            tlpFrame.Controls.Add(pDanhSachTranDau, 0, 2);
             tlpFrame.Controls.Add(btnLapLichThiDau, 0, 3);
             tlpFrame.Dock = DockStyle.Fill;
             tlpFrame.Location = new Point(0, 0);
@@ -79,6 +85,61 @@
             tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
             tlpFrame.Size = new Size(1418, 507);
             tlpFrame.TabIndex = 0;
+            // 
+            // dgDanhSachTranDau
+            // 
+            dgDanhSachTranDau.AccessibleName = "Table";
+            dgDanhSachTranDau.AllowDeleting = true;
+            dgDanhSachTranDau.AutoGenerateColumns = false;
+            gridTextColumn1.AllowEditing = false;
+            gridTextColumn1.AllowResizing = true;
+            gridTextColumn1.AutoSizeColumnsMode = Syncfusion.WinForms.DataGrid.Enums.AutoSizeColumnsMode.Fill;
+            gridTextColumn1.HeaderText = "Mã cầu thủ";
+            gridTextColumn1.MappingName = "MaCauThu";
+            gridTextColumn2.AllowResizing = true;
+            gridTextColumn2.HeaderText = "Họ tên";
+            gridTextColumn2.MappingName = "TenCauThu";
+            gridTextColumn2.Width = 275D;
+            gridComboBoxColumn1.AllowBlankFilters = false;
+            gridComboBoxColumn1.AllowResizing = true;
+            gridComboBoxColumn1.AutoSizeColumnsMode = Syncfusion.WinForms.DataGrid.Enums.AutoSizeColumnsMode.Fill;
+            gridComboBoxColumn1.DisplayMember = "TenLoaiCauThu";
+            gridComboBoxColumn1.HeaderText = "Loại cầu thủ";
+            gridComboBoxColumn1.MappingName = "MaLoaiCauThu";
+            gridComboBoxColumn1.ValidationMode = Syncfusion.WinForms.DataGrid.Enums.GridValidationMode.InView;
+            gridComboBoxColumn1.ValueMember = "MaLoaiCauThu";
+            gridDateTimeColumn1.AllowResizing = true;
+            gridDateTimeColumn1.AutoSizeColumnsMode = Syncfusion.WinForms.DataGrid.Enums.AutoSizeColumnsMode.Fill;
+            gridDateTimeColumn1.Format = "dd/MM/yyyy";
+            gridDateTimeColumn1.HeaderText = "Ngày sinh";
+            gridDateTimeColumn1.MappingName = "NgaySinh";
+            gridDateTimeColumn1.MaxDateTime = new DateTime(9999, 12, 31, 23, 59, 59, 999);
+            gridTextColumn3.AllowResizing = true;
+            gridTextColumn3.HeaderText = "Ghi chú";
+            gridTextColumn3.MappingName = "GhiChu";
+            gridTextColumn3.Width = 689D;
+            dgDanhSachTranDau.Columns.Add(gridTextColumn1);
+            dgDanhSachTranDau.Columns.Add(gridTextColumn2);
+            dgDanhSachTranDau.Columns.Add(gridComboBoxColumn1);
+            dgDanhSachTranDau.Columns.Add(gridDateTimeColumn1);
+            dgDanhSachTranDau.Columns.Add(gridTextColumn3);
+            tlpFrame.SetColumnSpan(dgDanhSachTranDau, 8);
+            dgDanhSachTranDau.Dock = DockStyle.Fill;
+            dgDanhSachTranDau.EditMode = Syncfusion.WinForms.DataGrid.Enums.EditMode.SingleClick;
+            dgDanhSachTranDau.Location = new Point(20, 116);
+            dgDanhSachTranDau.Margin = new Padding(10);
+            dgDanhSachTranDau.Name = "dgDanhSachTranDau";
+            dgDanhSachTranDau.PreviewRowHeight = 42;
+            dgDanhSachTranDau.SelectionMode = Syncfusion.WinForms.DataGrid.Enums.GridSelectionMode.Extended;
+            dgDanhSachTranDau.ShowSortNumbers = true;
+            dgDanhSachTranDau.Size = new Size(1378, 320);
+            dgDanhSachTranDau.Style.BorderColor = Color.FromArgb(100, 100, 100);
+            dgDanhSachTranDau.Style.CheckBoxStyle.CheckedBackColor = Color.FromArgb(0, 120, 215);
+            dgDanhSachTranDau.Style.CheckBoxStyle.CheckedBorderColor = Color.FromArgb(0, 120, 215);
+            dgDanhSachTranDau.Style.CheckBoxStyle.IndeterminateBorderColor = Color.FromArgb(0, 120, 215);
+            dgDanhSachTranDau.Style.HyperlinkStyle.DefaultLinkColor = Color.FromArgb(0, 120, 215);
+            dgDanhSachTranDau.TabIndex = 19;
+            dgDanhSachTranDau.Text = "sfDataGrid1";
             // 
             // txtNgayKetThuc
             // 
@@ -199,20 +260,6 @@
             txtVongThiDau.Size = new Size(328, 31);
             txtVongThiDau.TabIndex = 5;
             // 
-            // pDanhSachTranDau
-            // 
-            pDanhSachTranDau.AutoScroll = true;
-            pDanhSachTranDau.BackColor = Color.White;
-            pDanhSachTranDau.BorderStyle = BorderStyle.FixedSingle;
-            tlpFrame.SetColumnSpan(pDanhSachTranDau, 8);
-            pDanhSachTranDau.Dock = DockStyle.Fill;
-            pDanhSachTranDau.Location = new Point(20, 116);
-            pDanhSachTranDau.Margin = new Padding(10);
-            pDanhSachTranDau.Name = "pDanhSachTranDau";
-            pDanhSachTranDau.Padding = new Padding(10);
-            pDanhSachTranDau.Size = new Size(1378, 320);
-            pDanhSachTranDau.TabIndex = 10;
-            // 
             // btnLapLichThiDau
             // 
             btnLapLichThiDau.Dock = DockStyle.Fill;
@@ -237,6 +284,7 @@
             Load += GUI_LapLichThiDau_Load;
             tlpFrame.ResumeLayout(false);
             tlpFrame.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dgDanhSachTranDau).EndInit();
             ResumeLayout(false);
         }
 
@@ -246,7 +294,6 @@
         private Label lblMaVongDau;
         private TextBox txtMaVongDau;
         private TextBox txtVongThiDau;
-        private Panel pDanhSachTranDau;
         private Button btnLapLichThiDau;
         private Label lblVongThiDau;
         private Button btnThoat;
@@ -255,5 +302,6 @@
         private TextBox txtNgayBatDau;
         private Label lblNgayKetThuc;
         private Label lblNgayBatDau;
+        private Syncfusion.WinForms.DataGrid.SfDataGrid dgDanhSachTranDau;
     }
 }

@@ -14,10 +14,12 @@
         "outputPath": "C:\\Users\\pc\\Documents\\WorkSpace\\C#\\QuanLyGiaiVoDichBongDaQuocGia\\QuanLyGiaiVoDichBongDaQuocGia\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
+          "D:\\DevExpress 24.2\\Components\\Offline Packages",
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
           "C:\\Users\\pc\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 24.2.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,6 +28,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "D:\\DevExpress 24.2\\Components\\System\\Components\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -50,6 +53,10 @@
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
           "dependencies": {
+            "DevExpress.Win.Grid": {
+              "target": "Package",
+              "version": "[24.2.7, )"
+            },
             "MySql.Data": {
               "target": "Package",
               "version": "[9.3.0, )"

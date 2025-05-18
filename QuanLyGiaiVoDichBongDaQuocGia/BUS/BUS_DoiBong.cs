@@ -2,6 +2,7 @@
 using QuanLyGiaiVoDichBongDaQuocGia.DAL;
 using System.Transactions;
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 {
@@ -16,38 +17,47 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             _BUS_CauThu = bUS_CauThu;
         }
 
-        internal List<DTO_DoiBong> LayDanhSach(Expression<Func<DTO_DoiBong, DTO_DoiBong>>? selector = default, Expression<Func<DTO_DoiBong, bool>>? filter = default, bool isTracking = false)
+        public string LayMaMoiNhat()
         {
-            return _DAL.LayDanhSach(selector, filter, isTracking);
+            var query = _DAL.GetAll()
+                            .IgnoreQueryFilters()
+                            .AsNoTracking()
+                            .OrderByDescending(obj => obj.MaDoiBong);
+
+            var result = query.FirstOrDefault();
+
+            if (result != null)
+                return result.MaDoiBong;
+            else
+                return "DB000";
         }
 
-        public DTO_DoiBong LayMaMoiNhat()
+        public bool TiepNhanDoiBong(DTO_DoiBong doiBongTiepNhan)
         {
-            return _DAL.LayMaMoiNhat();
-        }
-
-        public bool TiepNhanDoiBong(DTO_DoiBong doiBongTiepNhan, List<DTO_CauThu> danhSachCauThuTiepNhan)
-        {
-            var danhSachTam = new List<DTO_DoiBong>(){ doiBongTiepNhan };
+            var danhSachTam = new List<DTO_DoiBong> { doiBongTiepNhan };
 
             this.KiemTraNhapLieu(danhSachTam);
 
-            using (var transaction = new TransactionScope())
+            using (var transaction = _DAL.Context.Database.BeginTransaction())
             {
-                this.LuuThongTin(danhSachTam);
-                _BUS_CauThu.TiepNhanCauThu(danhSachCauThuTiepNhan);
-                transaction.Complete();
-                return true;
+                try
+                {
+                    _BUS_CauThu.KiemTraNhapLieu(doiBongTiepNhan.CacCauThu);
+                    if(_DAL.ExistsLocally(doiBongTiepNhan) == false) _DAL.Add(doiBongTiepNhan);        
+                    _DAL.SaveChanges();
+                    transaction.Commit();
+                    return true;
+
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
             }            
         }
 
-        public bool LuuThongTin(List<DTO_DoiBong> danhSachLuu)
-        {
-            _DAL.LuuDanhSach(danhSachLuu);
-            return true;
-        }
-
-        private void KiemTraNhapLieu(List<DTO_DoiBong> danhSachKiemTra)
+        private void KiemTraNhapLieu(IEnumerable<DTO_DoiBong> danhSachKiemTra)
         {
             foreach(var entity in danhSachKiemTra)
             {

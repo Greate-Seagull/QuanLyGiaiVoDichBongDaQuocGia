@@ -1,6 +1,7 @@
 ﻿using QuanLyGiaiVoDichBongDaQuocGia.BUS;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
 using QuanLyGiaiVoDichBongDaQuocGia.Manager;
+using System.ComponentModel;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 {
@@ -12,48 +13,49 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         //Xu ly
         DTO_VongDau vongDau;
-        List<DTO_TranDau> danhSachTranDau;
+        List<DTO_TranDau> danhSachTranDauLapLich;
+        BindingList<DTO_TranDau> danhSachTranDauHienThi;
 
         //KiemTra
         List<DTO_TranDau> danhSachCapDau;
         OwnerManager<DTO_DoiBong, ComboBox> danhSachDoiBong;
 
         //Quan ly
-        IDManager stt;
-        IDManager maTranDau;       
+        IDManager maVongDau;
+        IDManager maTranDauQuanLy;       
 
         //UI
         public DTO_DoiBong cbTenDoi_DefaultItem = new DTO_DoiBong { TenDoiBong = "Chọn đội bóng" };
 
-        public DTO_VongDau VongDau { get => vongDau; set => vongDau = value; }
-        public OwnerManager<DTO_DoiBong, ComboBox> DanhSachDoiBong { get => danhSachDoiBong; set => danhSachDoiBong = value; }
-        public List<DTO_TranDau> DanhSachCapDau { get => danhSachCapDau; set => danhSachCapDau = value; }
-        public IDManager MaTranDau { get => maTranDau; set => maTranDau = value; }
-        public IDManager STT { get => stt; set => stt = value; }
-
-        public GUI_LapLichThiDau()
+        public GUI_LapLichThiDau(BUS_VongDau bUS_VongDau, BUS_TranDau bUS_TranDau, BUS_DoiBong bUS_DoiBong)
         {
             InitializeComponent();
+
+            //Dependencies
+            _BUS_VongDau = bUS_VongDau;
+            _BUS_TranDau = bUS_TranDau;
+            _BUS_DoiBong = bUS_DoiBong;
         }
 
         private void GUI_LapLichThiDau_Load(object sender, EventArgs e)
-        {                        
-            TaoSTT();
-            TaoMaTranDau();
+        {                                    
             TaoVongDau();
             TaoDanhSachTranDau();
             LayDanhSachDoiBong();
             LayDanhSachCapDau();
+
+            UILoad();
         }
 
-        private void TaoSTT()
+        private void UILoad()
         {
-            stt = new IDManager("0");
+            danhSachTranDauHienThi = new();
+            dgDanhSachTranDau.DataSource = danhSachTranDauHienThi;
         }
 
         private void LayDanhSachCapDau()
         {
-            danhSachCapDau = _BUS_TranDau.LayDanhSach();
+            danhSachCapDau = _BUS_TranDau.LayDanhSachCapDauNgoaiTruVongDau(vongDau.MaVongDau);
         }
 
         private void LayDanhSachDoiBong()
@@ -62,37 +64,27 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         }
 
         private void TaoDanhSachTranDau()
-        {            
-            danhSachTranDau = new();
+        {
+            maTranDauQuanLy = new(_BUS_TranDau.LayMaMoiNhat());
+            danhSachTranDauLapLich = new();
         }
 
         private void TaoVongDau()
         {
-            LayMaVongDauMoi();
-
-            VongDau = new DTO_VongDau { MaVongDau = txtMaVongDau.Text };
-        }
-
-        private void TaoMaTranDau()
-        {
-            MaTranDau = new IDManager(_BUS_TranDau.LayMaMoiNhat().MaTranDau);
-        }
-
-        private void LayMaVongDauMoi()
-        {
-            txtMaVongDau.Text = _BUS_VongDau.LayMaMoiNhat().MaVongDau;
+            maVongDau = new(_BUS_VongDau.LayMaMoiNhat());
+            txtMaVongDau.Text = maVongDau.GetNewID().ToString();
+            vongDau = new DTO_VongDau { MaVongDau = maVongDau.GetCurrentID().ToString() };
         }
 
         private void btnLapLichThiDau_Click(object sender, EventArgs e)
         {
             LayThongTinVongDau();
-            LayDanhSachThongTinTranDau();
 
             try
             {
-                if (_BUS_VongDau.LapLichThiDau(vongDau, danhSachTranDau))
+                if (_BUS_VongDau.LapLichThiDau(vongDau, danhSachTranDauLapLich))
                 {
-                    MaTranDau.Confirm();
+                    maTranDauQuanLy.Confirm();
                     MessageBox.Show("Lập lịch thi đấu thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
@@ -102,61 +94,31 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             }
         }
 
-        private void LayDanhSachThongTinTranDau()
-        {
-            foreach (GUI_LapTranDau_RowVersion row in pDanhSachTranDau.Controls)
-            {
-                row.CapNhatThongTinTranDau();
-            }
-        }
-
         private void LayThongTinVongDau()
         {
-            VongDau.MaVongDau = txtMaVongDau.Text;
-            VongDau.TenVongDau = txtVongThiDau.Text;
+            vongDau.MaVongDau = txtMaVongDau.Text;
+            vongDau.TenVongDau = txtVongThiDau.Text;
         }
 
         private void btnThemTranDau_Click(object sender, EventArgs e)
         {
-            pDanhSachTranDau.SuspendLayout();
-            
-            //Main logic
-            GUI_LapTranDau_RowVersion tranDauRow = new GUI_LapTranDau_RowVersion(this);
-            pDanhSachTranDau.Controls.Add(tranDauRow);
+            var tranDauMoi = new DTO_TranDau
+            {
+                MaTranDau = maTranDauQuanLy.CreateID(danhSachTranDauLapLich.Count + 1).ToString(),
+                MaVongDau = vongDau.MaVongDau
+            };
 
-            pDanhSachTranDau.ResumeLayout();
-        }
+            danhSachTranDauLapLich.Add(tranDauMoi);
 
-        internal void XoaTranDau(GUI_LapTranDau_RowVersion GUI_lapTranDau_RowVersion)
-        {
-            pDanhSachTranDau.SuspendLayout();
-
-            pDanhSachTranDau.Controls.Remove(GUI_lapTranDau_RowVersion);           
-            CapNhatSTT();
-            CapNhatMaTranDau();
-
-            pDanhSachTranDau.ResumeLayout();
+            danhSachTranDauHienThi.Add(tranDauMoi);
         }
 
         private void CapNhatMaTranDau()
         {
-            foreach (var row in pDanhSachTranDau.Controls)
+            int iDOffset = 1;
+            foreach (var entity in danhSachTranDauLapLich)
             {
-                if (row is GUI_LapTranDau_RowVersion tranDau)
-                {
-                    tranDau.CapNhatMaTranDau();
-                }
-            }
-        }
-
-        private void CapNhatSTT()
-        {
-            foreach (var row in pDanhSachTranDau.Controls)
-            {
-                if(row is GUI_LapTranDau_RowVersion tranDau)
-                {
-                    tranDau.CapNhatSTT();
-                }
+                entity.MaTranDau = maTranDauQuanLy.CreateID(iDOffset++).ToString();
             }
         }
 
@@ -164,14 +126,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
-        }
-
-        internal void CapNhatCacDoiThamGiaThiDau()
-        {
-            foreach(GUI_LapTranDau_RowVersion row in pDanhSachTranDau.Controls)
-            {
-                row.CapNhatDanhSachDoiBong();
-            }
         }
     }
 }

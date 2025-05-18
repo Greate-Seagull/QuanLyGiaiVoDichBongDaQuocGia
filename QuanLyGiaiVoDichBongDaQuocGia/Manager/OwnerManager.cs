@@ -1,13 +1,4 @@
-﻿using Mysqlx.Crud;
-using QuanLyGiaiVoDichBongDaQuocGia.DTO;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
+﻿namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
 {
     public class ManagedOwner<O>
     {
@@ -199,6 +190,11 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
             }
 
             return ownableData;
+        }
+
+        public HashSet<O> GetOwners(D data)
+        {
+            return dict[data].Owners;
         }
 
         public bool AddToBlacklist(D data, O owner)

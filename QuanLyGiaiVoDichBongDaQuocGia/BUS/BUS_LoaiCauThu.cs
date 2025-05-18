@@ -1,8 +1,10 @@
-﻿using QuanLyGiaiVoDichBongDaQuocGia.DAL;
+﻿using Microsoft.EntityFrameworkCore;
+using QuanLyGiaiVoDichBongDaQuocGia.DAL;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
 using QuanLyGiaiVoDichBongDaQuocGia.Manager;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -19,9 +21,17 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             _DAL = dAL;
         }
 
-        public List<DTO_LoaiCauThu> LayDanhSach(Expression<Func<DTO_LoaiCauThu, DTO_LoaiCauThu>>? selector = default, Expression<Func<DTO_LoaiCauThu, bool>>? filter = default, bool isTracking = false)
+        internal IEnumerable<DTO_LoaiCauThu> LayDanhSachLoaiCauThuTiepNhanDoiBong()
         {
-            return _DAL.LayDanhSach(selector, filter, isTracking);
+            var query = _DAL.GetAll()
+                            .Select(obj => new DTO_LoaiCauThu
+                            {
+                                MaLoaiCauThu = obj.MaLoaiCauThu,
+                                TenLoaiCauThu = obj.TenLoaiCauThu,
+                                SoLuongCauThuToiDaTheoLoaiCauThu = obj.SoLuongCauThuToiDaTheoLoaiCauThu
+                            });
+
+            return query.AsNoTracking().ToList();
         }
     }
 }

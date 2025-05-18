@@ -1,12 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QuanLyGiaiVoDichBongDaQuocGia.DBContext;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
-using System.Data;
-using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 {
-    public class DAL_DoiBong: IDoiBongRepository
+    public class DAL_DoiBong: IRepository<DTO_DoiBong>, IUsingDbContext
     {
         private readonly MySqlDbContext _context;
 
@@ -15,30 +13,14 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             _context = context;
         }
 
-        public string GetLastID()
-        {
-            var query = _context.DoiBongRepository
-                                .IgnoreQueryFilters()
-                                .AsNoTracking()
-                                .OrderByDescending(obj => obj.MaDoiBong);
-
-            var result = query.FirstOrDefault();
-
-            if (result != null)
-                return result.MaDoiBong;
-            else
-                return "DB000";
-        }
+        public DbContext Context => _context;
 
         //Add methods
         public void Add(DTO_DoiBong entity) => _context.DoiBongRepository.Add(entity);
         public void AddRange(IEnumerable<DTO_DoiBong> entities) => _context.DoiBongRepository.AddRange(entities);
 
         //Get methods
-        public DTO_DoiBong GetById(object id) => _context.DoiBongRepository.Find(id);
-        public IEnumerable<DTO_DoiBong> GetAll() => _context.DoiBongRepository.ToList();
-        public IEnumerable<DTO_DoiBong> Find(Expression<Func<DTO_DoiBong, DTO_DoiBong>> selector, Expression<Func<DTO_DoiBong, bool>> filter)
-            => _context.DoiBongRepository.Where(filter).Select(selector);
+        public IQueryable<DTO_DoiBong> GetAll() => _context.DoiBongRepository.AsQueryable();
 
         //Update methods
         public void Update(DTO_DoiBong entity) => _context.DoiBongRepository.Update(entity);
@@ -49,5 +31,12 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 
         //Save changes
         public void SaveChanges() => _context.SaveChanges();
+
+        public bool ExistsLocally(DTO_DoiBong doiBongTiepNhan)
+        {
+            return _context.ChangeTracker.Entries<DTO_DoiBong>()
+                           .Any(e => e.Entity.MaDoiBong == doiBongTiepNhan.MaDoiBong &&
+                                     e.State != EntityState.Deleted);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 {
@@ -9,9 +10,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
         void AddRange(IEnumerable<T> entities);
 
         //Get methods
-        T GetById(object id);
-        IEnumerable<T> GetAll();
-        IEnumerable<T> Find(Expression<Func<T, T>> selector, Expression<Func<T, bool>> filter);
+        IQueryable<T> GetAll();
 
         //Update methods
         void Update(T entity);

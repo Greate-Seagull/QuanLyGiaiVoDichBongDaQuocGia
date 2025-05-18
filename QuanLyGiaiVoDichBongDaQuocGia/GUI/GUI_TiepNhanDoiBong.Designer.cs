@@ -28,11 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Syncfusion.WinForms.DataGrid.GridTextColumn gridTextColumn1 = new Syncfusion.WinForms.DataGrid.GridTextColumn();
-            Syncfusion.WinForms.DataGrid.GridTextColumn gridTextColumn2 = new Syncfusion.WinForms.DataGrid.GridTextColumn();
-            Syncfusion.WinForms.DataGrid.GridComboBoxColumn gridComboBoxColumn1 = new Syncfusion.WinForms.DataGrid.GridComboBoxColumn();
-            Syncfusion.WinForms.DataGrid.GridDateTimeColumn gridDateTimeColumn1 = new Syncfusion.WinForms.DataGrid.GridDateTimeColumn();
-            Syncfusion.WinForms.DataGrid.GridTextColumn gridTextColumn3 = new Syncfusion.WinForms.DataGrid.GridTextColumn();
+            components = new System.ComponentModel.Container();
             tlpFrame = new TableLayoutPanel();
             btnThemCauThu = new Button();
             lblMaDoiBong = new Label();
@@ -43,9 +39,23 @@
             txtTenSanNha = new TextBox();
             btnTiepNhanDoiBong = new Button();
             btnThoat = new Button();
-            dgDanhSachCauThu = new Syncfusion.WinForms.DataGrid.SfDataGrid();
+            gcDanhSachCauThu = new DevExpress.XtraGrid.GridControl();
+            gvcDanhSachCauThu = new DevExpress.XtraGrid.Views.Grid.GridView();
+            gccMaCauThu = new DevExpress.XtraGrid.Columns.GridColumn();
+            gccTenCauThu = new DevExpress.XtraGrid.Columns.GridColumn();
+            gccLoaiCauThu = new DevExpress.XtraGrid.Columns.GridColumn();
+            lkLoaiCauThu = new DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit();
+            gccNgaySinh = new DevExpress.XtraGrid.Columns.GridColumn();
+            dtpNgaySinh = new DevExpress.XtraEditors.Repository.RepositoryItemDateEdit();
+            gccGhiChu = new DevExpress.XtraGrid.Columns.GridColumn();
+            behaviorManager1 = new DevExpress.Utils.Behaviors.BehaviorManager(components);
             tlpFrame.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgDanhSachCauThu).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)gcDanhSachCauThu).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)gvcDanhSachCauThu).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)lkLoaiCauThu).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dtpNgaySinh).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dtpNgaySinh.CalendarTimeProperties).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)behaviorManager1).BeginInit();
             SuspendLayout();
             // 
             // tlpFrame
@@ -68,7 +78,7 @@
             tlpFrame.Controls.Add(txtTenSanNha, 2, 1);
             tlpFrame.Controls.Add(btnTiepNhanDoiBong, 0, 3);
             tlpFrame.Controls.Add(btnThoat, 8, 3);
-            tlpFrame.Controls.Add(dgDanhSachCauThu, 0, 2);
+            tlpFrame.Controls.Add(gcDanhSachCauThu, 0, 2);
             tlpFrame.Dock = DockStyle.Fill;
             tlpFrame.Location = new Point(0, 0);
             tlpFrame.Margin = new Padding(0);
@@ -192,62 +202,109 @@
             btnThoat.UseVisualStyleBackColor = true;
             btnThoat.Click += btnThoat_Click;
             // 
-            // dgDanhSachCauThu
+            // gcDanhSachCauThu
             // 
-            dgDanhSachCauThu.AccessibleName = "Table";
-            dgDanhSachCauThu.AllowDeleting = true;
-            dgDanhSachCauThu.AutoGenerateColumns = false;
-            gridTextColumn1.AllowEditing = false;
-            gridTextColumn1.AllowResizing = true;
-            gridTextColumn1.AutoSizeColumnsMode = Syncfusion.WinForms.DataGrid.Enums.AutoSizeColumnsMode.Fill;
-            gridTextColumn1.HeaderText = "Mã cầu thủ";
-            gridTextColumn1.MappingName = "MaCauThu";
-            gridTextColumn2.AllowResizing = true;
-            gridTextColumn2.HeaderText = "Họ tên";
-            gridTextColumn2.MappingName = "TenCauThu";
-            gridTextColumn2.Width = 275D;
-            gridComboBoxColumn1.AllowBlankFilters = false;
-            gridComboBoxColumn1.AllowResizing = true;
-            gridComboBoxColumn1.AutoSizeColumnsMode = Syncfusion.WinForms.DataGrid.Enums.AutoSizeColumnsMode.Fill;
-            gridComboBoxColumn1.DisplayMember = "TenLoaiCauThu";
-            gridComboBoxColumn1.HeaderText = "Loại cầu thủ";
-            gridComboBoxColumn1.MappingName = "MaLoaiCauThu";
-            gridComboBoxColumn1.ValidationMode = Syncfusion.WinForms.DataGrid.Enums.GridValidationMode.InView;
-            gridComboBoxColumn1.ValueMember = "MaLoaiCauThu";
-            gridDateTimeColumn1.AllowResizing = true;
-            gridDateTimeColumn1.AutoSizeColumnsMode = Syncfusion.WinForms.DataGrid.Enums.AutoSizeColumnsMode.Fill;
-            gridDateTimeColumn1.Format = "dd/MM/yyyy";
-            gridDateTimeColumn1.HeaderText = "Ngày sinh";
-            gridDateTimeColumn1.MappingName = "NgaySinh";
-            gridDateTimeColumn1.MaxDateTime = new DateTime(9999, 12, 31, 23, 59, 59, 999);
-            gridTextColumn3.AllowResizing = true;
-            gridTextColumn3.HeaderText = "Ghi chú";
-            gridTextColumn3.MappingName = "GhiChu";
-            gridTextColumn3.Width = 689D;
-            dgDanhSachCauThu.Columns.Add(gridTextColumn1);
-            dgDanhSachCauThu.Columns.Add(gridTextColumn2);
-            dgDanhSachCauThu.Columns.Add(gridComboBoxColumn1);
-            dgDanhSachCauThu.Columns.Add(gridDateTimeColumn1);
-            dgDanhSachCauThu.Columns.Add(gridTextColumn3);
-            tlpFrame.SetColumnSpan(dgDanhSachCauThu, 8);
-            dgDanhSachCauThu.Dock = DockStyle.Fill;
-            dgDanhSachCauThu.EditMode = Syncfusion.WinForms.DataGrid.Enums.EditMode.SingleClick;
-            dgDanhSachCauThu.Location = new Point(20, 116);
-            dgDanhSachCauThu.Margin = new Padding(10);
-            dgDanhSachCauThu.Name = "dgDanhSachCauThu";
-            dgDanhSachCauThu.PreviewRowHeight = 42;
-            dgDanhSachCauThu.SelectionMode = Syncfusion.WinForms.DataGrid.Enums.GridSelectionMode.Extended;
-            dgDanhSachCauThu.ShowSortNumbers = true;
-            dgDanhSachCauThu.Size = new Size(1378, 320);
-            dgDanhSachCauThu.Style.BorderColor = Color.FromArgb(100, 100, 100);
-            dgDanhSachCauThu.Style.CheckBoxStyle.CheckedBackColor = Color.FromArgb(0, 120, 215);
-            dgDanhSachCauThu.Style.CheckBoxStyle.CheckedBorderColor = Color.FromArgb(0, 120, 215);
-            dgDanhSachCauThu.Style.CheckBoxStyle.IndeterminateBorderColor = Color.FromArgb(0, 120, 215);
-            dgDanhSachCauThu.Style.HyperlinkStyle.DefaultLinkColor = Color.FromArgb(0, 120, 215);
-            dgDanhSachCauThu.TabIndex = 9;
-            dgDanhSachCauThu.Text = "sfDataGrid1";
-            dgDanhSachCauThu.RecordDeleting += dgDanhSachCauThu_RecordDeleting;
-            dgDanhSachCauThu.RecordDeleted += dgDanhSachCauThu_RecordDeleted;
+            tlpFrame.SetColumnSpan(gcDanhSachCauThu, 8);
+            gcDanhSachCauThu.Dock = DockStyle.Fill;
+            gcDanhSachCauThu.Location = new Point(20, 116);
+            gcDanhSachCauThu.MainView = gvcDanhSachCauThu;
+            gcDanhSachCauThu.Margin = new Padding(10);
+            gcDanhSachCauThu.Name = "gcDanhSachCauThu";
+            gcDanhSachCauThu.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] { lkLoaiCauThu, dtpNgaySinh });
+            gcDanhSachCauThu.Size = new Size(1378, 320);
+            gcDanhSachCauThu.TabIndex = 9;
+            gcDanhSachCauThu.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gvcDanhSachCauThu });
+            gcDanhSachCauThu.KeyDown += gcDanhSachCauThu_KeyDown;
+            // 
+            // gvcDanhSachCauThu
+            // 
+            gvcDanhSachCauThu.Appearance.HeaderPanel.FontStyleDelta = FontStyle.Bold;
+            gvcDanhSachCauThu.Appearance.HeaderPanel.Options.UseFont = true;
+            gvcDanhSachCauThu.Appearance.HeaderPanel.Options.UseTextOptions = true;
+            gvcDanhSachCauThu.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            gvcDanhSachCauThu.Appearance.HeaderPanel.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
+            gvcDanhSachCauThu.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] { gccMaCauThu, gccTenCauThu, gccLoaiCauThu, gccNgaySinh, gccGhiChu });
+            gvcDanhSachCauThu.GridControl = gcDanhSachCauThu;
+            gvcDanhSachCauThu.Name = "gvcDanhSachCauThu";
+            gvcDanhSachCauThu.OptionsBehavior.EditorShowMode = DevExpress.Utils.EditorShowMode.MouseDown;
+            gvcDanhSachCauThu.OptionsNavigation.AutoFocusNewRow = true;
+            gvcDanhSachCauThu.OptionsNavigation.EnterMoveNextColumn = true;
+            gvcDanhSachCauThu.OptionsSelection.EnableAppearanceFocusedCell = false;
+            gvcDanhSachCauThu.OptionsSelection.MultiSelect = true;
+            gvcDanhSachCauThu.OptionsView.HeaderFilterButtonShowMode = DevExpress.XtraEditors.Controls.FilterButtonShowMode.Button;
+            gvcDanhSachCauThu.OptionsView.ShowAutoFilterRow = true;
+            gvcDanhSachCauThu.OptionsView.ShowViewCaption = true;
+            gvcDanhSachCauThu.ViewCaption = "Danh sách cầu thủ";
+            gvcDanhSachCauThu.CustomDrawRowIndicator += gvcDanhSachCauThu_CustomDrawRowIndicator;
+            gvcDanhSachCauThu.RowDeleting += gvcDanhSachCauThu_RowDeleting;
+            gvcDanhSachCauThu.RowDeleted += gvcDanhSachCauThu_RowDeleted;
+            // 
+            // gccMaCauThu
+            // 
+            gccMaCauThu.Caption = "Mã cầu thủ";
+            gccMaCauThu.FieldName = "MaCauThu";
+            gccMaCauThu.MinWidth = 30;
+            gccMaCauThu.Name = "gccMaCauThu";
+            gccMaCauThu.OptionsColumn.ReadOnly = true;
+            gccMaCauThu.Visible = true;
+            gccMaCauThu.VisibleIndex = 0;
+            gccMaCauThu.Width = 112;
+            // 
+            // gccTenCauThu
+            // 
+            gccTenCauThu.Caption = "Họ tên";
+            gccTenCauThu.FieldName = "TenCauThu";
+            gccTenCauThu.MinWidth = 30;
+            gccTenCauThu.Name = "gccTenCauThu";
+            gccTenCauThu.Visible = true;
+            gccTenCauThu.VisibleIndex = 1;
+            gccTenCauThu.Width = 112;
+            // 
+            // gccLoaiCauThu
+            // 
+            gccLoaiCauThu.Caption = "Loại cầu thủ";
+            gccLoaiCauThu.ColumnEdit = lkLoaiCauThu;
+            gccLoaiCauThu.FieldName = "MaLoaiCauThu";
+            gccLoaiCauThu.MinWidth = 30;
+            gccLoaiCauThu.Name = "gccLoaiCauThu";
+            gccLoaiCauThu.Visible = true;
+            gccLoaiCauThu.VisibleIndex = 2;
+            gccLoaiCauThu.Width = 112;
+            // 
+            // lkLoaiCauThu
+            // 
+            lkLoaiCauThu.AutoHeight = false;
+            lkLoaiCauThu.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            lkLoaiCauThu.Columns.AddRange(new DevExpress.XtraEditors.Controls.LookUpColumnInfo[] { new DevExpress.XtraEditors.Controls.LookUpColumnInfo("TenLoaiCauThu", "Loại cầu thủ"), new DevExpress.XtraEditors.Controls.LookUpColumnInfo("SoLuongCauThuToiDaTheoLoaiCauThu", "Số lượng tối đa") });
+            lkLoaiCauThu.Name = "lkLoaiCauThu";
+            // 
+            // gccNgaySinh
+            // 
+            gccNgaySinh.Caption = "Ngày sinh";
+            gccNgaySinh.ColumnEdit = dtpNgaySinh;
+            gccNgaySinh.FieldName = "NgaySinh";
+            gccNgaySinh.MinWidth = 30;
+            gccNgaySinh.Name = "gccNgaySinh";
+            gccNgaySinh.Visible = true;
+            gccNgaySinh.VisibleIndex = 3;
+            gccNgaySinh.Width = 112;
+            // 
+            // dtpNgaySinh
+            // 
+            dtpNgaySinh.AutoHeight = false;
+            dtpNgaySinh.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            dtpNgaySinh.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            dtpNgaySinh.Name = "dtpNgaySinh";
+            // 
+            // gccGhiChu
+            // 
+            gccGhiChu.Caption = "Ghi chú";
+            gccGhiChu.FieldName = "GhiChu";
+            gccGhiChu.MinWidth = 30;
+            gccGhiChu.Name = "gccGhiChu";
+            gccGhiChu.Visible = true;
+            gccGhiChu.VisibleIndex = 4;
+            gccGhiChu.Width = 112;
             // 
             // GUI_TiepNhanDoiBong
             // 
@@ -260,7 +317,12 @@
             Load += GUI_TiepNhanDoiBong_Load;
             tlpFrame.ResumeLayout(false);
             tlpFrame.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dgDanhSachCauThu).EndInit();
+            ((System.ComponentModel.ISupportInitialize)gcDanhSachCauThu).EndInit();
+            ((System.ComponentModel.ISupportInitialize)gvcDanhSachCauThu).EndInit();
+            ((System.ComponentModel.ISupportInitialize)lkLoaiCauThu).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dtpNgaySinh.CalendarTimeProperties).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dtpNgaySinh).EndInit();
+            ((System.ComponentModel.ISupportInitialize)behaviorManager1).EndInit();
             ResumeLayout(false);
         }
 
@@ -275,6 +337,15 @@
         private TextBox txtTenSanNha;
         private Button btnTiepNhanDoiBong;
         private Button btnThoat;
-        private Syncfusion.WinForms.DataGrid.SfDataGrid dgDanhSachCauThu;
+        private DevExpress.XtraGrid.GridControl gcDanhSachCauThu;
+        private DevExpress.XtraGrid.Views.Grid.GridView gvcDanhSachCauThu;
+        private DevExpress.XtraGrid.Columns.GridColumn gccMaCauThu;
+        private DevExpress.XtraGrid.Columns.GridColumn gccTenCauThu;
+        private DevExpress.XtraGrid.Columns.GridColumn gccLoaiCauThu;
+        private DevExpress.XtraGrid.Columns.GridColumn gccNgaySinh;
+        private DevExpress.XtraGrid.Columns.GridColumn gccGhiChu;
+        private DevExpress.Utils.Behaviors.BehaviorManager behaviorManager1;
+        private DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit lkLoaiCauThu;
+        private DevExpress.XtraEditors.Repository.RepositoryItemDateEdit dtpNgaySinh;
     }
 }

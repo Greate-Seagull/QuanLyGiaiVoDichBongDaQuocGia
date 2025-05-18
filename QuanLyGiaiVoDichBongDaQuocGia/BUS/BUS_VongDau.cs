@@ -1,4 +1,5 @@
-﻿using QuanLyGiaiVoDichBongDaQuocGia.DAL;
+﻿using Microsoft.EntityFrameworkCore;
+using QuanLyGiaiVoDichBongDaQuocGia.DAL;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
 using QuanLyGiaiVoDichBongDaQuocGia.Manager;
 using System;
@@ -11,7 +12,7 @@ using System.Transactions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 {          
-    class BUS_VongDau
+    public class BUS_VongDau
     {
         private readonly DAL_VongDau _DAL;
         private readonly BUS_TranDau _BUS_TranDau;
@@ -22,39 +23,46 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             _BUS_TranDau = bUS_TranDau;
         }
 
-        public List<DTO_VongDau> LayDanhSach(Expression<Func<DTO_VongDau, DTO_VongDau>>? selector = default, Expression<Func<DTO_VongDau, bool>>? filter = default, bool isTracking = false)
+        public string LayMaMoiNhat()
         {
-            return _DAL.LayDanhSach(selector, filter, isTracking);
+            var query = _DAL.GetAll()
+                            .IgnoreQueryFilters()
+                            .AsNoTracking()
+                            .OrderByDescending(obj => obj.MaVongDau);
+
+            var result = query.FirstOrDefault();
+
+            if (result != null)
+                return result.MaVongDau;
+            else
+                return "VD000";
         }
 
-        public DTO_VongDau LayMaMoiNhat()
-        {
-            return _DAL.LayMaMoiNhat();
-        }
-
-        public bool LapLichThiDau(DTO_VongDau vongDau, List<DTO_TranDau> danhSachTranDau)
+        public bool LapLichThiDau(DTO_VongDau vongDau, IEnumerable<DTO_TranDau> danhSachTranDau)
         {
             var danhSachTam = new List<DTO_VongDau> { vongDau };
 
             this.KiemTraNhapLieu(danhSachTam);
 
-            using(var transaction = new TransactionScope())
+            using(var transaction = _DAL.Context.Database.BeginTransaction())
             {
-                this.LuuThongTin(danhSachTam);
-                _BUS_TranDau.LapTranDau(danhSachTranDau);
-
-                transaction.Complete();
-                return true;
+                try
+                {
+                    _DAL.Add(vongDau);
+                    _BUS_TranDau.LapTranDau(danhSachTranDau);
+                    _DAL.SaveChanges();
+                    transaction.Commit();
+                    return true;
+                }
+                catch(Exception ex)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
             }
         }
 
-        private bool LuuThongTin(List<DTO_VongDau> danhSachLuu)
-        {
-            _DAL.LuuDanhSach(danhSachLuu);
-            return true;
-        }
-
-        private void KiemTraNhapLieu(List<DTO_VongDau> danhSachKiemTra)
+        private void KiemTraNhapLieu(IEnumerable<DTO_VongDau> danhSachKiemTra)
         {
             foreach (var entity in danhSachKiemTra)
             {

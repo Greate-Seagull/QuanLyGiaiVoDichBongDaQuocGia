@@ -1,4 +1,5 @@
-﻿using QuanLyGiaiVoDichBongDaQuocGia.DAL;
+﻿using Microsoft.EntityFrameworkCore;
+using QuanLyGiaiVoDichBongDaQuocGia.DAL;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
 using System.Linq.Expressions;
 
@@ -13,26 +14,24 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             _DAL = DAL;
         }
 
-        public List<DTO_BanThang> LayDanhSach(Expression<Func<DTO_BanThang, DTO_BanThang>>? selector = default, Expression<Func<DTO_BanThang, bool>>? filter = default, bool isTracking = false)
+        public string LayMaMoiNhat()
         {
-            //Add obj => obj.Deleted == false
-            return _DAL.LayDanhSach(selector, filter, isTracking);
+            var query = _DAL.GetAll()
+                            .IgnoreQueryFilters()
+                            .AsNoTracking()
+                            .OrderByDescending(obj => obj.MaBanThang);
+
+            var result = query.FirstOrDefault();
+
+            if (result != null)
+                return result.MaBanThang;
+            else
+                return "BT000";
         }
 
-        public DTO_BanThang LayMaMoiNhat()
+        public void GhiNhanBanThang(IEnumerable<DTO_BanThang> danhSachGhiNhan)
         {
-            return _DAL.LayMaMoiNhat();
-        }
-
-        public bool GhiNhanBanThang(List<DTO_BanThang> danhSachGhiNhan)
-        {
-            return LuuThongTin(danhSachGhiNhan);
-        }
-
-        public bool LuuThongTin(List<DTO_BanThang> danhSachLuu)
-        {
-            _DAL.LuuDanhSach(danhSachLuu);
-            return true;
+            _DAL.AddRange(danhSachGhiNhan);
         }
     }
 }

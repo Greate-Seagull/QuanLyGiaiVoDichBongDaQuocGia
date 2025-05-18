@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DevExpress.Utils.Extensions;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -53,17 +55,39 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.Manager
             return maDaPhat[^1];
         }
 
-        public void CancelID(ID iD)
+        public ID? GetID(int index)
         {
-            if(iD.IsConfirm == false)
+            if (index < 0 || index >= maDaPhat.Count)
+                return default;
+
+            return maDaPhat[index];
+        }
+
+        public bool CancelID(ID iD)
+        {
+            bool IsChangable = iD.IsConfirm == false;
+            if (IsChangable)
             {
-                int index = maDaPhat.IndexOf(iD);
-                for(int i = maDaPhat.Count - 1; i > index; i--)
-                {
-                    maDaPhat[i].GetID = maDaPhat[i - 1].GetID;
-                }
+                iD = maDaPhat[^1];
+                maDaPhat.Remove(iD);
+            }
+
+            return IsChangable;
+        }
+
+        public bool CancelID(int index)
+        {
+            if (index < 0 || index >= maDaPhat.Count)
+                return false;
+
+            bool IsChangable = maDaPhat[index].IsConfirm == false;
+            if (IsChangable)
+            {
+                index = maDaPhat.Count - 1;
                 maDaPhat.RemoveAt(index);
             }
+
+            return IsChangable;
         }
 
         public ID CreateID(int v)

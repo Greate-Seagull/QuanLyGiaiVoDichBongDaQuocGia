@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
 {
@@ -16,8 +17,14 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
         [Required, MaxLength(5)]
         public string? MaLoaiCauThu { get; set; }
 
+        [ForeignKey("MaLoaiCauThu")]
+        public DTO_LoaiCauThu LoaiCauThu { get; set; }
+
         [Required, MaxLength(5)]
         public string? MaDoiBong { get; set; }
+
+        [ForeignKey("MaDoiBong")]
+        public DTO_DoiBong DoiBong { get; set; }
 
         [MaxLength(300)]
         public string? GhiChu { get; set; }

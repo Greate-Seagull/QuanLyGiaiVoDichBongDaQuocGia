@@ -18,6 +18,9 @@ namespace QuanLyGiaiVoDichBongDaQuocGia
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
 
+            //Register Syncfusion<sup style="font-size:70%">&reg;</sup> license
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NNaF5cXmBCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdmWXpfdnVURmhZWEFwXkRWYUA=");
+
             var connectionString = ConfigurationManager.ConnectionStrings["MySQlConnection"].ConnectionString;
 
             var options = new DbContextOptionsBuilder<MySqlDbContext>().UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)).Options;

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
 {
@@ -13,6 +14,9 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
         [Required, MaxLength(50)]
         public string? TenSanNha { get; set; }
         public bool Deleted { get; set; } = false;
+
+        [InverseProperty("DoiBong")]
+        public List<DTO_CauThu> CacCauThu { get; set; }
         public override string ToString()
         {
             return TenDoiBong;

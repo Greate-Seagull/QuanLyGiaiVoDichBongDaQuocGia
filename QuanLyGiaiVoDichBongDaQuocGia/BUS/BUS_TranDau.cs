@@ -1,10 +1,11 @@
-﻿using QuanLyGiaiVoDichBongDaQuocGia.DAL;
+﻿using Microsoft.EntityFrameworkCore;
+using QuanLyGiaiVoDichBongDaQuocGia.DAL;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
 using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 {        
-    class BUS_TranDau
+    public class BUS_TranDau
     {
         private readonly DAL_TranDau _DAL;
         private readonly BUS_BanThang _BUS_BanThang;
@@ -15,29 +16,28 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             _BUS_BanThang = bUS_BanThang;
         }
 
-        public List<DTO_TranDau> LayDanhSach(Expression<Func<DTO_TranDau, DTO_TranDau>>? selector = default, Expression<Func<DTO_TranDau, bool>>? filter = default, bool isTracking = false)
+        public string LayMaMoiNhat()
         {
-            return _DAL.LayDanhSach(selector, filter, isTracking);
+            var query = _DAL.GetAll()
+                            .IgnoreQueryFilters()
+                            .AsNoTracking()
+                            .OrderByDescending(obj => obj.MaTranDau);
+
+            var result = query.FirstOrDefault();
+
+            if (result != null)
+                return result.MaTranDau;
+            else
+                return "TD000";
         }
 
-        public DTO_TranDau LayMaMoiNhat()
+        public void LapTranDau(IEnumerable<DTO_TranDau> danhSachTranDau)
         {
-            return _DAL.LayMaMoiNhat();
+            this.KiemTraNhapLieu(danhSachTranDau);
+            _DAL.AddRange(danhSachTranDau);
         }
 
-        public bool LapTranDau(List<DTO_TranDau> danhSachTranDau)
-        {
-            KiemTraNhapLieu(danhSachTranDau);
-            return LuuThongTin(danhSachTranDau);
-        }
-
-        public bool LuuThongTin(List<DTO_TranDau> danhSachLuu)
-        {
-            _DAL.LuuDanhSach(danhSachLuu);
-            return true;
-        }
-
-        private void KiemTraNhapLieu(List<DTO_TranDau> danhSachKiemTra)
+        private void KiemTraNhapLieu(IEnumerable<DTO_TranDau> danhSachKiemTra)
         {
             foreach (var entity in danhSachKiemTra)
             {
@@ -48,10 +48,41 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             }
         }
 
-        internal bool GhiNhanKetQua(List<DTO_BanThang> danhSachBanThang)
+        internal bool GhiNhanKetQua(DTO_TranDau tranDauGhiNhan, IEnumerable<DTO_BanThang> danhSachBanThang)
         {
             _BUS_BanThang.GhiNhanBanThang(danhSachBanThang);
-            return LuuThongTin(new());
+            return true;
+        }
+
+        internal List<DTO_TranDau> LayDanhSachCapDauNgoaiTruVongDau(string? maVongDau)
+        {
+            var query = _DAL.GetAll()
+                            .Where(obj => obj.MaVongDau != maVongDau)
+                            .Select(obj => new DTO_TranDau
+                            {
+                                MaTranDau = obj.MaTranDau,
+                                MaDoi1 = obj.MaDoi1,
+                                MaDoi2 = obj.MaDoi2
+                            });
+
+            return query.AsNoTracking().ToList();
+        }
+
+        internal List<DTO_TranDau> LayDanhSachTranDauGhiNhanKetQua()
+        {
+            var query = _DAL.GetAll()
+                            .Select(obj => new DTO_TranDau
+                            {
+                                MaTranDau = obj.MaTranDau,
+                                MaDoi1 = obj.MaDoi1,
+                                MaDoi2 = obj.MaDoi2,
+                                NgayGio = obj.NgayGio,
+                                TiSoDoi1 = obj.TiSoDoi1,
+                                TiSoDoi2 = obj.TiSoDoi2
+                            });
+
+            //use tracking
+            return query.ToList();
         }
     }
 }

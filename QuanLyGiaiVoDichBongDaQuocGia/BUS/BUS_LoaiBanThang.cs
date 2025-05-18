@@ -1,10 +1,11 @@
-﻿using QuanLyGiaiVoDichBongDaQuocGia.DAL;
+﻿using Microsoft.EntityFrameworkCore;
+using QuanLyGiaiVoDichBongDaQuocGia.DAL;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
 using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 {    
-    class BUS_LoaiBanThang
+    public class BUS_LoaiBanThang
     {
         private readonly DAL_LoaiBanThang _DAL;
 
@@ -13,9 +14,16 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             _DAL = dAL;
         }
 
-        public List<DTO_LoaiBanThang> LayDanhSach(Expression<Func<DTO_LoaiBanThang, DTO_LoaiBanThang>>? selector = default, Expression<Func<DTO_LoaiBanThang, bool>>? filter = default, bool isTracking = false)
+        internal List<DTO_LoaiBanThang> LayDanhSachLoaiBanThangGhiNhanKetQua()
         {
-            return _DAL.LayDanhSach(selector, filter, isTracking);
+            var query = _DAL.GetAll()
+                            .Select(obj => new DTO_LoaiBanThang
+                            {
+                                MaLoaiBanThang = obj.MaLoaiBanThang,
+                                TenLoaiBanThang = obj.TenLoaiBanThang
+                            });
+
+            return query.AsNoTracking().ToList();
         }
     }
 }

@@ -1,5 +1,9 @@
-﻿using QuanLyGiaiVoDichBongDaQuocGia.DAL;
+﻿using DevExpress.DirectX.Common;
+using Microsoft.EntityFrameworkCore;
+using MySqlX.XDevAPI.Common;
+using QuanLyGiaiVoDichBongDaQuocGia.DAL;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
+using System.ComponentModel;
 using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
@@ -13,35 +17,59 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             _DAL = dAL;
         }
 
-        public List<DTO_CauThu> LayDanhSach(Expression<Func<DTO_CauThu, DTO_CauThu>>? selector = default, Expression<Func<DTO_CauThu, bool>>? filter = default, bool isTracking = false)
+        public string LayMaMoiNhat()
         {
-            return _DAL.LayDanhSach(selector, filter, isTracking);
+            var query = _DAL.GetAll()
+                            .IgnoreQueryFilters()
+                            .AsNoTracking()
+                            .OrderByDescending(obj => obj.MaCauThu);
+
+            var result = query.FirstOrDefault();
+
+            if (result != null)
+                return result.MaCauThu;
+            else
+                return "CT000";
         }
 
-        public DTO_CauThu LayMaMoiNhat()
-        {
-            return _DAL.LayMaMoiNhat();
-        }
-
-        public bool TiepNhanCauThu(List<DTO_CauThu> danhSachTiepNhan)
-        {
-            KiemTraNhapLieu(danhSachTiepNhan);
-            return LuuThongTin(danhSachTiepNhan);
-        }
-
-        public bool LuuThongTin(List<DTO_CauThu> danhSachLuu)
-        {
-            _DAL.LuuDanhSach(danhSachLuu);
-            return true;
-        }
-
-        private void KiemTraNhapLieu(List<DTO_CauThu> danhSachTiepNhan)
+        public void KiemTraNhapLieu(IEnumerable<DTO_CauThu> danhSachTiepNhan)
         {
             foreach(var entity in danhSachTiepNhan)
             {
                 if (string.IsNullOrEmpty(entity.TenCauThu))
                     throw new Exception("Tên cầu thủ không được bỏ trống");
             }
+        }
+
+        internal List<DTO_CauThu> LayDanhSachCauThuThuocHaiDoi(string maDoi1, string maDoi2)
+        {
+            var query = _DAL.GetAll()
+                            .Where(obj => obj.MaDoiBong == maDoi1 || obj.MaDoiBong == maDoi2)
+                            .Select(obj => new DTO_CauThu
+                            {
+                                MaCauThu = obj.MaCauThu,
+                                TenCauThu = obj.TenCauThu
+                            });
+
+            return query.AsNoTracking().ToList();
+        }
+
+        internal Dictionary<string, int> DemSoLuongCauThuTheoLoai(IEnumerable<DTO_CauThu> entities)
+        {
+            var result = new Dictionary<string, int>();
+
+            foreach(var entity in entities)
+            {
+                if (string.IsNullOrEmpty(entity.MaLoaiCauThu))
+                    continue;
+
+                if (result.ContainsKey(entity.MaLoaiCauThu))
+                    result[entity.MaLoaiCauThu]++;
+                else
+                    result[entity.MaLoaiCauThu] = 1;
+            }
+
+            return result;
         }
     }
 }

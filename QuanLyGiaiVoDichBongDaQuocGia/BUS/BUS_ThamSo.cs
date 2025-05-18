@@ -1,4 +1,5 @@
-﻿using QuanLyGiaiVoDichBongDaQuocGia.DAL;
+﻿using Microsoft.EntityFrameworkCore;
+using QuanLyGiaiVoDichBongDaQuocGia.DAL;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
 using System.Linq.Expressions;
 
@@ -13,9 +14,18 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             _DAL = dAL;
         }
 
-        public DTO_ThamSo? LayThamSo(Expression<Func<DTO_ThamSo, DTO_ThamSo>>? selector = default)
+        internal DTO_ThamSo LayThamSoTiepNhanDoiBong()
         {
-            return _DAL.LayDanhSach(selector);
+            var query = _DAL.GetAll()
+                            .Select(entity => new DTO_ThamSo
+                            {
+                                TuoiCauThuToiDa = entity.TuoiCauThuToiDa,
+                                TuoiCauThuToiThieu = entity.TuoiCauThuToiThieu,
+                                SoLuongCauThuToiDa = entity.SoLuongCauThuToiDa,
+                                SoLuongCauThuToiThieu = entity.SoLuongCauThuToiThieu
+                            });
+
+            return query.AsNoTracking().First();
         }
     }
 }

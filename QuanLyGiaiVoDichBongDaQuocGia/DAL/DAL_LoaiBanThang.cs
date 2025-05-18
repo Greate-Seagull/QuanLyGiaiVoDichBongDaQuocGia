@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 {
-    class DAL_LoaiBanThang: ILoaiBanThangRepository
+    public class DAL_LoaiBanThang: IRepository<DTO_LoaiBanThang>, IUsingDbContext
     {
         private readonly MySqlDbContext _context;
 
@@ -15,30 +15,14 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
             _context = context;
         }
 
-        public string GetLastID()
-        {
-            var query = _context.LoaiBanThangRepository
-                                .IgnoreQueryFilters()
-                                .AsNoTracking()
-                                .OrderByDescending(obj => obj.MaLoaiBanThang);
-
-            var result = query.FirstOrDefault();
-
-            if (result != null)
-                return result.MaLoaiBanThang;
-            else
-                return "LBT00";
-        }
+        public DbContext Context => _context;
 
         //Add methods
         public void Add(DTO_LoaiBanThang entity) => _context.LoaiBanThangRepository.Add(entity);
         public void AddRange(IEnumerable<DTO_LoaiBanThang> entities) => _context.LoaiBanThangRepository.AddRange(entities);
 
         //Get methods
-        public DTO_LoaiBanThang GetById(object id) => _context.LoaiBanThangRepository.Find(id);
-        public IEnumerable<DTO_LoaiBanThang> GetAll() => _context.LoaiBanThangRepository.ToList();
-        public IEnumerable<DTO_LoaiBanThang> Find(Expression<Func<DTO_LoaiBanThang, DTO_LoaiBanThang>> selector, Expression<Func<DTO_LoaiBanThang, bool>> filter)
-            => _context.LoaiBanThangRepository.Where(filter).Select(selector);
+        public IQueryable<DTO_LoaiBanThang> GetAll() => _context.LoaiBanThangRepository.AsQueryable();
 
         //Update methods
         public void Update(DTO_LoaiBanThang entity) => _context.LoaiBanThangRepository.Update(entity);
