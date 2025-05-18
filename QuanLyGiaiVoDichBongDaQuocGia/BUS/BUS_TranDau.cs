@@ -41,13 +41,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
                 if (entity.NgayGio is null)
                     throw new Exception($"Ngày giờ chưa được lập cho trận đấu {entity.MaTranDau}");
             }
-        }
-
-        internal bool GhiNhanKetQua(DTO_TranDau tranDauGhiNhan, IEnumerable<DTO_BanThang> danhSachBanThang)
-        {
-            _BUS_BanThang.GhiNhanBanThang(danhSachBanThang);
-            return true;
-        }
+        }        
 
         internal List<DTO_TranDau> LayDanhSachCapDau()
         {
@@ -65,18 +59,11 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
         internal List<DTO_TranDau> LayDanhSachTranDauGhiNhanKetQua()
         {
             var query = _DAL.GetAll()
-                            .Select(obj => new DTO_TranDau
-                            {
-                                MaTranDau = obj.MaTranDau,
-                                MaDoi1 = obj.MaDoi1,
-                                MaDoi2 = obj.MaDoi2,
-                                NgayGio = obj.NgayGio,
-                                TiSoDoi1 = obj.TiSoDoi1,
-                                TiSoDoi2 = obj.TiSoDoi2
-                            });
+                            .Include(obj => obj.DoiBong1)
+                            .Include(obj => obj.DoiBong2)
+                            .Include(obj => obj.CacBanThang);
 
-            //use tracking
-            return query.ToList();
+            return query.AsNoTracking().ToList();
         }
 
         internal List<string> LayDanhSachMaDoiBongDaThiDau(List<DTO_TranDau> danhSachCapDau)
@@ -92,6 +79,42 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
                                  .Select(entity => entity.MaDoi2)
                                  .Distinct()
                                  .ToList();
+        }
+
+        internal bool GhiNhanKetQua(DTO_TranDau tranDauGhiNhan)
+        {
+            var trackedEntity = _DAL.GetAll().FirstOrDefault(obj => obj.MaTranDau == tranDauGhiNhan.MaTranDau);
+            if (trackedEntity is null)
+                return false;
+
+            _BUS_BanThang.KiemTraNhapLieu(tranDauGhiNhan.CacBanThang);
+
+            trackedEntity.TiSoDoi1 = tranDauGhiNhan.TiSoDoi1;
+            trackedEntity.TiSoDoi2 = tranDauGhiNhan.TiSoDoi2;
+            trackedEntity.CacBanThang = tranDauGhiNhan.CacBanThang;
+            _DAL.SaveChanges();
+            return true;
+        }
+
+        internal void CapNhatTiSo(DTO_TranDau tranDauGhiNhan, List<DTO_CauThu> danhSachCauThuThuocHaiDoi)
+        {
+            tranDauGhiNhan.TiSoDoi1 = 0;
+            tranDauGhiNhan.TiSoDoi2 = 0;
+
+            foreach(var entity in tranDauGhiNhan.CacBanThang)
+            {
+                if (entity.Deleted == false)
+                {
+                    var cauThu = danhSachCauThuThuocHaiDoi.FirstOrDefault(obj => obj.MaCauThu == entity.MaCauThu);
+                    if (cauThu is null)
+                        continue;
+
+                    if (cauThu.MaDoiBong == tranDauGhiNhan.MaDoi1)
+                        tranDauGhiNhan.TiSoDoi1++;
+                    else //if (cauThu.MaDoiBong == tranDauGhiNhan.MaDoi2)
+                        tranDauGhiNhan.TiSoDoi2++;
+                }
+            }
         }
     }
 }

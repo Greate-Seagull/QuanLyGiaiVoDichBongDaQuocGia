@@ -34,6 +34,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia
             DAL_BanThang _DAL_BanThang = new(dbContext);
             DAL_TranDau _DAL_TranDau = new(dbContext);
             DAL_VongDau _DAL_VongDau = new(dbContext);
+            DAL_LoaiBanThang _DAL_LoaiBanThang = new(dbContext);
 
             BUS_ThamSo _BUS_ThamSo = new(_DAL_ThamSo);
             BUS_CauThu _BUS_CauThu = new(_DAL_CauThu);
@@ -42,9 +43,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia
             BUS_BanThang _BUS_BanThang = new(_DAL_BanThang);
             BUS_TranDau _BUS_TranDau = new(_DAL_TranDau, _BUS_BanThang);
             BUS_VongDau _BUS_VongDau = new(_DAL_VongDau, _BUS_TranDau);
+            BUS_LoaiBanThang _BUS_LoaiBanThang = new(_DAL_LoaiBanThang);
 
-        ApplicationConfiguration.Initialize();
-            Application.Run(new GUI_LapLichThiDau(_BUS_VongDau, _BUS_TranDau, _BUS_DoiBong));
+            ApplicationConfiguration.Initialize();
+            Application.Run(new GUI_GhiNhanKetQua(_BUS_BanThang, _BUS_TranDau, _BUS_CauThu, _BUS_LoaiBanThang, _BUS_ThamSo));
         }
     }
 }

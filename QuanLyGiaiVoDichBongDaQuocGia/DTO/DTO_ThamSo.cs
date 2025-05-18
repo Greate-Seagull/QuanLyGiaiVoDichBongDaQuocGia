@@ -6,5 +6,7 @@
         public int? TuoiCauThuToiDa { get; set; }
         public int? SoLuongCauThuToiThieu { get; set; }
         public int? SoLuongCauThuToiDa { get; set; }
+        public int? ThoiDiemGhiBanToiThieu { get; set; }
+        public int? ThoiDiemGhiBanToiDa { get; set; }
     }
 }

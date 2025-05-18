@@ -29,6 +29,16 @@
         private void InitializeComponent()
         {
             tlpFrame = new TableLayoutPanel();
+            gcDanhSachBanThang = new DevExpress.XtraGrid.GridControl();
+            gvcDanhSachBanThang = new DevExpress.XtraGrid.Views.Grid.GridView();
+            gccMaBanThang = new DevExpress.XtraGrid.Columns.GridColumn();
+            gccMaCauThu = new DevExpress.XtraGrid.Columns.GridColumn();
+            lkMaCauThu = new DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit();
+            gccMaDoiBong = new DevExpress.XtraGrid.Columns.GridColumn();
+            gccMaLoaiBanThang = new DevExpress.XtraGrid.Columns.GridColumn();
+            lkMaLoaiBanThang = new DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit();
+            gccThoiDiemGhiBan = new DevExpress.XtraGrid.Columns.GridColumn();
+            spThoiDiemGhiBan = new DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit();
             cbTranDau = new ComboBox();
             txtTenSan = new TextBox();
             txtTiSo = new TextBox();
@@ -39,9 +49,13 @@
             btnThoat = new Button();
             lblTiSo = new Label();
             lblTranDau = new Label();
-            pDanhSachBanThang = new Panel();
             btnGhiNhanKetQua = new Button();
             tlpFrame.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)gcDanhSachBanThang).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)gvcDanhSachBanThang).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)lkMaCauThu).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)lkMaLoaiBanThang).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)spThoiDiemGhiBan).BeginInit();
             SuspendLayout();
             // 
             // tlpFrame
@@ -55,6 +69,7 @@
             tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
             tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
             tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
+            tlpFrame.Controls.Add(gcDanhSachBanThang, 0, 2);
             tlpFrame.Controls.Add(cbTranDau, 0, 1);
             tlpFrame.Controls.Add(txtTenSan, 2, 1);
             tlpFrame.Controls.Add(txtTiSo, 1, 1);
@@ -65,7 +80,6 @@
             tlpFrame.Controls.Add(btnThoat, 7, 3);
             tlpFrame.Controls.Add(lblTiSo, 1, 0);
             tlpFrame.Controls.Add(lblTranDau, 0, 0);
-            tlpFrame.Controls.Add(pDanhSachBanThang, 0, 2);
             tlpFrame.Controls.Add(btnGhiNhanKetQua, 0, 3);
             tlpFrame.Dock = DockStyle.Fill;
             tlpFrame.Location = new Point(0, 0);
@@ -79,6 +93,120 @@
             tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
             tlpFrame.Size = new Size(1418, 507);
             tlpFrame.TabIndex = 1;
+            // 
+            // gcDanhSachBanThang
+            // 
+            tlpFrame.SetColumnSpan(gcDanhSachBanThang, 8);
+            gcDanhSachBanThang.Dock = DockStyle.Fill;
+            gcDanhSachBanThang.Location = new Point(20, 116);
+            gcDanhSachBanThang.MainView = gvcDanhSachBanThang;
+            gcDanhSachBanThang.Margin = new Padding(10);
+            gcDanhSachBanThang.Name = "gcDanhSachBanThang";
+            gcDanhSachBanThang.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] { lkMaCauThu, lkMaLoaiBanThang, spThoiDiemGhiBan });
+            gcDanhSachBanThang.Size = new Size(1378, 320);
+            gcDanhSachBanThang.TabIndex = 21;
+            gcDanhSachBanThang.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gvcDanhSachBanThang });
+            // 
+            // gvcDanhSachBanThang
+            // 
+            gvcDanhSachBanThang.Appearance.HeaderPanel.FontStyleDelta = FontStyle.Bold;
+            gvcDanhSachBanThang.Appearance.HeaderPanel.Options.UseFont = true;
+            gvcDanhSachBanThang.Appearance.HeaderPanel.Options.UseTextOptions = true;
+            gvcDanhSachBanThang.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            gvcDanhSachBanThang.Appearance.HeaderPanel.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
+            gvcDanhSachBanThang.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] { gccMaBanThang, gccMaCauThu, gccMaDoiBong, gccMaLoaiBanThang, gccThoiDiemGhiBan });
+            gvcDanhSachBanThang.GridControl = gcDanhSachBanThang;
+            gvcDanhSachBanThang.Name = "gvcDanhSachBanThang";
+            gvcDanhSachBanThang.OptionsBehavior.EditorShowMode = DevExpress.Utils.EditorShowMode.MouseDown;
+            gvcDanhSachBanThang.OptionsNavigation.AutoFocusNewRow = true;
+            gvcDanhSachBanThang.OptionsNavigation.EnterMoveNextColumn = true;
+            gvcDanhSachBanThang.OptionsSelection.EnableAppearanceFocusedCell = false;
+            gvcDanhSachBanThang.OptionsSelection.MultiSelect = true;
+            gvcDanhSachBanThang.OptionsView.HeaderFilterButtonShowMode = DevExpress.XtraEditors.Controls.FilterButtonShowMode.Button;
+            gvcDanhSachBanThang.OptionsView.ShowAutoFilterRow = true;
+            gvcDanhSachBanThang.OptionsView.ShowViewCaption = true;
+            gvcDanhSachBanThang.ViewCaption = "Danh sách bàn thắng";
+            gvcDanhSachBanThang.CustomDrawRowIndicator += gvcDanhSachBanThang_CustomDrawRowIndicator;
+            gvcDanhSachBanThang.CellValueChanged += gvcDanhSachBanThang_CellValueChanged;
+            gvcDanhSachBanThang.RowDeleted += gvcDanhSachBanThang_RowDeleted;
+            gvcDanhSachBanThang.CustomUnboundColumnData += gvcDanhSachBanThang_CustomUnboundColumnData;
+            gvcDanhSachBanThang.KeyDown += gvcDanhSachBanThang_KeyDown;
+            // 
+            // gccMaBanThang
+            // 
+            gccMaBanThang.Caption = "Mã bàn thắng";
+            gccMaBanThang.FieldName = "MaBanThang";
+            gccMaBanThang.MinWidth = 30;
+            gccMaBanThang.Name = "gccMaBanThang";
+            gccMaBanThang.OptionsColumn.ReadOnly = true;
+            gccMaBanThang.Visible = true;
+            gccMaBanThang.VisibleIndex = 0;
+            gccMaBanThang.Width = 112;
+            // 
+            // gccMaCauThu
+            // 
+            gccMaCauThu.Caption = "Cầu thủ";
+            gccMaCauThu.ColumnEdit = lkMaCauThu;
+            gccMaCauThu.FieldName = "MaCauThu";
+            gccMaCauThu.MinWidth = 30;
+            gccMaCauThu.Name = "gccMaCauThu";
+            gccMaCauThu.Visible = true;
+            gccMaCauThu.VisibleIndex = 1;
+            gccMaCauThu.Width = 112;
+            // 
+            // lkMaCauThu
+            // 
+            lkMaCauThu.AutoHeight = false;
+            lkMaCauThu.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            lkMaCauThu.Columns.AddRange(new DevExpress.XtraEditors.Controls.LookUpColumnInfo[] { new DevExpress.XtraEditors.Controls.LookUpColumnInfo("TenCauThu", "Họ tên") });
+            lkMaCauThu.Name = "lkMaCauThu";
+            // 
+            // gccMaDoiBong
+            // 
+            gccMaDoiBong.Caption = "Đội bóng";
+            gccMaDoiBong.FieldName = "MaDoiBong";
+            gccMaDoiBong.MinWidth = 30;
+            gccMaDoiBong.Name = "gccMaDoiBong";
+            gccMaDoiBong.OptionsColumn.ReadOnly = true;
+            gccMaDoiBong.UnboundDataType = typeof(string);
+            gccMaDoiBong.Visible = true;
+            gccMaDoiBong.VisibleIndex = 2;
+            gccMaDoiBong.Width = 112;
+            // 
+            // gccMaLoaiBanThang
+            // 
+            gccMaLoaiBanThang.Caption = "Loại bàn thắng";
+            gccMaLoaiBanThang.ColumnEdit = lkMaLoaiBanThang;
+            gccMaLoaiBanThang.FieldName = "MaLoaiBanThang";
+            gccMaLoaiBanThang.MinWidth = 30;
+            gccMaLoaiBanThang.Name = "gccMaLoaiBanThang";
+            gccMaLoaiBanThang.Visible = true;
+            gccMaLoaiBanThang.VisibleIndex = 3;
+            gccMaLoaiBanThang.Width = 112;
+            // 
+            // lkMaLoaiBanThang
+            // 
+            lkMaLoaiBanThang.AutoHeight = false;
+            lkMaLoaiBanThang.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            lkMaLoaiBanThang.Columns.AddRange(new DevExpress.XtraEditors.Controls.LookUpColumnInfo[] { new DevExpress.XtraEditors.Controls.LookUpColumnInfo("TenLoaiBanThang", "Loại bàn thắng") });
+            lkMaLoaiBanThang.Name = "lkMaLoaiBanThang";
+            // 
+            // gccThoiDiemGhiBan
+            // 
+            gccThoiDiemGhiBan.Caption = "Thời điểm";
+            gccThoiDiemGhiBan.ColumnEdit = spThoiDiemGhiBan;
+            gccThoiDiemGhiBan.FieldName = "ThoiDiemGhiBan";
+            gccThoiDiemGhiBan.MinWidth = 30;
+            gccThoiDiemGhiBan.Name = "gccThoiDiemGhiBan";
+            gccThoiDiemGhiBan.Visible = true;
+            gccThoiDiemGhiBan.VisibleIndex = 4;
+            gccThoiDiemGhiBan.Width = 112;
+            // 
+            // spThoiDiemGhiBan
+            // 
+            spThoiDiemGhiBan.AutoHeight = false;
+            spThoiDiemGhiBan.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            spThoiDiemGhiBan.Name = "spThoiDiemGhiBan";
             // 
             // cbTranDau
             // 
@@ -201,20 +329,6 @@
             lblTranDau.Text = "Trận đấu";
             lblTranDau.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // pDanhSachBanThang
-            // 
-            pDanhSachBanThang.AutoScroll = true;
-            pDanhSachBanThang.BackColor = Color.White;
-            pDanhSachBanThang.BorderStyle = BorderStyle.FixedSingle;
-            tlpFrame.SetColumnSpan(pDanhSachBanThang, 8);
-            pDanhSachBanThang.Dock = DockStyle.Fill;
-            pDanhSachBanThang.Location = new Point(20, 116);
-            pDanhSachBanThang.Margin = new Padding(10);
-            pDanhSachBanThang.Name = "pDanhSachBanThang";
-            pDanhSachBanThang.Padding = new Padding(10);
-            pDanhSachBanThang.Size = new Size(1378, 320);
-            pDanhSachBanThang.TabIndex = 10;
-            // 
             // btnGhiNhanKetQua
             // 
             btnGhiNhanKetQua.Dock = DockStyle.Fill;
@@ -239,6 +353,11 @@
             Load += GUI_GhiNhanKetQua_Load;
             tlpFrame.ResumeLayout(false);
             tlpFrame.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)gcDanhSachBanThang).EndInit();
+            ((System.ComponentModel.ISupportInitialize)gvcDanhSachBanThang).EndInit();
+            ((System.ComponentModel.ISupportInitialize)lkMaCauThu).EndInit();
+            ((System.ComponentModel.ISupportInitialize)lkMaLoaiBanThang).EndInit();
+            ((System.ComponentModel.ISupportInitialize)spThoiDiemGhiBan).EndInit();
             ResumeLayout(false);
         }
 
@@ -249,7 +368,6 @@
         private Button btnThoat;
         private Label lblTiSo;
         private Label lblTranDau;
-        private Panel pDanhSachBanThang;
         private Button btnGhiNhanKetQua;
         private TextBox txtTenSan;
         private TextBox txtTiSo;
@@ -257,5 +375,15 @@
         private Label lblNgayGio;
         private Label lblTenSan;
         private ComboBox cbTranDau;
+        private DevExpress.XtraGrid.GridControl gcDanhSachBanThang;
+        private DevExpress.XtraGrid.Views.Grid.GridView gvcDanhSachBanThang;
+        private DevExpress.XtraGrid.Columns.GridColumn gccMaBanThang;
+        private DevExpress.XtraGrid.Columns.GridColumn gccMaCauThu;
+        private DevExpress.XtraGrid.Columns.GridColumn gccMaDoiBong;
+        private DevExpress.XtraGrid.Columns.GridColumn gccMaLoaiBanThang;
+        private DevExpress.XtraGrid.Columns.GridColumn gccThoiDiemGhiBan;
+        private DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit lkMaCauThu;
+        private DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit lkMaLoaiBanThang;
+        private DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit spThoiDiemGhiBan;
     }
 }

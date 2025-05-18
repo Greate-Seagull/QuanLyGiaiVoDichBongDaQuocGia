@@ -44,11 +44,14 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
         internal List<DTO_CauThu> LayDanhSachCauThuThuocHaiDoi(string maDoi1, string maDoi2)
         {
             var query = _DAL.GetAll()
+                            .Include(obj => obj.DoiBong)
                             .Where(obj => obj.MaDoiBong == maDoi1 || obj.MaDoiBong == maDoi2)
                             .Select(obj => new DTO_CauThu
                             {
                                 MaCauThu = obj.MaCauThu,
-                                TenCauThu = obj.TenCauThu
+                                TenCauThu = obj.TenCauThu,
+                                MaDoiBong = obj.MaDoiBong,
+                                DoiBong = obj.DoiBong
                             });
 
             return query.AsNoTracking().ToList();
@@ -70,6 +73,11 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             }
 
             return result;
+        }
+
+        internal List<DTO_CauThu> LayDanhSachCauThuThuocHaiDoi(object maDoi1, object maDoi2)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -33,5 +33,18 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
         {
             _DAL.AddRange(danhSachGhiNhan);
         }
+
+        internal void KiemTraNhapLieu(IEnumerable<DTO_BanThang>? danhSachKiemTra)
+        {
+            foreach(var entity in danhSachKiemTra)
+            {
+                if (entity.MaCauThu is null)
+                    throw new Exception($"Cầu thủ chưa được chọn của bàn thắng {entity.MaBanThang}");
+                if (entity.MaLoaiBanThang is null)
+                    throw new Exception($"Loại bàn thắng chưa được chọn của bàn thắng {entity.MaBanThang}");
+                if (entity.ThoiDiemGhiBan is null)
+                    throw new Exception($"Thời điểm ghi bàn chưa được điều chỉnh của bàn thắng {entity.MaBanThang}");
+            }
+        }
     }
 }

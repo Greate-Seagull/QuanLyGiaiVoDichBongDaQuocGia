@@ -30,5 +30,12 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
         public int? TiSoDoi1 { get; set; } = 0;
         public int? TiSoDoi2 { get; set; } = 0;
         public bool Deleted { get; set; } = false;
+
+        //TranDau is already in database and is tracked in EF Core when loading them, this property for inserting BanThang
+        public List<DTO_BanThang>? CacBanThang { get; set; }
+
+        //For debugging and displaying
+        public string TiSo => $"{TiSoDoi1 ?? 0} - {TiSoDoi2 ?? 0}";
+        public string CapDau => $"{DoiBong1?.TenDoiBong ?? string.Empty} - {DoiBong2?.TenDoiBong ?? string.Empty}";
     }
 }
