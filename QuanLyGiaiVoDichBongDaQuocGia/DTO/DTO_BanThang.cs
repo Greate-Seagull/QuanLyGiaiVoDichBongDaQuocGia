@@ -17,7 +17,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
         [Required, MaxLength(5)]
         public string? MaLoaiBanThang { get; set; }
 
-        public int ThoiDiemGhiBan { get; set; }
+        public int? ThoiDiemGhiBan { get; set; }
         public bool Deleted { get; set; } = false;
     }
 }

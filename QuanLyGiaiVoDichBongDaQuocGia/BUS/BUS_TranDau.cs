@@ -20,10 +20,9 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
         {
             var query = _DAL.GetAll()
                             .IgnoreQueryFilters()
-                            .AsNoTracking()
                             .OrderByDescending(obj => obj.MaTranDau);
 
-            var result = query.FirstOrDefault();
+            var result = query.AsNoTracking().FirstOrDefault();
 
             if (result != null)
                 return result.MaTranDau;
@@ -31,13 +30,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
                 return "TD000";
         }
 
-        public void LapTranDau(IEnumerable<DTO_TranDau> danhSachTranDau)
-        {
-            this.KiemTraNhapLieu(danhSachTranDau);
-            _DAL.AddRange(danhSachTranDau);
-        }
-
-        private void KiemTraNhapLieu(IEnumerable<DTO_TranDau> danhSachKiemTra)
+        public void KiemTraNhapLieu(IEnumerable<DTO_TranDau> danhSachKiemTra)
         {
             foreach (var entity in danhSachKiemTra)
             {
@@ -45,6 +38,8 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
                     throw new Exception($"Đội bóng 1 chưa được chọn cho trận đấu {entity.MaTranDau}");
                 if (string.IsNullOrEmpty(entity.MaDoi2))
                     throw new Exception($"Đội bóng 2 chưa được chọn cho trận đấu {entity.MaTranDau}");
+                if (entity.NgayGio is null)
+                    throw new Exception($"Ngày giờ chưa được lập cho trận đấu {entity.MaTranDau}");
             }
         }
 
@@ -54,10 +49,9 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             return true;
         }
 
-        internal List<DTO_TranDau> LayDanhSachCapDauNgoaiTruVongDau(string? maVongDau)
+        internal List<DTO_TranDau> LayDanhSachCapDau()
         {
             var query = _DAL.GetAll()
-                            .Where(obj => obj.MaVongDau != maVongDau)
                             .Select(obj => new DTO_TranDau
                             {
                                 MaTranDau = obj.MaTranDau,
@@ -83,6 +77,21 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
             //use tracking
             return query.ToList();
+        }
+
+        internal List<string> LayDanhSachMaDoiBongDaThiDau(List<DTO_TranDau> danhSachCapDau)
+        {
+            return danhSachCapDau.SelectMany(entity => new[] { entity.MaDoi1, entity.MaDoi2 })
+                                 .Distinct()
+                                 .ToList();
+        }
+
+        internal List<string> LayDanhSachMaDoiBongDaThiDauVoi(string? maDoi1, List<DTO_TranDau> danhSachCapDau)
+        {
+            return danhSachCapDau.Where(entity => entity.MaDoi1 == maDoi1)
+                                 .Select(entity => entity.MaDoi2)
+                                 .Distinct()
+                                 .ToList();
         }
     }
 }

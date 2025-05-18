@@ -23,22 +23,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             _BUS_TranDau = bUS_TranDau;
         }
 
-        public string LayMaMoiNhat()
-        {
-            var query = _DAL.GetAll()
-                            .IgnoreQueryFilters()
-                            .AsNoTracking()
-                            .OrderByDescending(obj => obj.MaVongDau);
-
-            var result = query.FirstOrDefault();
-
-            if (result != null)
-                return result.MaVongDau;
-            else
-                return "VD000";
-        }
-
-        public bool LapLichThiDau(DTO_VongDau vongDau, IEnumerable<DTO_TranDau> danhSachTranDau)
+        public bool LapLichThiDau(DTO_VongDau vongDau)
         {
             var danhSachTam = new List<DTO_VongDau> { vongDau };
 
@@ -48,8 +33,8 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             {
                 try
                 {
-                    _DAL.Add(vongDau);
-                    _BUS_TranDau.LapTranDau(danhSachTranDau);
+                    _BUS_TranDau.KiemTraNhapLieu(vongDau.CacTranDau);
+                    if(_DAL.ExistsLocally(vongDau) == false) _DAL.Add(vongDau);
                     _DAL.SaveChanges();
                     transaction.Commit();
                     return true;
@@ -66,8 +51,8 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
         {
             foreach (var entity in danhSachKiemTra)
             {
-                if (string.IsNullOrEmpty(entity.TenVongDau))
-                    throw new Exception("Tên vòng đấu không được để trống");
+                if (string.IsNullOrEmpty(entity.MaVongDau))
+                    throw new Exception("Mã vòng đấu không được để trống");
             }
         }
     }

@@ -31,14 +31,20 @@ namespace QuanLyGiaiVoDichBongDaQuocGia
             DAL_CauThu _DAL_CauThu = new(dbContext);
             DAL_DoiBong _DAL_DoiBong = new(dbContext);
             DAL_LoaiCauThu _DAL_LoaiCauThu = new(dbContext);
+            DAL_BanThang _DAL_BanThang = new(dbContext);
+            DAL_TranDau _DAL_TranDau = new(dbContext);
+            DAL_VongDau _DAL_VongDau = new(dbContext);
 
             BUS_ThamSo _BUS_ThamSo = new(_DAL_ThamSo);
             BUS_CauThu _BUS_CauThu = new(_DAL_CauThu);
             BUS_DoiBong _BUS_DoiBong = new(_DAL_DoiBong, _BUS_CauThu);
             BUS_LoaiCauThu _BUS_LoaiCauThu = new(_DAL_LoaiCauThu);
+            BUS_BanThang _BUS_BanThang = new(_DAL_BanThang);
+            BUS_TranDau _BUS_TranDau = new(_DAL_TranDau, _BUS_BanThang);
+            BUS_VongDau _BUS_VongDau = new(_DAL_VongDau, _BUS_TranDau);
 
-            ApplicationConfiguration.Initialize();
-            Application.Run(new GUI_TiepNhanDoiBong(_BUS_ThamSo, _BUS_DoiBong, _BUS_CauThu, _BUS_LoaiCauThu));
+        ApplicationConfiguration.Initialize();
+            Application.Run(new GUI_LapLichThiDau(_BUS_VongDau, _BUS_TranDau, _BUS_DoiBong));
         }
     }
 }

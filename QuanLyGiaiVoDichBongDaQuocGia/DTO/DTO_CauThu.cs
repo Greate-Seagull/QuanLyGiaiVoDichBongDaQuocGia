@@ -12,19 +12,19 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
         public string? TenCauThu { get; set; }
 
         [Required]
-        public DateTime NgaySinh { get; set; }
+        public DateTime? NgaySinh { get; set; }
 
         [Required, MaxLength(5)]
         public string? MaLoaiCauThu { get; set; }
 
         [ForeignKey("MaLoaiCauThu")]
-        public DTO_LoaiCauThu LoaiCauThu { get; set; }
+        public DTO_LoaiCauThu? LoaiCauThu { get; set; }
 
         [Required, MaxLength(5)]
         public string? MaDoiBong { get; set; }
 
         [ForeignKey("MaDoiBong")]
-        public DTO_DoiBong DoiBong { get; set; }
+        public DTO_DoiBong? DoiBong { get; set; }
 
         [MaxLength(300)]
         public string? GhiChu { get; set; }

@@ -32,5 +32,12 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DAL
 
         //Save changes
         public void SaveChanges() => _context.SaveChanges();
+
+        internal bool ExistsLocally(DTO_VongDau vongDau)
+        {
+            return _context.ChangeTracker.Entries<DTO_VongDau>()
+                           .Any(e => e.Entity.MaVongDau == vongDau.MaVongDau &&
+                                     e.State != EntityState.Deleted);
+        }
     }
 }

@@ -9,9 +9,9 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
 
         [Required, MaxLength(50)]
         public string? TenLoaiCauThu { get; set; }
-        public int SoLuongCauThuToiDaTheoLoaiCauThu { get; set; }
+        public int? SoLuongCauThuToiDaTheoLoaiCauThu { get; set; }
 
-        public List<DTO_CauThu> CacCauThu { get; set; }
+        public List<DTO_CauThu>? CacCauThu { get; set; }
 
         public override string ToString()
         {

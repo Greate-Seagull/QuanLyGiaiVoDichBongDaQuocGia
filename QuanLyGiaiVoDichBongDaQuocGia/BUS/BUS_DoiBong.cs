@@ -3,6 +3,7 @@ using QuanLyGiaiVoDichBongDaQuocGia.DAL;
 using System.Transactions;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata.Ecma335;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 {
@@ -55,6 +56,25 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
                     throw;
                 }
             }            
+        }
+
+        internal List<DTO_DoiBong> LayDanhSachDoiBongLapLich()
+        {
+            var query = _DAL.GetAll()
+                            .Select(obj => new DTO_DoiBong
+                            {
+                                MaDoiBong = obj.MaDoiBong,
+                                TenDoiBong = obj.TenDoiBong,
+                                TenSanNha = obj.TenSanNha
+                            });
+
+            return query.AsNoTracking().ToList();
+        }
+
+        internal List<DTO_DoiBong> LayDanhSachDoiBongThiDauHopLe(List<DTO_DoiBong> danhSachDoiBong, List<string> danhSachMaDoiBongDangLapLich, List<string> danhSachMaDoiBongDaLapLich)
+        {
+            return danhSachDoiBong.Where(entity => danhSachMaDoiBongDaLapLich.Contains(entity.MaDoiBong) == false && danhSachMaDoiBongDangLapLich.Contains(entity.MaDoiBong) == false)
+                                  .ToList();
         }
 
         private void KiemTraNhapLieu(IEnumerable<DTO_DoiBong> danhSachKiemTra)

@@ -82,8 +82,12 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         private void LayThamSo()
         {
             thamSo = _BUS_ThamSo.LayThamSoTiepNhanDoiBong();
-            minDate = new DateTime(DateTime.Now.Year - thamSo.TuoiCauThuToiDa, DateTime.Now.Month, DateTime.Now.Day);
-            maxDate = new DateTime(DateTime.Now.Year - thamSo.TuoiCauThuToiThieu, DateTime.Now.Month, DateTime.Now.Day);
+
+            int tuoiToiDa = thamSo.TuoiCauThuToiDa ?? 0;
+            int tuoiToiThieu = thamSo.TuoiCauThuToiThieu ?? 0;
+
+            minDate = new DateTime(DateTime.Now.Year - tuoiToiDa, DateTime.Now.Month, DateTime.Now.Day);
+            maxDate = new DateTime(DateTime.Now.Year - tuoiToiThieu, DateTime.Now.Month, DateTime.Now.Day);
         }
 
         private void TaoDanhSachCauThu()

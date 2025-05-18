@@ -9,10 +9,5 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
 
         [Required, MaxLength(5)]
         public string? TenLoaiBanThang { get; set; }
-
-        public override string ToString()
-        {
-            return TenLoaiBanThang;
-        }
     }
 }
