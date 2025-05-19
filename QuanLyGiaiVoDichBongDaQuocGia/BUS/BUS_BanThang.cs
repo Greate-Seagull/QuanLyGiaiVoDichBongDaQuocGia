@@ -46,5 +46,75 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
                     throw new Exception($"Thời điểm ghi bàn chưa được điều chỉnh của bàn thắng {entity.MaBanThang}");
             }
         }
+
+        internal List<DTO_BanThang> LayDanhSachBanThangTraCuu()
+        {
+            var query = _DAL.GetAll()
+                            .Select(obj => new DTO_BanThang
+                            {
+                                MaBanThang = obj.MaBanThang,
+                                MaTranDau = obj.MaTranDau,
+                                MaCauThu = obj.MaCauThu,
+                                MaLoaiBanThang = obj.MaLoaiBanThang,
+                                ThoiDiemGhiBan = obj.ThoiDiemGhiBan
+                            });
+
+            return query.AsNoTracking().ToList();
+        }
+
+        internal void DienThongTin(Dictionary<string, DTO_BanThang> danhSachBanThang, 
+                                   Dictionary<string, DTO_TranDau>? danhSachTranDau,
+                                   Dictionary<string, DTO_CauThu>? danhSachCauThu,
+                                   Dictionary<string, DTO_LoaiBanThang>? danhSachLoaiBanThang)
+        {
+            foreach(var banThang in danhSachBanThang.Values)
+            {
+                if(danhSachTranDau is not null && banThang.MaTranDau is not null)
+                {
+                    DTO_TranDau tranDau;
+                    danhSachTranDau.TryGetValue(banThang.MaTranDau, out tranDau);
+                    banThang.TranDau = tranDau;
+                }
+
+                if(danhSachCauThu is not null && banThang.MaCauThu is not null)
+                {
+                    DTO_CauThu cauThu;
+                    danhSachCauThu.TryGetValue(banThang.MaCauThu, out cauThu);
+                    banThang.CauThu = cauThu;
+                }
+
+                if(danhSachLoaiBanThang is not null && banThang.MaLoaiBanThang is not null)
+                {
+                    DTO_LoaiBanThang loaiBanThang;
+                    danhSachLoaiBanThang.TryGetValue(banThang.MaLoaiBanThang, out loaiBanThang);
+                    banThang.LoaiBanThang = loaiBanThang;
+                }
+            }
+        }
+
+        internal IEnumerable<DTO_BanThang> TraCuuBanThang(IEnumerable<DTO_BanThang> danhSachBanThang,
+                                                          IEnumerable<DTO_TranDau>? danhSachTranDau,
+                                                          DTO_LoaiBanThang? loaiBanThang,
+                                                          int? startThoiDiemGhiBan, int? endThoiDiemGhiBan)
+        {
+            var result = danhSachBanThang;
+
+            if(danhSachTranDau is not null)
+            {
+                var maTranDau = danhSachTranDau.Select(entity => entity.MaTranDau).ToHashSet();
+                result = result.Where(entity => maTranDau.Contains(entity.MaTranDau));
+            }   
+            if(loaiBanThang is not null)
+                result = result.Where(entity => entity.MaLoaiBanThang == loaiBanThang.MaLoaiBanThang);
+            if(startThoiDiemGhiBan is not null)
+                result = result.Where(entity => entity.ThoiDiemGhiBan >= startThoiDiemGhiBan);
+            if (endThoiDiemGhiBan is not null)
+                result = result.Where(entity => entity.ThoiDiemGhiBan <= endThoiDiemGhiBan);
+
+            return result;
+            //return danhSachBanThang.Where(entity => maTranDau.Contains(entity.MaTranDau) &&
+            //                                        entity.MaLoaiBanThang == loaiBanThang?.MaLoaiBanThang &&
+            //                                        entity.ThoiDiemGhiBan >= startThoiDiemGhiBan && entity.ThoiDiemGhiBan <= endThoiDiemGhiBan);
+        }
     }
 }

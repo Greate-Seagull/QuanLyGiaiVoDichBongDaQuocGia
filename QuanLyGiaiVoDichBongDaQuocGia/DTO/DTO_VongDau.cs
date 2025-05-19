@@ -6,7 +6,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
     public class DTO_VongDau
     {
         [Key, MaxLength(5)]
-        public string? MaVongDau { get; set; }
+        public string MaVongDau { get; set; }
 
         [Required, MaxLength(5)]
         public string? TenVongDau { get; set; }

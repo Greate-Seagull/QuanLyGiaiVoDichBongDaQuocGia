@@ -6,7 +6,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
     public class DTO_DoiBong
     {
         [Key, MaxLength(5)]
-        public string? MaDoiBong { get; set; }
+        public string MaDoiBong { get; set; }
 
         [Required, MaxLength(50)]
         public string? TenDoiBong { get; set; }

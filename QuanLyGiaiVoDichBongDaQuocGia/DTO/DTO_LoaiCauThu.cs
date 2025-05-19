@@ -5,7 +5,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
     public class DTO_LoaiCauThu
     {
         [Key, MaxLength(5)]
-        public string? MaLoaiCauThu { get; set; }
+        public string MaLoaiCauThu { get; set; }
 
         [Required, MaxLength(50)]
         public string? TenLoaiCauThu { get; set; }

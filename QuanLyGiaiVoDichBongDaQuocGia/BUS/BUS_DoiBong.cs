@@ -4,6 +4,7 @@ using System.Transactions;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata.Ecma335;
+using DevExpress.Utils.Extensions;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 {
@@ -58,6 +59,21 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             }            
         }
 
+        internal void DienDanhSach(Dictionary<string, DTO_DoiBong> danhSachDoiBong, Dictionary<string, DTO_CauThu> danhSachCauThu)
+        {
+            foreach(var cauThu in danhSachCauThu.Values)
+            {
+                DTO_DoiBong doiBong;
+                if(cauThu.MaDoiBong is not null && danhSachDoiBong.TryGetValue(cauThu.MaDoiBong, out doiBong))
+                {
+                    if (doiBong.CacCauThu is null)
+                        doiBong.CacCauThu = new();
+
+                    doiBong.CacCauThu.Add(cauThu);
+                }
+            }
+        }
+
         internal List<DTO_DoiBong> LayDanhSachDoiBongLapLich()
         {
             var query = _DAL.GetAll()
@@ -75,6 +91,40 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
         {
             return danhSachDoiBong.Where(entity => danhSachMaDoiBongDaLapLich.Contains(entity.MaDoiBong) == false && danhSachMaDoiBongDangLapLich.Contains(entity.MaDoiBong) == false)
                                   .ToList();
+        }
+
+        internal List<DTO_DoiBong> LayDanhSachDoiBongTraCuu()
+        {
+            var query = _DAL.GetAll()
+                            .Select(obj => new DTO_DoiBong
+                            {
+                                MaDoiBong = obj.MaDoiBong,
+                                TenDoiBong = obj.TenDoiBong,
+                                TenSanNha = obj.TenSanNha
+                            });
+
+            return query.AsNoTracking().ToList();
+        }
+
+        internal IEnumerable<DTO_DoiBong> TraCuuDoiBong(IEnumerable<DTO_DoiBong> danhSachDoiBong,
+                                                        IEnumerable<DTO_TranDau>? danhSachTranDau,
+                                                        int? startSoLuong, int? endSoLuong)
+        {
+            var result = danhSachDoiBong;
+                
+            if(danhSachTranDau is not null)
+            {
+                var maDoiBong = danhSachTranDau.SelectMany(entity => new[] { entity.MaDoi1, entity.MaDoi2 }).ToHashSet();
+                result = result.Where(entity => maDoiBong.Contains(entity.MaDoiBong));
+            }
+            if(startSoLuong is not null)
+                result = result.Where(entity => entity.CacCauThu?.Count >= startSoLuong);
+            if(endSoLuong is not null)
+                result = result.Where(entity => entity.CacCauThu.Count <= endSoLuong);
+
+            return result;
+            //return danhSachDoiBong.Where(entity => maDoiBong.Contains(entity.MaDoiBong) &&
+            //                                       entity.CacCauThu?.Count >= startSoLuong && entity.CacCauThu.Count <= endSoLuong);
         }
 
         private void KiemTraNhapLieu(IEnumerable<DTO_DoiBong> danhSachKiemTra)

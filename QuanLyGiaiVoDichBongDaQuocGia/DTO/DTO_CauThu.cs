@@ -6,7 +6,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
     public class DTO_CauThu
     {
         [Key, MaxLength(5)]
-        public string? MaCauThu { get; set; }
+        public string MaCauThu { get; set; }
 
         [Required, MaxLength(50)]
         public string? TenCauThu { get; set; }
@@ -29,9 +29,9 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
         [MaxLength(300)]
         public string? GhiChu { get; set; }
         public bool Deleted { get; set; } = false;
-        public override string ToString()
-        {
-            return TenCauThu;
-        }
+
+        //For debugging and displaying
+        public string TenLoaiCauThu => LoaiCauThu?.TenLoaiCauThu ?? string.Empty;
+        public string TenDoiBong => DoiBong?.TenDoiBong ?? string.Empty;
     }
 }

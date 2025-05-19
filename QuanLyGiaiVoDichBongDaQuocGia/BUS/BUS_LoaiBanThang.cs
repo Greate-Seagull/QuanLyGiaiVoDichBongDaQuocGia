@@ -25,5 +25,17 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
             return query.AsNoTracking().ToList();
         }
+
+        internal List<DTO_LoaiBanThang> LayDanhSachLoaiBanThangTraCuu()
+        {
+            var query = _DAL.GetAll()
+                            .Select(obj => new DTO_LoaiBanThang
+                            {
+                                MaLoaiBanThang = obj.MaLoaiBanThang,
+                                TenLoaiBanThang = obj.TenLoaiBanThang
+                            });
+
+            return query.AsNoTracking().ToList();
+        }
     }
 }

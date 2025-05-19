@@ -6,7 +6,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
     public class DTO_TranDau
     {
         [Key, MaxLength(5)]
-        public string? MaTranDau { get; set; }
+        public string MaTranDau { get; set; }
 
         public DateTime? NgayGio { get; set; }
 
@@ -36,6 +36,15 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
 
         //For debugging and displaying
         public string TiSo => $"{TiSoDoi1 ?? 0} - {TiSoDoi2 ?? 0}";
-        public string CapDau => $"{DoiBong1?.TenDoiBong ?? string.Empty} - {DoiBong2?.TenDoiBong ?? string.Empty}";
+        public string CapDau
+        {
+            get
+            {
+                if (MaTranDau == "Tất cả")
+                    return MaTranDau;
+
+                return $"{DoiBong1?.TenDoiBong ?? string.Empty} - {DoiBong2?.TenDoiBong ?? string.Empty}";
+            }
+        }
     }
 }

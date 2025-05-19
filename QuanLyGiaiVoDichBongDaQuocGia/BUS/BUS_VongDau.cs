@@ -47,6 +47,40 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             }
         }
 
+        internal List<DTO_VongDau> LayDanhSachVongDauTraCuu()
+        {
+            var query = _DAL.GetAll()
+                            .Select(obj => new DTO_VongDau
+                            {
+                                MaVongDau = obj.MaVongDau,
+                                TenVongDau = obj.TenVongDau,
+                                NgayBatDau = obj.NgayBatDau,
+                                NgayKetThuc = obj.NgayKetThuc
+                            });
+
+            return query.AsNoTracking().ToList();
+        }
+
+        internal IEnumerable<DTO_VongDau> TraCuuVongDau(IEnumerable<DTO_VongDau> danhSachVongDau, 
+                                                        DateTime? startNgayBatDau, DateTime? endNgayBatDau, 
+                                                        DateTime? startNgayKetThuc, DateTime? endNgayKetThuc)
+        {
+            var result = danhSachVongDau;
+
+            if (startNgayBatDau is not null)
+                result = result.Where(entity => entity.NgayBatDau >= startNgayBatDau);
+            if (endNgayBatDau is not null)
+                result = result.Where(entity => entity.NgayBatDau <= endNgayBatDau);
+            if (startNgayKetThuc is not null)
+                result = result.Where(entity => entity.NgayKetThuc >= startNgayKetThuc);
+            if (endNgayKetThuc is not null)
+                result = result.Where(entity => entity.NgayKetThuc <= endNgayKetThuc);
+
+            return result;
+            //return danhSachVongDau.Where(entity => entity.NgayBatDau >= startNgayBatDau && entity.NgayBatDau <= endNgayBatDau &&
+            //                                       entity.NgayKetThuc >= startNgayKetThuc && entity.NgayKetThuc <= endNgayKetThuc);
+        }
+
         private void KiemTraNhapLieu(IEnumerable<DTO_VongDau> danhSachKiemTra)
         {
             foreach (var entity in danhSachKiemTra)

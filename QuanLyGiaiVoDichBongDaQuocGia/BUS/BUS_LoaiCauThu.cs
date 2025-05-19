@@ -33,5 +33,31 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
             return query.AsNoTracking().ToList();
         }
+
+        internal List<DTO_LoaiCauThu> LayDanhSachLoaiCauThuTraCuu()
+        {
+            var query = _DAL.GetAll()
+                            .Select(obj => new DTO_LoaiCauThu
+                            {
+                                MaLoaiCauThu = obj.MaLoaiCauThu,
+                                TenLoaiCauThu = obj.TenLoaiCauThu,
+                                SoLuongCauThuToiDaTheoLoaiCauThu = obj.SoLuongCauThuToiDaTheoLoaiCauThu
+                            });
+
+            return query.AsNoTracking().ToList();
+        }
+
+        internal IEnumerable<DTO_LoaiCauThu> TraCuuLoaiCauThu(IEnumerable<DTO_LoaiCauThu> danhSachLoaiCauThu, 
+                                                              int? startSoLuong, int? endSoLuong)
+        {
+            var result = danhSachLoaiCauThu;
+            if (startSoLuong is not null)
+                result = result.Where(entity => entity.SoLuongCauThuToiDaTheoLoaiCauThu >= startSoLuong);
+            if (endSoLuong is not null)
+                result = result.Where(entity => entity.SoLuongCauThuToiDaTheoLoaiCauThu <= endSoLuong);
+
+            return result;
+            //return danhSachLoaiCauThu.Where(entity => entity.SoLuongCauThuToiDaTheoLoaiCauThu >= startSoLuong && entity.SoLuongCauThuToiDaTheoLoaiCauThu <= endSoLuong);
+        }
     }
 }

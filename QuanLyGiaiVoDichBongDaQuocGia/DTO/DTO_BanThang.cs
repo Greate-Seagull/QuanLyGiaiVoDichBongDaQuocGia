@@ -6,7 +6,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
     public class DTO_BanThang
     {
         [Key, MaxLength(5)]
-        public string? MaBanThang { get; set; }
+        public string MaBanThang { get; set; }
 
         [Required, MaxLength(5)]
         public string? MaTranDau { get; set; }
@@ -28,5 +28,25 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
 
         public int? ThoiDiemGhiBan { get; set; }
         public bool Deleted { get; set; } = false;
+
+        //For displaying
+        public string ThongTin
+        {
+            get
+            {
+                if (MaBanThang == "Tất cả")
+                    return MaBanThang;
+
+                DTO_DoiBong? doiBong;
+                if (CauThu?.MaDoiBong == TranDau?.MaDoi1)
+                    doiBong = TranDau?.DoiBong2;
+                else if (CauThu?.MaDoiBong == TranDau?.MaDoi2)
+                    doiBong = TranDau?.DoiBong1;
+                else
+                    doiBong = default;
+
+                return $"{CauThu?.TenCauThu ?? "Error"} ghi bàn vào lưới {doiBong?.TenDoiBong ?? "Error"} phút {ThoiDiemGhiBan ?? 0}";
+            }
+        }
     }
 }

@@ -159,7 +159,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             };
         }
 
-        private void gvcDanhSachBanThang_RowDeleted(object sender, DevExpress.Data.RowDeletedEventArgs e)
+        private void gvcDanhSachBanThang_RowDeleted(object sender, DevExpress.Data.RowDeletedEventArgs e) //Not working as expected
         {
             var entity = e.Row as DTO_BanThang;
 
