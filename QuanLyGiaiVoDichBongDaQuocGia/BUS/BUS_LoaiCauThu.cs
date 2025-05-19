@@ -47,17 +47,27 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             return query.AsNoTracking().ToList();
         }
 
-        internal IEnumerable<DTO_LoaiCauThu> TraCuuLoaiCauThu(IEnumerable<DTO_LoaiCauThu> danhSachLoaiCauThu, 
-                                                              int? startSoLuong, int? endSoLuong)
+        internal IEnumerable<DTO_LoaiCauThu> TraCuuLoaiCauThuTheoMaLoaiCauThu(IEnumerable<DTO_LoaiCauThu> danhSachLoaiCauThu, string maLoaiCauThu)
         {
             var result = danhSachLoaiCauThu;
+
+            if (string.IsNullOrEmpty(maLoaiCauThu) == false)
+                result = result.Where(entity => entity.MaLoaiCauThu == maLoaiCauThu);
+
+            return result;
+        }
+
+        internal IEnumerable<DTO_LoaiCauThu> TraCuuLoaiCauThuTheoSoLuongCauThuToiDa(IEnumerable<DTO_LoaiCauThu> danhSachLoaiCauThu, 
+                                                                                    int? startSoLuong, int? endSoLuong)
+        {
+            var result = danhSachLoaiCauThu;
+
             if (startSoLuong is not null)
                 result = result.Where(entity => entity.SoLuongCauThuToiDaTheoLoaiCauThu >= startSoLuong);
             if (endSoLuong is not null)
                 result = result.Where(entity => entity.SoLuongCauThuToiDaTheoLoaiCauThu <= endSoLuong);
 
             return result;
-            //return danhSachLoaiCauThu.Where(entity => entity.SoLuongCauThuToiDaTheoLoaiCauThu >= startSoLuong && entity.SoLuongCauThuToiDaTheoLoaiCauThu <= endSoLuong);
         }
     }
 }

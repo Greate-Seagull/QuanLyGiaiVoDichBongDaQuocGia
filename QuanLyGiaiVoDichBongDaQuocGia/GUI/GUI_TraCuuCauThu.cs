@@ -1,4 +1,5 @@
 ﻿using DevExpress.Internal.WinApi.Windows.UI.Notifications;
+using DevExpress.XtraRichEdit.Layout.Export;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using QuanLyGiaiVoDichBongDaQuocGia.BUS;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
@@ -34,6 +35,16 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         DTO_TranDau defaultTranDau = new DTO_TranDau { MaTranDau = "Tất cả" };
         DTO_BanThang defaultBanThang = new DTO_BanThang { MaBanThang = "Tất cả" };
         DTO_LoaiBanThang defaultLoaiBanThang = new DTO_LoaiBanThang { TenLoaiBanThang = "Tất cả" };
+
+        List<DTO_TranDau> filteredDanhSachTranDau;
+        List<DTO_DoiBong> filteredDanhSachDoiBong;
+        List<DTO_BanThang> filteredDanhSachBanThang;
+
+        bool anyLoaiCauThuFiltersApplied;
+        bool anyDoiBongFiltersApplied;
+        bool anyVongDauFiltersApplied;
+        bool anyTranDauFiltersApplied;
+        bool anyBanThangFiltersApplied;
 
         public GUI_TraCuuCauThu(BUS_CauThu bUS_CauThu, BUS_DoiBong bUS_DoiBong, BUS_LoaiCauThu bUS_LoaiCauThu, BUS_VongDau bUS_VongDau, BUS_TranDau bUS_TranDau, BUS_LoaiBanThang bUS_LoaiBanThang, BUS_BanThang bUS_BanThang)
         {
@@ -80,9 +91,9 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             cbLoaiCauThu.DataSource = loaiCauThuBindingSource;
             cbLoaiCauThu.DisplayMember = "TenLoaiCauThu";
 
-            var doiBongBindingSource = new BindingList<DTO_DoiBong>(danhSachDoiBong.Values.ToList());
-            doiBongBindingSource.Insert(0, defaultDoiBong);
-            cbDoiBong.DataSource = doiBongBindingSource;
+            filteredDanhSachDoiBong = danhSachDoiBong.Values.ToList();
+            filteredDanhSachDoiBong.Insert(0, defaultDoiBong);
+            cbDoiBong.DataSource = filteredDanhSachDoiBong;
             cbDoiBong.DisplayMember = "TenDoiBong";
 
             cbSanNha.DataSource = cbDoiBong.DataSource;
@@ -93,14 +104,14 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             cbVongDau.DataSource = vongDauBindingSource;
             cbVongDau.DisplayMember = "TenVongDau";
 
-            var tranDauBindingSource = new BindingList<DTO_TranDau>(danhSachTranDau.Values.ToList());
-            tranDauBindingSource.Insert(0, defaultTranDau);
-            cbTranDau.DataSource = tranDauBindingSource;
+            filteredDanhSachTranDau = danhSachTranDau.Values.ToList();
+            filteredDanhSachTranDau.Insert(0, defaultTranDau);
+            cbTranDau.DataSource = filteredDanhSachTranDau;
             cbTranDau.DisplayMember = "CapDau";
 
-            var banThangBindingSource = new BindingList<DTO_BanThang>(danhSachBanThang.Values.ToList());
-            banThangBindingSource.Insert(0, defaultBanThang);
-            cbBanThang.DataSource = banThangBindingSource;
+            filteredDanhSachBanThang = danhSachBanThang.Values.ToList();
+            filteredDanhSachBanThang.Insert(0, defaultBanThang);
+            cbBanThang.DataSource = filteredDanhSachBanThang;
             cbBanThang.DisplayMember = "ThongTin";
 
             var loaiBanThangBindingSource = new BindingList<DTO_LoaiBanThang>(danhSachLoaiBanThang.Values.ToList());
@@ -122,13 +133,15 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void LayDanhSachLoaiBanThang()
         {
-            danhSachLoaiBanThang = _BUS_LoaiBanThang.LayDanhSachLoaiBanThangTraCuu().ToDictionary(obj => obj.MaLoaiBanThang);
+            danhSachLoaiBanThang = _BUS_LoaiBanThang.LayDanhSachLoaiBanThangTraCuu().ToDictionary(obj => obj.MaLoaiBanThang);            
         }
 
         private void LayDanhSachBanThang()
         {
             danhSachBanThang = _BUS_BanThang.LayDanhSachBanThangTraCuu().ToDictionary(obj => obj.MaBanThang);
             _BUS_BanThang.DienThongTin(danhSachBanThang, danhSachTranDau, danhSachCauThu, danhSachLoaiBanThang);
+
+            _BUS_CauThu.DienDanhSach(danhSachCauThu, danhSachBanThang);
         }
 
         private void LayDanhSachTranDau()
@@ -154,73 +167,116 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void cbLoaiCauThu_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var cb = sender as ComboBox;
-            var loaiCauThu = cb?.SelectedItem as DTO_LoaiCauThu;
-
-            if (loaiCauThu == defaultLoaiCauThu)
+            if (sender is not ComboBox cb || cb.SelectedItem is not DTO_LoaiCauThu loaiCauThu)
                 return;
 
-            nudSoLuongCauThuTheoLoaiFrom.Value = Convert.ToDecimal(loaiCauThu?.SoLuongCauThuToiDaTheoLoaiCauThu);
-            nudSoLuongCauThuTheoLoaiTo.Value = nudSoLuongCauThuTheoLoaiFrom.Value;
+            bool isDefault = loaiCauThu.Equals(defaultLoaiCauThu);
+            
+            if (isDefault == false)
+            {
+                nudSoLuongCauThuTheoLoaiFrom.Value = Convert.ToDecimal(loaiCauThu?.SoLuongCauThuToiDaTheoLoaiCauThu);
+                nudSoLuongCauThuTheoLoaiTo.Value = nudSoLuongCauThuTheoLoaiFrom.Value;
+            }
         }
 
         private void cbDoiBong_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var cb = sender as ComboBox;
-            var doiBong = cb?.SelectedItem as DTO_DoiBong;
-
-            if (doiBong == defaultDoiBong)
+            if (sender is not ComboBox cb || cb.SelectedItem is not DTO_DoiBong doiBong)
                 return;
 
-            nudSoLuongCauThuFrom.Value = Convert.ToDecimal(doiBong?.CacCauThu?.Count);
-            nudSoLuongCauThuTo.Value = nudSoLuongCauThuFrom.Value;
+            bool isDefault = doiBong.Equals(defaultDoiBong);
+
+            if (isDefault == false)
+            {
+                nudSoLuongCauThuFrom.Value = Convert.ToDecimal(doiBong?.CacCauThu?.Count);
+                nudSoLuongCauThuTo.Value = nudSoLuongCauThuFrom.Value;
+            }
         }
 
         private void cbVongDau_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var cb = sender as ComboBox;
-            var vongDau = cb?.SelectedItem as DTO_VongDau;
-
-            if (vongDau == defaultVongDau)
+            if (sender is not ComboBox cb || cb.SelectedItem is not DTO_VongDau vongDau)
                 return;
 
-            dtpNgayBatDauFrom.Value = vongDau?.NgayBatDau ?? dtpGioTranDauFrom.MinDate;
-            dtpNgayBatDauTo.Value = vongDau?.NgayBatDau ?? dtpNgayBatDauTo.MaxDate;
+            bool isDefault = vongDau.Equals(defaultBanThang);
 
-            dtpNgayKetThucFrom.Value = vongDau?.NgayKetThuc ?? dtpNgayKetThucFrom.MinDate;
-            dtpNgayKetThucTo.Value = vongDau?.NgayKetThuc ?? dtpNgayKetThucTo.MaxDate;
+            //Update TranDau
+            filteredDanhSachTranDau = isDefault
+                ? danhSachTranDau.Values.ToList()
+                : _BUS_TranDau.TraCuuTranDauTheoVongDau(danhSachTranDau.Values, vongDau).ToList();
+
+            filteredDanhSachTranDau.Insert(0, defaultTranDau);
+            cbTranDau.DataSource = filteredDanhSachTranDau;
+
+            if (isDefault == false)
+            {
+                //Update NgayBatDau
+                DateTime vongDauNgayBatDau = vongDau.NgayBatDau ?? DateTime.Today;
+                dtpNgayBatDauFrom.Value = vongDauNgayBatDau;
+                dtpNgayBatDauTo.Value = vongDauNgayBatDau;
+
+                //Update NgayKetThuc
+                DateTime vongDauNgayKetThuc = vongDau.NgayBatDau ?? DateTime.Today;
+                dtpNgayKetThucFrom.Value = vongDauNgayKetThuc;
+                dtpNgayKetThucTo.Value = vongDauNgayKetThuc;
+            }
         }
 
         private void cbTranDau_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var cb = sender as ComboBox;
-            var tranDau = cb?.SelectedItem as DTO_TranDau;
-
-            if (tranDau == defaultTranDau)
+            if (sender is not ComboBox cb || cb.SelectedItem is not DTO_TranDau tranDau)
                 return;
 
-            nudTiSoDoi1.Value = Convert.ToDecimal(tranDau?.TiSoDoi1);
-            nudTiSoDoi2.Value = Convert.ToDecimal(tranDau?.TiSoDoi2);
+            bool isDefault = tranDau.Equals(defaultTranDau);
 
-            dtpNgayTranDauFrom.Value = tranDau?.NgayGio ?? dtpNgayTranDauFrom.MinDate;
-            dtpNgayTranDauTo.Value = tranDau?.NgayGio ?? dtpNgayTranDauTo.MaxDate;
+            //Update DoiBong
+            filteredDanhSachDoiBong = isDefault
+                ? danhSachDoiBong.Values.ToList()
+                : _BUS_DoiBong.TraCuuDoiBongTheoTranDau(danhSachDoiBong.Values, tranDau).ToList();
 
-            dtpGioTranDauFrom.Value = tranDau?.NgayGio ?? dtpGioTranDauFrom.MinDate;
-            dtpGioTranDauTo.Value = tranDau?.NgayGio ?? dtpGioTranDauTo.MaxDate;
+            filteredDanhSachDoiBong.Insert(0, defaultDoiBong);
+            cbDoiBong.DataSource = filteredDanhSachDoiBong;
+            cbSanNha.DataSource = filteredDanhSachDoiBong;
+
+            //Update BanThang
+            filteredDanhSachBanThang = isDefault
+                ? danhSachBanThang.Values.ToList()
+                : _BUS_BanThang.TraCuuBanThangTheoTranDau(danhSachBanThang.Values, tranDau).ToList();
+
+            filteredDanhSachBanThang.Insert(0, defaultBanThang);
+            cbBanThang.DataSource = filteredDanhSachBanThang;
+
+            if (isDefault == false)
+            {
+                //Update TiSo
+                nudTiSoDoi1.Value = Convert.ToDecimal(tranDau?.TiSoDoi1);
+                nudTiSoDoi2.Value = Convert.ToDecimal(tranDau?.TiSoDoi2);
+
+                //Update NgayGio
+                DateTime matchDateTime = tranDau.NgayGio ?? DateTime.Now;
+
+                dtpNgayTranDauFrom.Value = matchDateTime;
+                dtpNgayTranDauTo.Value = matchDateTime;
+
+                dtpGioTranDauFrom.Value = matchDateTime;
+                dtpGioTranDauTo.Value = matchDateTime;            
+            }
         }
 
         private void cbBanThang_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var cb = sender as ComboBox;
-            var banThang = cb?.SelectedItem as DTO_BanThang;
-
-            if (banThang == defaultBanThang)
+            if (sender is not ComboBox cb || cb.SelectedItem is not DTO_BanThang banThang)
                 return;
 
-            cbLoaiBanThang.SelectedItem = banThang?.LoaiBanThang;
+            if (banThang.Equals(defaultBanThang) == false)
+            {
+                //Update LoaiBanThang
+                cbLoaiBanThang.SelectedItem = banThang?.LoaiBanThang;
 
-            nudThoiDiemGhiBanFrom.Value = Convert.ToDecimal(banThang?.ThoiDiemGhiBan);
-            nudThoiDiemGhiBanTo.Value = nudThoiDiemGhiBanFrom.Value;
+                //Update ThoiDiemGhiBan
+                nudThoiDiemGhiBanFrom.Value = Convert.ToDecimal(banThang?.ThoiDiemGhiBan);
+                nudThoiDiemGhiBanTo.Value = nudThoiDiemGhiBanFrom.Value;
+            }
         }
 
         private void cNgaySinh_CheckedChanged(object sender, EventArgs e)
@@ -303,63 +359,59 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             var ketQuaTimKiemCauThu = TimKiemCauThu(ketQuaTimKiemLoaiCauThu, ketQuaTimKiemDoiBong, ketQuaTimKiemBanThang);
             gcDanhSachCauThu.DataSource = ketQuaTimKiemCauThu.ToList();
         }
-        /// <summary>
-        /// Do splitting TraCuu method into smaller methods
-        /// Do searching based on SoBanThang
-        /// Do filtering ComboBox's DataSource based on another ComboBox
-        /// </summary>
-        /// <param name="ketQuaTimKiemLoaiCauThu"></param>
-        /// <param name="ketQuaTimKiemDoiBong"></param>
-        /// <param name="ketQuaTimKiemBanThang"></param>
-        /// <returns></returns>
-
 
         private IEnumerable<DTO_CauThu> TimKiemCauThu(IEnumerable<DTO_LoaiCauThu>? ketQuaTimKiemLoaiCauThu, IEnumerable<DTO_DoiBong>? ketQuaTimKiemDoiBong, IEnumerable<DTO_BanThang>? ketQuaTimKiemBanThang)
         {
-            var maCauThu = txtMaCauThu.Text;
-            var tenCauThu = txtTenCauThu.Text;
-            DateTime? startNgaySinh = dtpNgaySinhFrom.Enabled ? dtpNgaySinhFrom.Value : null;
-            DateTime? endNgaySinh = dtpNgaySinhTo.Enabled ? dtpNgaySinhTo.Value : null;
-            int? startSoBanThang = nudSoBanThangFrom.Enabled ? (int)nudSoBanThangFrom.Value : null;
-            int? endSoBanThang = nudSoBanThangTo.Enabled ? (int)nudSoBanThangTo.Value : null;
+            var ketQuaTimKiem = _BUS_CauThu.TraCuuCauThu(danhSachCauThu.Values, txtMaCauThu.Text, txtTenCauThu.Text);
 
-            var ketQuaTimKiem = _BUS_CauThu.TraCuuCauThu(danhSachCauThu.Values, maCauThu, tenCauThu);
-            ketQuaTimKiem = _BUS_CauThu.TraCuuCauThu(ketQuaTimKiem, startNgaySinh, endNgaySinh);
-            return _BUS_CauThu.TraCuuCauThu(ketQuaTimKiem, ketQuaTimKiemLoaiCauThu, ketQuaTimKiemDoiBong, ketQuaTimKiemBanThang);
+            if(cNgaySinh.Checked)
+                ketQuaTimKiem = _BUS_CauThu.TraCuuCauThu(ketQuaTimKiem, dtpNgaySinhFrom.Value, dtpNgaySinhTo.Value);
+
+            if(cSoBanThang.Checked)
+                ketQuaTimKiem = _BUS_CauThu.TraCuuCauThu(ketQuaTimKiem, (int)nudSoBanThangFrom.Value, (int)nudSoBanThangTo.Value);
+
+            if (anyLoaiCauThuFiltersApplied)
+                ketQuaTimKiem = _BUS_CauThu.TraCuuCauThu(ketQuaTimKiem, ketQuaTimKiemLoaiCauThu);
+
+            if (anyDoiBongFiltersApplied)
+                ketQuaTimKiem = _BUS_CauThu.TraCuuCauThu(ketQuaTimKiem, ketQuaTimKiemDoiBong);
+
+            if (anyBanThangFiltersApplied)
+                ketQuaTimKiem = _BUS_CauThu.TraCuuCauThu(ketQuaTimKiem, ketQuaTimKiemBanThang);
+
+            return ketQuaTimKiem;
         }
 
         private IEnumerable<DTO_BanThang>? TimKiemBanThang(IEnumerable<DTO_TranDau>? ketQuaTimKiemTranDau)
         {
             var banThang = cbBanThang.SelectedItem as DTO_BanThang;
-            IEnumerable<DTO_BanThang>? ketQuaTimKiemBanThang = null;
+            IEnumerable<DTO_BanThang>? ketQuaTimKiemBanThang = filteredDanhSachBanThang;
 
-            if (banThang == defaultBanThang)
+            anyBanThangFiltersApplied = banThang.Equals(defaultBanThang) == false;
+
+            if (anyBanThangFiltersApplied)
             {
-                DTO_LoaiBanThang? loaiBanThang = cbLoaiBanThang.SelectedItem as DTO_LoaiBanThang;
-                loaiBanThang = loaiBanThang != defaultLoaiBanThang ? loaiBanThang : null;
-                int? startThoiDiemGhiBan = nudThoiDiemGhiBanFrom.Enabled ? (int)nudThoiDiemGhiBanFrom.Value : null;
-                int? endThoiDiemGhiBan = nudThoiDiemGhiBanTo.Enabled ? (int)nudThoiDiemGhiBanTo.Value : null;
-
-                if(loaiBanThang is null &&
-                   startThoiDiemGhiBan is null &&
-                   endThoiDiemGhiBan is null)
-                {
-                    return null;
-                }
-
-                ketQuaTimKiemBanThang = _BUS_BanThang.TraCuuBanThang(danhSachBanThang.Values,
-                                                                         ketQuaTimKiemTranDau,
-                                                                         loaiBanThang,
-                                                                         startThoiDiemGhiBan, endThoiDiemGhiBan);
+                ketQuaTimKiemBanThang = _BUS_BanThang.TraCuuBanThangTheoMaBanThang(ketQuaTimKiemBanThang, banThang.MaBanThang);
             }
             else
             {
-                ketQuaTimKiemBanThang = new List<DTO_BanThang> { banThang };
-                ketQuaTimKiemBanThang = _BUS_BanThang.TraCuuBanThang(ketQuaTimKiemBanThang,
-                                                                    ketQuaTimKiemTranDau,
-                                                                    null,
-                                                                    null, null);
+                DTO_LoaiBanThang? loaiBanThang = cbLoaiBanThang.SelectedItem as DTO_LoaiBanThang;
+                if (loaiBanThang.Equals(defaultLoaiBanThang) == false)
+                {
+                    ketQuaTimKiemBanThang = _BUS_BanThang.TraCuuBanThangTheoLoaiBanThang(ketQuaTimKiemBanThang, loaiBanThang);
+                    anyBanThangFiltersApplied = true;
+                }
+                
+                if (cThoiDiemGhiBan.Checked)
+                {
+                    ketQuaTimKiemBanThang = _BUS_BanThang.TraCuuBanThangTheoThoiDiemGhiBan(ketQuaTimKiemBanThang, (int)nudThoiDiemGhiBanFrom.Value, (int)nudThoiDiemGhiBanTo.Value);
+                    anyBanThangFiltersApplied = true;
+                }
             }
+
+            //Prevent searching path ... TranDau -> BanThang -> CauThu ...
+            if (anyTranDauFiltersApplied && anyBanThangFiltersApplied)
+                ketQuaTimKiemBanThang = _BUS_BanThang.TraCuuBanThangTheoTranDau(ketQuaTimKiemBanThang, ketQuaTimKiemTranDau);
 
             return ketQuaTimKiemBanThang;
         }
@@ -367,23 +419,28 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         private IEnumerable<DTO_DoiBong>? TimKiemDoiBong(IEnumerable<DTO_TranDau>? ketQuaTimKiemTranDau)
         {
             var doiBong = cbDoiBong.SelectedItem as DTO_DoiBong;
-            IEnumerable<DTO_DoiBong>? ketQuaTimKiemDoiBong = null;
+            IEnumerable<DTO_DoiBong>? ketQuaTimKiemDoiBong = filteredDanhSachDoiBong;
 
-            if (doiBong == defaultDoiBong)
+            anyDoiBongFiltersApplied = doiBong.Equals(defaultDoiBong) == false;
+
+            if (anyDoiBongFiltersApplied)
             {
-                int? startSoLuongCauThu = nudSoLuongCauThuFrom.Enabled ? (int)nudSoLuongCauThuFrom.Value : null;
-                int? endSoLuongCauThu = nudSoLuongCauThuTo.Enabled ? (int)nudSoLuongCauThuTo.Value : null;
-                ketQuaTimKiemDoiBong = _BUS_DoiBong.TraCuuDoiBong(danhSachDoiBong.Values,
-                                                                      ketQuaTimKiemTranDau,
-                                                                      startSoLuongCauThu,
-                                                                      endSoLuongCauThu);
+                ketQuaTimKiemDoiBong = _BUS_DoiBong.TraCuuDoiBongTheoMaDoiBong(ketQuaTimKiemDoiBong, doiBong.MaDoiBong);
             }
             else
             {
-                ketQuaTimKiemDoiBong = new List<DTO_DoiBong> { doiBong };
-                ketQuaTimKiemDoiBong = _BUS_DoiBong.TraCuuDoiBong(ketQuaTimKiemDoiBong,
-                                                                ketQuaTimKiemTranDau,
-                                                                null, null);
+                if(cSoLuongCauThu.Checked)
+                {
+                    ketQuaTimKiemDoiBong = _BUS_DoiBong.TraCuuDoiBongTheoSoLuongCauThu(ketQuaTimKiemDoiBong, (int)nudSoLuongCauThuFrom.Value, (int)nudSoLuongCauThuTo.Value);
+                    anyDoiBongFiltersApplied = true;
+                }
+            }
+
+            //Allow searching path ... TranDau -> DoiBong -> CauThu ...
+            if (anyTranDauFiltersApplied)
+            {
+                ketQuaTimKiemDoiBong = _BUS_DoiBong.TraCuuDoiBongTheoTranDau(ketQuaTimKiemDoiBong, ketQuaTimKiemTranDau);
+                anyDoiBongFiltersApplied = true;
             }
 
             return ketQuaTimKiemDoiBong;
@@ -392,31 +449,37 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         private IEnumerable<DTO_TranDau>? TimKiemTranDau(IEnumerable<DTO_VongDau>? ketQuaTimKiemVongDau)
         {
             var tranDau = cbTranDau.SelectedItem as DTO_TranDau;
-            IEnumerable<DTO_TranDau>? ketQuaTimKiemTranDau = null;
+            IEnumerable<DTO_TranDau>? ketQuaTimKiemTranDau = filteredDanhSachTranDau;
 
-            if (tranDau == defaultTranDau)
+            anyTranDauFiltersApplied = tranDau.Equals(defaultTranDau) == false;
+
+            if (anyTranDauFiltersApplied)
             {
-                int? tiSo1 = nudTiSoDoi1.Enabled ? (int)nudTiSoDoi1.Value : null;
-                int? tiSo2 = nudTiSoDoi2.Enabled ? (int)nudTiSoDoi2.Value : null;
-                DateTime? startNgayTranDau = dtpNgayTranDauFrom.Enabled ? dtpNgayTranDauFrom.Value : null;
-                DateTime? endNgayTranDau = dtpNgayTranDauTo.Enabled ? dtpNgayTranDauTo.Value : null;
-                DateTime? startGioTranDau = dtpGioTranDauFrom.Enabled ? dtpGioTranDauFrom.Value : null;
-                DateTime? endGioTranDau = dtpGioTranDauTo.Enabled ? dtpGioTranDauTo.Value : null;
-                ketQuaTimKiemTranDau = _BUS_TranDau.TraCuuTranDau(danhSachTranDau.Values,
-                                                                ketQuaTimKiemVongDau,
-                                                                tiSo1, tiSo2,
-                                                                startNgayTranDau, endNgayTranDau,
-                                                                startGioTranDau, endGioTranDau);
+                ketQuaTimKiemTranDau = _BUS_TranDau.TraCuuTranDauTheoMaTranDau(ketQuaTimKiemTranDau, tranDau.MaTranDau);
             }
             else
             {
-                ketQuaTimKiemTranDau = new List<DTO_TranDau> { tranDau };
-                ketQuaTimKiemTranDau = _BUS_TranDau.TraCuuTranDau(ketQuaTimKiemTranDau,
-                                                                ketQuaTimKiemVongDau,
-                                                                null, null,
-                                                                null, null,
-                                                                null, null);
+                if(cTiSo.Checked)
+                {
+                    ketQuaTimKiemTranDau = _BUS_TranDau.TraCuuTranDauTheoTiSo(ketQuaTimKiemTranDau, (int)nudTiSoDoi1.Value, (int)nudTiSoDoi2.Value);
+                    anyTranDauFiltersApplied = true;
+                }
+
+                if(cNgayTranDau.Checked)
+                {
+                    ketQuaTimKiemTranDau = _BUS_TranDau.TraCuuTranDauTheoNgay(ketQuaTimKiemTranDau, dtpNgayTranDauFrom.Value, dtpNgayTranDauTo.Value);
+                    anyTranDauFiltersApplied = true;
+                }
+
+                if(cGioTranDau.Checked)
+                {
+                    ketQuaTimKiemTranDau = _BUS_TranDau.TraCuuTranDauTheoGio(ketQuaTimKiemTranDau, dtpGioTranDauFrom.Value, dtpGioTranDauTo.Value);
+                    anyTranDauFiltersApplied = true;
+                }
             }
+
+            if (anyVongDauFiltersApplied)
+                ketQuaTimKiemTranDau = _BUS_TranDau.TraCuuTranDauTheoVongDau(ketQuaTimKiemTranDau, ketQuaTimKiemVongDau);
 
             return ketQuaTimKiemTranDau;
         }
@@ -424,21 +487,27 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         private IEnumerable<DTO_VongDau>? TimKiemVongDau()
         {
             var vongDau = cbVongDau.SelectedItem as DTO_VongDau;
-            IEnumerable<DTO_VongDau>? ketQuaTimKiemVongDau = null;
+            IEnumerable<DTO_VongDau>? ketQuaTimKiemVongDau = danhSachVongDau.Values.AsEnumerable();
 
-            if (vongDau == defaultVongDau)
+            anyVongDauFiltersApplied = vongDau.Equals(defaultVongDau) == false;
+
+            if (anyVongDauFiltersApplied)
             {
-                DateTime? startNgayBatDau = dtpNgayBatDauFrom.Enabled ? dtpNgayBatDauFrom.Value : null;
-                DateTime? endNgayBatDau = dtpNgayBatDauTo.Enabled ? dtpNgayBatDauTo.Value : null;
-                DateTime? startNgayKetThuc = dtpNgayKetThucFrom.Enabled ? dtpNgayKetThucFrom.Value : null;
-                DateTime? endNgayKetThuc = dtpNgayKetThucTo.Enabled ? dtpNgayKetThucTo.Value : null;
-                ketQuaTimKiemVongDau = _BUS_VongDau.TraCuuVongDau(danhSachVongDau.Values,
-                                                                startNgayBatDau, endNgayBatDau,
-                                                                startNgayKetThuc, endNgayKetThuc);
+                ketQuaTimKiemVongDau = _BUS_VongDau.TraCuuVongDauTheoMaVongDau(ketQuaTimKiemVongDau, vongDau.MaVongDau);
             }
             else
             {
-                ketQuaTimKiemVongDau = new List<DTO_VongDau> { vongDau };
+                if(cNgayBatDau.Checked)
+                {
+                    ketQuaTimKiemVongDau = _BUS_VongDau.TraCuuVongDauTheoNgayBatDau(ketQuaTimKiemVongDau, dtpNgayBatDauFrom.Value, dtpNgayBatDauTo.Value);
+                    anyVongDauFiltersApplied = true;
+                }
+
+                if(cNgayKetThuc.Checked)
+                {
+                    ketQuaTimKiemVongDau = _BUS_VongDau.TraCuuVongDauTheoNgayKetThuc(ketQuaTimKiemVongDau, dtpNgayKetThucFrom.Value, dtpNgayKetThucTo.Value);
+                    anyVongDauFiltersApplied = true;
+                }
             }
 
             return ketQuaTimKiemVongDau;
@@ -447,19 +516,21 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         private IEnumerable<DTO_LoaiCauThu>? TimKiemLoaiCauThu()
         {
             var loaiCauThu = cbLoaiCauThu.SelectedItem as DTO_LoaiCauThu;
-            IEnumerable<DTO_LoaiCauThu>? ketQuaTimKiemLoaiCauThu = null;
+            IEnumerable<DTO_LoaiCauThu>? ketQuaTimKiemLoaiCauThu = danhSachLoaiCauThu.Values.AsEnumerable();
 
-            if (loaiCauThu == defaultLoaiCauThu)
+            anyLoaiCauThuFiltersApplied = loaiCauThu.Equals(defaultLoaiCauThu) == false;
+
+            if (anyLoaiCauThuFiltersApplied)
             {
-                int? startSoLuongCauThuTheoLoai = nudSoLuongCauThuTheoLoaiFrom.Enabled ? (int)nudSoLuongCauThuTheoLoaiFrom.Value : null;
-                int? endSoLuongCauThuTheoLoai = nudSoLuongCauThuTheoLoaiTo.Enabled ? (int)nudSoLuongCauThuTheoLoaiTo.Value : null;
-                ketQuaTimKiemLoaiCauThu = _BUS_LoaiCauThu.TraCuuLoaiCauThu(danhSachLoaiCauThu.Values,
-                                                                            startSoLuongCauThuTheoLoai,
-                                                                            endSoLuongCauThuTheoLoai);
+                ketQuaTimKiemLoaiCauThu = _BUS_LoaiCauThu.TraCuuLoaiCauThuTheoMaLoaiCauThu(ketQuaTimKiemLoaiCauThu, loaiCauThu.MaLoaiCauThu);
             }
             else
             {
-                ketQuaTimKiemLoaiCauThu = new List<DTO_LoaiCauThu> { loaiCauThu };
+                if (cSoLuongCauThuTheoLoai.Checked)
+                {
+                    ketQuaTimKiemLoaiCauThu = _BUS_LoaiCauThu.TraCuuLoaiCauThuTheoSoLuongCauThuToiDa(ketQuaTimKiemLoaiCauThu, (int)nudSoLuongCauThuTheoLoaiFrom.Value, (int)nudSoLuongCauThuTheoLoaiTo.Value);
+                    anyLoaiCauThuFiltersApplied = true;
+                }
             }
 
             return ketQuaTimKiemLoaiCauThu;

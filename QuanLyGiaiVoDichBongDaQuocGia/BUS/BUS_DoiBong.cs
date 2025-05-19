@@ -106,9 +106,8 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             return query.AsNoTracking().ToList();
         }
 
-        internal IEnumerable<DTO_DoiBong> TraCuuDoiBong(IEnumerable<DTO_DoiBong> danhSachDoiBong,
-                                                        IEnumerable<DTO_TranDau>? danhSachTranDau,
-                                                        int? startSoLuong, int? endSoLuong)
+        internal IEnumerable<DTO_DoiBong> TraCuuDoiBongTheoTranDau(IEnumerable<DTO_DoiBong> danhSachDoiBong,
+                                                                   IEnumerable<DTO_TranDau>? danhSachTranDau)
         {
             var result = danhSachDoiBong;
                 
@@ -117,14 +116,21 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
                 var maDoiBong = danhSachTranDau.SelectMany(entity => new[] { entity.MaDoi1, entity.MaDoi2 }).ToHashSet();
                 result = result.Where(entity => maDoiBong.Contains(entity.MaDoiBong));
             }
-            if(startSoLuong is not null)
+
+            return result;            
+        }
+
+        internal IEnumerable<DTO_DoiBong> TraCuuDoiBongTheoSoLuongCauThu(IEnumerable<DTO_DoiBong> danhSachDoiBong,
+                                                                         int? startSoLuong, int? endSoLuong)
+        {
+            var result = danhSachDoiBong;
+
+            if (startSoLuong is not null)
                 result = result.Where(entity => entity.CacCauThu?.Count >= startSoLuong);
-            if(endSoLuong is not null)
-                result = result.Where(entity => entity.CacCauThu.Count <= endSoLuong);
+            if (endSoLuong is not null)
+                result = result.Where(entity => entity.CacCauThu?.Count <= endSoLuong);
 
             return result;
-            //return danhSachDoiBong.Where(entity => maDoiBong.Contains(entity.MaDoiBong) &&
-            //                                       entity.CacCauThu?.Count >= startSoLuong && entity.CacCauThu.Count <= endSoLuong);
         }
 
         private void KiemTraNhapLieu(IEnumerable<DTO_DoiBong> danhSachKiemTra)
@@ -136,6 +142,28 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
                 if (string.IsNullOrEmpty(entity.TenSanNha))
                     throw new Exception("Tên sân nhà không được để trống");
             }
-        }        
+        }
+
+        internal IEnumerable<DTO_DoiBong> TraCuuDoiBongTheoMaDoiBong(IEnumerable<DTO_DoiBong> danhSachDoiBong, string maDoiBong)
+        {
+            var result = danhSachDoiBong;
+
+            if (string.IsNullOrEmpty(maDoiBong) == false)
+                result = result.Where(entity => entity.MaDoiBong == maDoiBong);
+
+            return result;
+        }
+
+        internal IEnumerable<DTO_DoiBong> TraCuuDoiBongTheoTranDau(IEnumerable<DTO_DoiBong> danhSachDoiBong, DTO_TranDau? tranDau)
+        {
+            var result = danhSachDoiBong;
+
+            if (tranDau is not null)
+            {
+                result = result.Where(entity => entity.MaDoiBong == tranDau.MaDoi1 || entity.MaDoiBong == tranDau.MaDoi2);
+            }
+
+            return result;
+        }
     }
 }

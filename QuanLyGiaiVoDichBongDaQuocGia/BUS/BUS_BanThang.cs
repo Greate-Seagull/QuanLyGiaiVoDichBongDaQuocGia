@@ -92,10 +92,8 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             }
         }
 
-        internal IEnumerable<DTO_BanThang> TraCuuBanThang(IEnumerable<DTO_BanThang> danhSachBanThang,
-                                                          IEnumerable<DTO_TranDau>? danhSachTranDau,
-                                                          DTO_LoaiBanThang? loaiBanThang,
-                                                          int? startThoiDiemGhiBan, int? endThoiDiemGhiBan)
+        internal IEnumerable<DTO_BanThang> TraCuuBanThangTheoTranDau(IEnumerable<DTO_BanThang> danhSachBanThang,
+                                                                     IEnumerable<DTO_TranDau>? danhSachTranDau)
         {
             var result = danhSachBanThang;
 
@@ -103,18 +101,54 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             {
                 var maTranDau = danhSachTranDau.Select(entity => entity.MaTranDau).ToHashSet();
                 result = result.Where(entity => maTranDau.Contains(entity.MaTranDau));
-            }   
-            if(loaiBanThang is not null)
-                result = result.Where(entity => entity.MaLoaiBanThang == loaiBanThang.MaLoaiBanThang);
-            if(startThoiDiemGhiBan is not null)
+            }
+
+            return result;            
+        }
+
+        internal IEnumerable<DTO_BanThang> TraCuuBanThangTheoLoaiBanThang(IEnumerable<DTO_BanThang> danhSachBanThang,
+                                                                          DTO_LoaiBanThang? loaiBanThang)
+        {
+            var result = danhSachBanThang;
+
+            if (loaiBanThang is not null)
+                result = result.Where(entity => entity.MaLoaiBanThang == loaiBanThang.MaLoaiBanThang);            
+
+            return result;
+        }
+        internal IEnumerable<DTO_BanThang> TraCuuBanThangTheoThoiDiemGhiBan(IEnumerable<DTO_BanThang> danhSachBanThang,
+                                                                            int? startThoiDiemGhiBan, int? endThoiDiemGhiBan)
+        {
+            var result = danhSachBanThang;
+
+            if (startThoiDiemGhiBan is not null)
                 result = result.Where(entity => entity.ThoiDiemGhiBan >= startThoiDiemGhiBan);
             if (endThoiDiemGhiBan is not null)
                 result = result.Where(entity => entity.ThoiDiemGhiBan <= endThoiDiemGhiBan);
 
             return result;
-            //return danhSachBanThang.Where(entity => maTranDau.Contains(entity.MaTranDau) &&
-            //                                        entity.MaLoaiBanThang == loaiBanThang?.MaLoaiBanThang &&
-            //                                        entity.ThoiDiemGhiBan >= startThoiDiemGhiBan && entity.ThoiDiemGhiBan <= endThoiDiemGhiBan);
+        }
+
+        internal IEnumerable<DTO_BanThang> TraCuuBanThangTheoMaBanThang(IEnumerable<DTO_BanThang> danhSachBanThang, string maBanThang)
+        {
+            var result = danhSachBanThang;
+
+            if (string.IsNullOrEmpty(maBanThang) == false)
+                result = result.Where(entity => entity.MaBanThang == maBanThang);
+
+            return result;
+        }
+
+        internal IEnumerable<DTO_BanThang> TraCuuBanThangTheoTranDau(IEnumerable<DTO_BanThang> danhSachBanThang, DTO_TranDau? tranDau)
+        {
+            var result = danhSachBanThang;
+
+            if (tranDau is not null)
+            {
+                result = result.Where(entity => entity.MaTranDau == tranDau.MaTranDau);
+            }
+
+            return result;
         }
     }
 }

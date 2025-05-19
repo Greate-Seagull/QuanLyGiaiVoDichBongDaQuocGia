@@ -61,9 +61,18 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             return query.AsNoTracking().ToList();
         }
 
-        internal IEnumerable<DTO_VongDau> TraCuuVongDau(IEnumerable<DTO_VongDau> danhSachVongDau, 
-                                                        DateTime? startNgayBatDau, DateTime? endNgayBatDau, 
-                                                        DateTime? startNgayKetThuc, DateTime? endNgayKetThuc)
+        internal IEnumerable<DTO_VongDau> TraCuuVongDauTheoMaVongDau(IEnumerable<DTO_VongDau> danhSachVongDau, string maVongDau)
+        {
+            var result = danhSachVongDau;
+
+            if (string.IsNullOrEmpty(maVongDau) == false)
+                result = result.Where(entity => entity.MaVongDau == maVongDau);
+
+            return result;
+        }
+
+        internal IEnumerable<DTO_VongDau> TraCuuVongDauTheoNgayBatDau(IEnumerable<DTO_VongDau> danhSachVongDau, 
+                                                                      DateTime? startNgayBatDau, DateTime? endNgayBatDau)
         {
             var result = danhSachVongDau;
 
@@ -71,14 +80,21 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
                 result = result.Where(entity => entity.NgayBatDau >= startNgayBatDau);
             if (endNgayBatDau is not null)
                 result = result.Where(entity => entity.NgayBatDau <= endNgayBatDau);
+
+            return result;
+        }
+
+        internal IEnumerable<DTO_VongDau> TraCuuVongDauTheoNgayKetThuc(IEnumerable<DTO_VongDau> danhSachVongDau,
+                                                                       DateTime? startNgayKetThuc, DateTime? endNgayKetThuc)
+        {
+            var result = danhSachVongDau;
+
             if (startNgayKetThuc is not null)
                 result = result.Where(entity => entity.NgayKetThuc >= startNgayKetThuc);
             if (endNgayKetThuc is not null)
                 result = result.Where(entity => entity.NgayKetThuc <= endNgayKetThuc);
 
             return result;
-            //return danhSachVongDau.Where(entity => entity.NgayBatDau >= startNgayBatDau && entity.NgayBatDau <= endNgayBatDau &&
-            //                                       entity.NgayKetThuc >= startNgayKetThuc && entity.NgayKetThuc <= endNgayKetThuc);
         }
 
         private void KiemTraNhapLieu(IEnumerable<DTO_VongDau> danhSachKiemTra)

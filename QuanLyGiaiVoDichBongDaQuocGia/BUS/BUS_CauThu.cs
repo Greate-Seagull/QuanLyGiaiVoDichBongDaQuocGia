@@ -76,11 +76,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             return result;
         }
 
-        internal List<DTO_CauThu> LayDanhSachCauThuThuocHaiDoi(object maDoi1, object maDoi2)
-        {
-            throw new NotImplementedException();
-        }
-
         internal List<DTO_CauThu> LayDanhSachCauThuTraCuu()
         {
             var query = _DAL.GetAll()
@@ -118,9 +113,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
         }
 
         internal IEnumerable<DTO_CauThu> TraCuuCauThu(IEnumerable<DTO_CauThu> danhSachCauThu, 
-                                                      IEnumerable<DTO_LoaiCauThu>? ketQuaTimKiemLoaiCauThu,
-                                                      IEnumerable<DTO_DoiBong>? ketQuaTimKiemDoiBong, 
-                                                      IEnumerable<DTO_BanThang>? ketQuaTimKiemBanThang)
+                                                      IEnumerable<DTO_LoaiCauThu>? ketQuaTimKiemLoaiCauThu)
         {
             var result = danhSachCauThu;
 
@@ -129,12 +122,30 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
                 var maLoaiCauThu = ketQuaTimKiemLoaiCauThu.Select(entity => entity.MaLoaiCauThu).ToHashSet();
                 result = result.Where(entity => maLoaiCauThu.Contains(entity.MaLoaiCauThu));
             }
-            if(ketQuaTimKiemDoiBong is not null)
+
+            return result;
+        }
+
+        internal IEnumerable<DTO_CauThu> TraCuuCauThu(IEnumerable<DTO_CauThu> danhSachCauThu,
+                                                      IEnumerable<DTO_DoiBong>? ketQuaTimKiemDoiBong)
+        {
+            var result = danhSachCauThu;
+
+            if (ketQuaTimKiemDoiBong is not null)
             {
                 var maDoiBong = ketQuaTimKiemDoiBong.Select(entity => entity.MaDoiBong).ToHashSet();
                 result = result.Where(entity => maDoiBong.Contains(entity.MaDoiBong));
             }
-            if(ketQuaTimKiemBanThang is not null)
+
+            return result;
+        }
+
+        internal IEnumerable<DTO_CauThu> TraCuuCauThu(IEnumerable<DTO_CauThu> danhSachCauThu,
+                                                      IEnumerable<DTO_BanThang>? ketQuaTimKiemBanThang)
+        {
+            var result = danhSachCauThu;
+
+            if (ketQuaTimKiemBanThang is not null)
             {
                 var maBanThang = ketQuaTimKiemBanThang.Select(entity => entity.MaCauThu).ToHashSet();
                 result = result.Where(entity => maBanThang.Contains(entity.MaCauThu));
@@ -149,11 +160,11 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
             if (string.IsNullOrEmpty(maCauThu) == false)
             {
-                result = result.Where(entity => entity.MaCauThu == maCauThu);
+                result = result.Where(entity => entity.MaCauThu.ToLower().Contains(maCauThu));
             }
             if (string.IsNullOrEmpty(tenCauThu) == false)
             {
-                result = result.Where(entity => entity.TenCauThu == tenCauThu);
+                result = result.Where(entity => entity.TenCauThu.ToLower().Contains(tenCauThu));
             }
 
             return result;
@@ -173,6 +184,37 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             }
 
             return result;
+        }
+
+        internal IEnumerable<DTO_CauThu> TraCuuCauThu(IEnumerable<DTO_CauThu> danhSachCauThu, int? startSoBanThang, int? endSoBanThang)
+        {
+            var result = danhSachCauThu;
+
+            if (startSoBanThang is not null)
+            {
+                result = result.Where(entity => entity.CacBanThang.Count >= startSoBanThang);
+            }
+            if (endSoBanThang is not null)
+            {
+                result = result.Where(entity => entity.CacBanThang.Count <= endSoBanThang);
+            }
+
+            return result;
+        }
+
+        internal void DienDanhSach(Dictionary<string, DTO_CauThu> danhSachCauThu, Dictionary<string, DTO_BanThang> danhSachBanThang)
+        {
+            foreach (var banThang in danhSachBanThang.Values)
+            {
+                DTO_CauThu cauThu;
+                if (banThang.MaCauThu is not null && danhSachCauThu.TryGetValue(banThang.MaCauThu, out cauThu))
+                {
+                    if (cauThu.CacBanThang is null)
+                        cauThu.CacBanThang = new();
+
+                    cauThu.CacBanThang.Add(banThang);
+                }
+            }
         }
     }
 }

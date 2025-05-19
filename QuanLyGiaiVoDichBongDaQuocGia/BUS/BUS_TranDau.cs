@@ -165,37 +165,79 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             }
         }
 
-        internal IEnumerable<DTO_TranDau> TraCuuTranDau(IEnumerable<DTO_TranDau> danhSachTranDau, 
-                                                        IEnumerable<DTO_VongDau>? danhSachVongDau,
-                                                        int? tiSoDoi1, int? tiSoDoi2,
-                                                        DateTime? startNgay, DateTime? endNgay,
-                                                        DateTime? startGio, DateTime? endGio)
+        internal IEnumerable<DTO_TranDau> TraCuuTranDauTheoVongDau(IEnumerable<DTO_TranDau> danhSachTranDau, 
+                                                                   IEnumerable<DTO_VongDau>? danhSachVongDau)
         {
             var result = danhSachTranDau;
 
-            if(danhSachTranDau is not null)
+            if(danhSachVongDau is not null)
             {
                 var maVongDau = danhSachVongDau.Select(entity => entity.MaVongDau).ToHashSet();
                 result = result.Where(entity => maVongDau.Contains(entity.MaVongDau));
             }
-            if(tiSoDoi1 is not null)
+
+            return result;
+        }
+
+        internal IEnumerable<DTO_TranDau> TraCuuTranDauTheoTiSo(IEnumerable<DTO_TranDau> danhSachTranDau,
+                                                                int? tiSoDoi1, int? tiSoDoi2)
+        {
+            var result = danhSachTranDau;
+
+            if (tiSoDoi1 is not null)
                 result = result.Where(entity => entity.TiSoDoi1 == tiSoDoi1);
             if (tiSoDoi2 is not null)
                 result = result.Where(entity => entity.TiSoDoi2 == tiSoDoi2);
+
+            return result;
+        }
+
+        internal IEnumerable<DTO_TranDau> TraCuuTranDauTheoNgay(IEnumerable<DTO_TranDau> danhSachTranDau,
+                                                                DateTime? startNgay, DateTime? endNgay)
+        {
+            var result = danhSachTranDau;
+
             if (startNgay is not null)
                 result = result.Where(entity => entity.NgayGio?.Date >= startNgay?.Date);
             if (endNgay is not null)
                 result = result.Where(entity => entity.NgayGio?.Date <= endNgay?.Date);
+
+            return result;
+        }
+
+        internal IEnumerable<DTO_TranDau> TraCuuTranDauTheoGio(IEnumerable<DTO_TranDau> danhSachTranDau,
+                                                               DateTime? startGio, DateTime? endGio)
+        {
+            var result = danhSachTranDau;
+
             if (startGio is not null)
                 result = result.Where(entity => entity.NgayGio?.TimeOfDay >= startGio?.TimeOfDay);
             if (endGio is not null)
                 result = result.Where(entity => entity.NgayGio?.TimeOfDay <= endGio?.TimeOfDay);
 
             return result;
-            //return danhSachTranDau.Where(entity => maVongDau.Contains(entity.MaVongDau) &&
-            //                                       entity.TiSoDoi1 == tiSoDoi1 && entity.TiSoDoi2 == tiSoDoi2 &&
-            //                                       entity.NgayGio?.Date >= startNgay.Date && entity.NgayGio?.Date <= endNgay.Date &&
-            //                                       entity.NgayGio?.TimeOfDay >= startGio.TimeOfDay && entity.NgayGio?.TimeOfDay <= endGio.TimeOfDay);
+        }
+
+        internal IEnumerable<DTO_TranDau> TraCuuTranDauTheoMaTranDau(IEnumerable<DTO_TranDau> danhSachTranDau, string maTranDau)
+        {
+            var result = danhSachTranDau;
+
+            if (string.IsNullOrEmpty(maTranDau) == false)
+                result = result.Where(entity => entity.MaTranDau == maTranDau);
+
+            return result;
+        }
+
+        internal IEnumerable<DTO_TranDau> TraCuuTranDauTheoVongDau(IEnumerable<DTO_TranDau> danhSachTranDau, DTO_VongDau? vongDau)
+        {
+            var result = danhSachTranDau;
+
+            if (vongDau is not null)
+            {
+                result = result.Where(entity => entity.MaVongDau == vongDau.MaVongDau);
+            }
+
+            return result;
         }
     }
 }

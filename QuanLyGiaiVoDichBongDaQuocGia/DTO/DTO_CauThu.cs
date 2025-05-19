@@ -30,6 +30,8 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
         public string? GhiChu { get; set; }
         public bool Deleted { get; set; } = false;
 
+        public List<DTO_BanThang>? CacBanThang { get; set; }
+
         //For debugging and displaying
         public string TenLoaiCauThu => LoaiCauThu?.TenLoaiCauThu ?? string.Empty;
         public string TenDoiBong => DoiBong?.TenDoiBong ?? string.Empty;
