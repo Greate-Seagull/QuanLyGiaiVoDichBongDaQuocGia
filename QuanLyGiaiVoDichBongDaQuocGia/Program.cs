@@ -18,9 +18,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
 
-            //Register Syncfusion<sup style="font-size:70%">&reg;</sup> license
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NNaF5cXmBCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdmWXpfdnVURmhZWEFwXkRWYUA=");
-
             var connectionString = ConfigurationManager.ConnectionStrings["MySQlConnection"].ConnectionString;
 
             var options = new DbContextOptionsBuilder<MySqlDbContext>().UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)).Options;
@@ -46,8 +43,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia
             BUS_LoaiBanThang _BUS_LoaiBanThang = new(_DAL_LoaiBanThang);
 
             ApplicationConfiguration.Initialize();
-            Application.Run(new GUI_LapDanhSachCauThuGhiBan(_BUS_CauThu, _BUS_TranDau))
-                ;
+            Application.Run(new GUI_ThayDoiQuiDinh(_BUS_ThamSo, _BUS_LoaiCauThu, _BUS_LoaiBanThang));
         }
     }
 }

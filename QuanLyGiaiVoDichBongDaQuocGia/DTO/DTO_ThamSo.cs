@@ -1,7 +1,11 @@
-﻿namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
 {
     public class DTO_ThamSo
     {
+        [Key]
+        public int MaThamSo { get; set; } = 0;
         public int TuoiCauThuToiThieu { get; set; }
         public int TuoiCauThuToiDa { get; set; }
         public int SoLuongCauThuToiThieu { get; set; }

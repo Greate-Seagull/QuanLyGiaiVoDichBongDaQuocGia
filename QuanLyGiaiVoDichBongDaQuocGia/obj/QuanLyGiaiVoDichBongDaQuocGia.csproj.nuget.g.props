@@ -15,16 +15,10 @@
     <SourceRoot Include="C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages\" />
   </ItemGroup>
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <Import Project="$(NuGetPackageRoot)microsoft.winforms.designer.sdk\1.6.0\build\netcoreapp3.1\Microsoft.WinForms.Designer.SDK.props" Condition="Exists('$(NuGetPackageRoot)microsoft.winforms.designer.sdk\1.6.0\build\netcoreapp3.1\Microsoft.WinForms.Designer.SDK.props')" />
     <Import Project="$(NuGetPackageRoot)microsoft.entityframeworkcore\8.0.13\buildTransitive\net8.0\Microsoft.EntityFrameworkCore.props" Condition="Exists('$(NuGetPackageRoot)microsoft.entityframeworkcore\8.0.13\buildTransitive\net8.0\Microsoft.EntityFrameworkCore.props')" />
     <Import Project="D:\DevExpress 24.2\Components\Offline Packages\devexpress.data.desktop\24.2.7\build\net8.0-windows\DevExpress.Data.Desktop.props" Condition="Exists('D:\DevExpress 24.2\Components\Offline Packages\devexpress.data.desktop\24.2.7\build\net8.0-windows\DevExpress.Data.Desktop.props')" />
   </ImportGroup>
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <PkgSyncfusion_Shared_Base Condition=" '$(PkgSyncfusion_Shared_Base)' == '' ">C:\Users\pc\.nuget\packages\syncfusion.shared.base\29.2.4</PkgSyncfusion_Shared_Base>
-    <PkgSyncfusion_Core_WinForms Condition=" '$(PkgSyncfusion_Core_WinForms)' == '' ">C:\Users\pc\.nuget\packages\syncfusion.core.winforms\29.2.4</PkgSyncfusion_Core_WinForms>
-    <PkgSyncfusion_SfListView_WinForms Condition=" '$(PkgSyncfusion_SfListView_WinForms)' == '' ">C:\Users\pc\.nuget\packages\syncfusion.sflistview.winforms\29.2.4</PkgSyncfusion_SfListView_WinForms>
-    <PkgSyncfusion_SfInput_WinForms Condition=" '$(PkgSyncfusion_SfInput_WinForms)' == '' ">C:\Users\pc\.nuget\packages\syncfusion.sfinput.winforms\29.2.4</PkgSyncfusion_SfInput_WinForms>
-    <PkgSyncfusion_SfDataGrid_WinForms Condition=" '$(PkgSyncfusion_SfDataGrid_WinForms)' == '' ">C:\Users\pc\.nuget\packages\syncfusion.sfdatagrid.winforms\29.2.4</PkgSyncfusion_SfDataGrid_WinForms>
     <PkgDevExpress_Data Condition=" '$(PkgDevExpress_Data)' == '' ">D:\DevExpress 24.2\Components\Offline Packages\devexpress.data\24.2.7</PkgDevExpress_Data>
     <PkgDevExpress_Utils Condition=" '$(PkgDevExpress_Utils)' == '' ">D:\DevExpress 24.2\Components\Offline Packages\devexpress.utils\24.2.7</PkgDevExpress_Utils>
     <PkgDevExpress_Win_Navigation Condition=" '$(PkgDevExpress_Win_Navigation)' == '' ">D:\DevExpress 24.2\Components\Offline Packages\devexpress.win.navigation\24.2.7</PkgDevExpress_Win_Navigation>

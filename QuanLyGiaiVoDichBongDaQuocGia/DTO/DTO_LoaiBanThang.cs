@@ -10,6 +10,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
 
         [Required, MaxLength(5)]
         public string? TenLoaiBanThang { get; set; }
+        public bool Deleted { get; set; } = false;
 
         [InverseProperty("LoaiBanThang")]
         public List<DTO_BanThang>? CacBanThang { get; set; }

@@ -23,7 +23,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DBContext
             //Configure ThamSo entity
             modelBuilder.Entity<DTO_ThamSo>(entity =>
             {
-                entity.HasNoKey();
                 entity.ToTable("THAMSO");
             });
 
@@ -52,6 +51,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DBContext
             modelBuilder.Entity<DTO_LoaiBanThang>(entity =>
             {
                 entity.ToTable("LOAIBANTHANG");
+                entity.HasQueryFilter(obj => obj.Deleted == false);
             });
 
             //Configure LoaiCauThu entity

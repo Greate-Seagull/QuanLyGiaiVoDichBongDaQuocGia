@@ -21,6 +21,19 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             _DAL = dAL;
         }
 
+        internal List<DTO_LoaiCauThu> LayDanhSachLoaiCauThuThayDoiQuiDinh()
+        {
+            var query = _DAL.GetAll()
+                            .Select(entity => new DTO_LoaiCauThu
+                            {
+                                MaLoaiCauThu = entity.MaLoaiCauThu,
+                                TenLoaiCauThu = entity.TenLoaiCauThu,
+                                SoLuongCauThuToiDaTheoLoaiCauThu = entity.SoLuongCauThuToiDaTheoLoaiCauThu
+                            });
+
+            return query.AsNoTracking().ToList();
+        }
+
         internal IEnumerable<DTO_LoaiCauThu> LayDanhSachLoaiCauThuTiepNhanDoiBong()
         {
             var query = _DAL.GetAll()
@@ -45,6 +58,21 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
                             });
 
             return query.AsNoTracking().ToList();
+        }
+       
+        internal bool ThayDoiQuiDinh(DTO_LoaiCauThu loaiCauThuThayDoi)
+        {
+            var trackedEntity = _DAL.GetAll().FirstOrDefault(entity => entity.MaLoaiCauThu == loaiCauThuThayDoi.MaLoaiCauThu);
+
+            if (trackedEntity is null)
+            {
+                return false;
+            }
+            
+            trackedEntity.SoLuongCauThuToiDaTheoLoaiCauThu = loaiCauThuThayDoi.SoLuongCauThuToiDaTheoLoaiCauThu;
+            _DAL.SaveChanges();
+            _DAL.Context.ChangeTracker.Clear();
+            return true;
         }
 
         internal IEnumerable<DTO_LoaiCauThu> TraCuuLoaiCauThuTheoMaLoaiCauThu(IEnumerable<DTO_LoaiCauThu> danhSachLoaiCauThu, string maLoaiCauThu)

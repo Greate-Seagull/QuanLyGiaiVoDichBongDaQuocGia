@@ -39,6 +39,25 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             return query.AsNoTracking().First();
         }
 
+        internal DTO_ThamSo LayThamSoThayDoiQuiDinh()
+        {
+            var query = _DAL.GetAll()
+                            .Select(entity => new DTO_ThamSo
+                            {
+                                TuoiCauThuToiDa = entity.TuoiCauThuToiDa,
+                                TuoiCauThuToiThieu = entity.TuoiCauThuToiThieu,
+                                SoLuongCauThuToiDa = entity.SoLuongCauThuToiDa,
+                                SoLuongCauThuToiThieu = entity.SoLuongCauThuToiThieu,
+                                ThoiDiemGhiBanToiDa = entity.ThoiDiemGhiBanToiDa,
+                                ThoiDiemGhiBanToiThieu = entity.ThoiDiemGhiBanToiThieu,
+                                DiemThang = entity.DiemThang,
+                                DiemHoa = entity.DiemHoa,
+                                DiemThua = entity.DiemThua
+                            });
+
+            return query.AsNoTracking().First();
+        }
+
         internal DTO_ThamSo LayThamSoTiepNhanDoiBong()
         {
             var query = _DAL.GetAll()
@@ -51,6 +70,27 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
                             });
 
             return query.AsNoTracking().First();
+        }
+        
+        internal bool ThayDoiQuiDinh(DTO_ThamSo thamSo)
+        {
+            var trackedEntity = _DAL.GetAll().First();
+            if (trackedEntity is null)
+                return false;
+
+            trackedEntity.TuoiCauThuToiDa = thamSo.TuoiCauThuToiDa;
+            trackedEntity.TuoiCauThuToiThieu = thamSo.TuoiCauThuToiThieu;
+            trackedEntity.SoLuongCauThuToiDa = thamSo.SoLuongCauThuToiDa;
+            trackedEntity.SoLuongCauThuToiThieu = thamSo.SoLuongCauThuToiThieu;
+            trackedEntity.ThoiDiemGhiBanToiDa = thamSo.ThoiDiemGhiBanToiDa;
+            trackedEntity.ThoiDiemGhiBanToiThieu = thamSo.ThoiDiemGhiBanToiThieu;
+            trackedEntity.DiemThang = thamSo.DiemThang;
+            trackedEntity.DiemHoa = thamSo.DiemHoa;
+            trackedEntity.DiemThua = thamSo.DiemThua;
+
+            _DAL.SaveChanges();
+            _DAL.Context.ChangeTracker.Clear();
+            return true;
         }
     }
 }

@@ -65,10 +65,6 @@
               "target": "Package",
               "version": "[8.0.3, )"
             },
-            "Syncfusion.SfDataGrid.WinForms": {
-              "target": "Package",
-              "version": "[29.2.4, )"
-            },
             "System.Runtime.Caching": {
               "target": "Package",
               "version": "[9.0.5, )"
