@@ -7,6 +7,9 @@
     <Compile Update="GUI\GUI_GhiNhanKetQua.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="GUI\GUI_LapBangXepHang.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="GUI\GUI_LapLichThiDau.cs">
       <SubType>Form</SubType>
     </Compile>

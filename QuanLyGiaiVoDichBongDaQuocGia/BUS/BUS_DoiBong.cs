@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata.Ecma335;
 using DevExpress.Utils.Extensions;
+using QuanLyGiaiVoDichBongDaQuocGia.ViewModel;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 {
@@ -164,6 +165,104 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             }
 
             return result;
+        }
+
+        internal List<DTO_DoiBong> LayDanhSachDoiBongXepHang()
+        {
+            var query = _DAL.GetAll()
+                            .Select(entity => new DTO_DoiBong
+                            {
+                                MaDoiBong = entity.MaDoiBong,
+                                TenDoiBong = entity.TenDoiBong
+                            });
+
+            return query.AsNoTracking().ToList();
+        }
+
+        internal List<VM_DoiBong> LapBangXepHangTheoTranDau(IEnumerable<DTO_TranDau> ketQuaTimKiemTranDau, DTO_ThamSo thamSo)
+        {
+            var danhSachDoiBong = TaoBangXepHang(ketQuaTimKiemTranDau);
+            CapNhatThongSoTranDau(danhSachDoiBong, ketQuaTimKiemTranDau);
+            TinhDiem(danhSachDoiBong, thamSo);
+            return XepHangDoiBong(danhSachDoiBong);
+        }
+
+        private List<VM_DoiBong> XepHangDoiBong(Dictionary<string, VM_DoiBong> danhSachDoiBong)
+        {
+            var bangXepHang = danhSachDoiBong.Values
+                                             .OrderByDescending(entity => entity.Diem)
+                                             .ThenByDescending(entity => entity.HieuSo)
+                                             .ThenByDescending(entity => entity.SoBanThang)
+                                             .ThenBy(entity => entity.MaDoiBong)
+                                             .ToList();
+
+            for(int i = 0; i < bangXepHang.Count; i++)
+            {
+                bangXepHang[i].Hang = i + 1;
+            }
+
+            return bangXepHang;
+        }
+
+        private void TinhDiem(Dictionary<string, VM_DoiBong> bangXepHang, DTO_ThamSo thamSo)
+        {
+            foreach (var doiBong in bangXepHang.Values)
+            {
+                doiBong.Diem = doiBong.SoTranThang * thamSo.DiemThang +
+                               doiBong.SoTranHoa * thamSo.DiemHoa +
+                               doiBong.SoBanThua * thamSo.DiemThua;
+            }
+        }
+
+        private void CapNhatThongSoTranDau(Dictionary<string, VM_DoiBong> bangXepHang, IEnumerable<DTO_TranDau> ketQuaTimKiemTranDau)
+        {
+            foreach (var tranDau in ketQuaTimKiemTranDau)
+            {
+                if (string.IsNullOrWhiteSpace(tranDau.MaDoi1) || string.IsNullOrWhiteSpace(tranDau.MaDoi2))
+                    continue;
+
+                var doi1 = bangXepHang[tranDau.MaDoi1];
+                var doi2 = bangXepHang[tranDau.MaDoi2];
+
+                int tiSo1 = tranDau.TiSoDoi1 ?? 0;
+                int tiSo2 = tranDau.TiSoDoi2 ?? 0;
+
+                doi1.SoBanThang += tiSo1;
+                doi2.SoBanThang += tiSo2;
+
+                if (tiSo1 > tiSo2)
+                {
+                    doi1.SoTranThang++;
+                    doi2.SoTranThua++;
+                }
+                else if (tiSo1 < tiSo2)
+                {
+                    doi1.SoTranThua++;
+                    doi2.SoTranThang++;
+                }
+                else
+                {
+                    doi1.SoTranHoa++;
+                    doi2.SoTranHoa++;
+                }
+            }
+        }
+
+        public Dictionary<string, VM_DoiBong> TaoBangXepHang(IEnumerable<DTO_TranDau> danhSachTranDau)
+        {
+            return danhSachTranDau.SelectMany(entity => new[] { entity.MaDoi1, entity.MaDoi2 })                                  
+                                  .Where(id => string.IsNullOrEmpty(id) == false)
+                                  .Cast<string>()
+                                  .Distinct()
+                                  .ToDictionary(id => id, id => new VM_DoiBong { MaDoiBong = id });
+        }
+
+        internal void DienThongTinHienThi(List<VM_DoiBong> bangXepHang, Dictionary<string, DTO_DoiBong> danhSachDoiBong)
+        {
+            foreach(var entity in bangXepHang)
+            {
+                entity.TenDoiBong = danhSachDoiBong[entity.MaDoiBong].TenDoiBong;
+            }
         }
     }
 }

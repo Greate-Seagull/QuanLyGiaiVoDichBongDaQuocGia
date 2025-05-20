@@ -14,6 +14,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
         public DateTime? NgayKetThuc { get; set; }
         public bool Deleted { get; set; } = false;
 
+        [InverseProperty("VongDau")]
         public List<DTO_TranDau> CacTranDau { get; set; }
     }
 }

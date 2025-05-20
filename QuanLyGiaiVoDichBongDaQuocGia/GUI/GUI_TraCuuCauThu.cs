@@ -1,4 +1,5 @@
 ﻿using DevExpress.Internal.WinApi.Windows.UI.Notifications;
+using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraRichEdit.Layout.Export;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using QuanLyGiaiVoDichBongDaQuocGia.BUS;
@@ -133,21 +134,24 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         private void LayDanhSachLoaiBanThang()
         {
-            danhSachLoaiBanThang = _BUS_LoaiBanThang.LayDanhSachLoaiBanThangTraCuu().ToDictionary(obj => obj.MaLoaiBanThang);            
+            danhSachLoaiBanThang = _BUS_LoaiBanThang.LayDanhSachLoaiBanThangTraCuu().ToDictionary(obj => obj.MaLoaiBanThang);
         }
 
         private void LayDanhSachBanThang()
         {
             danhSachBanThang = _BUS_BanThang.LayDanhSachBanThangTraCuu().ToDictionary(obj => obj.MaBanThang);
-            _BUS_BanThang.DienThongTin(danhSachBanThang, danhSachTranDau, danhSachCauThu, danhSachLoaiBanThang);
+            _BUS_BanThang.DienThongTinTranDau(danhSachBanThang, danhSachTranDau);
+            _BUS_BanThang.DienThongTinCauThu(danhSachBanThang, danhSachCauThu);
+            _BUS_BanThang.DienThongTinLoaiBanThang(danhSachBanThang, danhSachLoaiBanThang);
 
-            _BUS_CauThu.DienDanhSach(danhSachCauThu, danhSachBanThang);
+            _BUS_CauThu.DienThongTinBanThang(danhSachCauThu, danhSachBanThang);
         }
 
         private void LayDanhSachTranDau()
         {
             danhSachTranDau = _BUS_TranDau.LayDanhSachTranDauTraCuu().ToDictionary(obj => obj.MaTranDau);
-            _BUS_TranDau.DienThongTin(danhSachTranDau, danhSachDoiBong, danhSachVongDau);
+            _BUS_TranDau.DienThongTinDoiBong(danhSachTranDau, danhSachDoiBong);
+            _BUS_TranDau.DienThongTinVongDau(danhSachTranDau, danhSachVongDau);
         }
 
         private void LayDanhSachVongDau()
@@ -171,7 +175,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
                 return;
 
             bool isDefault = loaiCauThu.Equals(defaultLoaiCauThu);
-            
+
             if (isDefault == false)
             {
                 nudSoLuongCauThuTheoLoaiFrom.Value = Convert.ToDecimal(loaiCauThu?.SoLuongCauThuToiDaTheoLoaiCauThu);
@@ -259,7 +263,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
                 dtpNgayTranDauTo.Value = matchDateTime;
 
                 dtpGioTranDauFrom.Value = matchDateTime;
-                dtpGioTranDauTo.Value = matchDateTime;            
+                dtpGioTranDauTo.Value = matchDateTime;
             }
         }
 
@@ -364,10 +368,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         {
             var ketQuaTimKiem = _BUS_CauThu.TraCuuCauThu(danhSachCauThu.Values, txtMaCauThu.Text, txtTenCauThu.Text);
 
-            if(cNgaySinh.Checked)
+            if (cNgaySinh.Checked)
                 ketQuaTimKiem = _BUS_CauThu.TraCuuCauThu(ketQuaTimKiem, dtpNgaySinhFrom.Value, dtpNgaySinhTo.Value);
 
-            if(cSoBanThang.Checked)
+            if (cSoBanThang.Checked)
                 ketQuaTimKiem = _BUS_CauThu.TraCuuCauThu(ketQuaTimKiem, (int)nudSoBanThangFrom.Value, (int)nudSoBanThangTo.Value);
 
             if (anyLoaiCauThuFiltersApplied)
@@ -401,7 +405,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
                     ketQuaTimKiemBanThang = _BUS_BanThang.TraCuuBanThangTheoLoaiBanThang(ketQuaTimKiemBanThang, loaiBanThang);
                     anyBanThangFiltersApplied = true;
                 }
-                
+
                 if (cThoiDiemGhiBan.Checked)
                 {
                     ketQuaTimKiemBanThang = _BUS_BanThang.TraCuuBanThangTheoThoiDiemGhiBan(ketQuaTimKiemBanThang, (int)nudThoiDiemGhiBanFrom.Value, (int)nudThoiDiemGhiBanTo.Value);
@@ -429,7 +433,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             }
             else
             {
-                if(cSoLuongCauThu.Checked)
+                if (cSoLuongCauThu.Checked)
                 {
                     ketQuaTimKiemDoiBong = _BUS_DoiBong.TraCuuDoiBongTheoSoLuongCauThu(ketQuaTimKiemDoiBong, (int)nudSoLuongCauThuFrom.Value, (int)nudSoLuongCauThuTo.Value);
                     anyDoiBongFiltersApplied = true;
@@ -459,19 +463,19 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             }
             else
             {
-                if(cTiSo.Checked)
+                if (cTiSo.Checked)
                 {
                     ketQuaTimKiemTranDau = _BUS_TranDau.TraCuuTranDauTheoTiSo(ketQuaTimKiemTranDau, (int)nudTiSoDoi1.Value, (int)nudTiSoDoi2.Value);
                     anyTranDauFiltersApplied = true;
                 }
 
-                if(cNgayTranDau.Checked)
+                if (cNgayTranDau.Checked)
                 {
                     ketQuaTimKiemTranDau = _BUS_TranDau.TraCuuTranDauTheoNgay(ketQuaTimKiemTranDau, dtpNgayTranDauFrom.Value, dtpNgayTranDauTo.Value);
                     anyTranDauFiltersApplied = true;
                 }
 
-                if(cGioTranDau.Checked)
+                if (cGioTranDau.Checked)
                 {
                     ketQuaTimKiemTranDau = _BUS_TranDau.TraCuuTranDauTheoGio(ketQuaTimKiemTranDau, dtpGioTranDauFrom.Value, dtpGioTranDauTo.Value);
                     anyTranDauFiltersApplied = true;
@@ -497,13 +501,13 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             }
             else
             {
-                if(cNgayBatDau.Checked)
+                if (cNgayBatDau.Checked)
                 {
                     ketQuaTimKiemVongDau = _BUS_VongDau.TraCuuVongDauTheoNgayBatDau(ketQuaTimKiemVongDau, dtpNgayBatDauFrom.Value, dtpNgayBatDauTo.Value);
                     anyVongDauFiltersApplied = true;
                 }
 
-                if(cNgayKetThuc.Checked)
+                if (cNgayKetThuc.Checked)
                 {
                     ketQuaTimKiemVongDau = _BUS_VongDau.TraCuuVongDauTheoNgayKetThuc(ketQuaTimKiemVongDau, dtpNgayKetThucFrom.Value, dtpNgayKetThucTo.Value);
                     anyVongDauFiltersApplied = true;
@@ -540,6 +544,45 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         {
             this.DialogResult = DialogResult.OK;
             this.Close();
+        }
+
+        private void gvcDanhSachCauThu_CustomDrawRowIndicator(object sender, DevExpress.XtraGrid.Views.Grid.RowIndicatorCustomDrawEventArgs e)
+        {
+            var gv = sender as GridView;
+
+            if (!gv.IsGroupRow(e.RowHandle)) //Nếu không phải là Group
+            {
+                if (e.Info.IsRowIndicator) //Nếu là dòng Indicator
+                {
+                    if (e.RowHandle < 0)
+                    {
+                        e.Info.ImageIndex = 0;
+                        e.Info.DisplayText = string.Empty;
+                    }
+                    else
+                    {
+                        e.Info.ImageIndex = -1; //Không hiển thị hình
+                        e.Info.DisplayText = (e.RowHandle + 1).ToString(); //Số thứ tự tăng dần
+                    }
+                    SizeF _Size = e.Graphics.MeasureString(e.Info.DisplayText, e.Appearance.Font); //Lấy kích thước của vùng hiển thị Text
+                    Int32 _Width = Convert.ToInt32(_Size.Width) + 20;
+                    BeginInvoke(new MethodInvoker(delegate { cal(_Width, gv); })); //Tăng kích thước nếu Text vượt quá
+                }
+            }
+            else
+            {
+                e.Info.ImageIndex = -1;
+                e.Info.DisplayText = string.Format("[{0}]", (e.RowHandle * -1)); //Nhân -1 để đánh lại số thứ tự tăng dần
+                SizeF _Size = e.Graphics.MeasureString(e.Info.DisplayText, e.Appearance.Font);
+                Int32 _Width = Convert.ToInt32(_Size.Width) + 20;
+                BeginInvoke(new MethodInvoker(delegate { cal(_Width, gv); }));
+            }
+        }
+
+        bool cal(Int32 _Width, GridView _View)
+        {
+            _View.IndicatorWidth = _View.IndicatorWidth < _Width ? _Width : _View.IndicatorWidth;
+            return true;
         }
     }
 }

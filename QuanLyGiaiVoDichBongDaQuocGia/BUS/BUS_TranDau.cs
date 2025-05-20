@@ -134,29 +134,33 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             return query.AsNoTracking().ToList();
         }
 
-        internal void DienThongTin(Dictionary<string, DTO_TranDau> danhSachTranDau,
-                                   Dictionary<string, DTO_DoiBong>? danhSachDoiBong,
-                                   Dictionary<string, DTO_VongDau>? danhSachVongDau)
+        internal void DienThongTinDoiBong(Dictionary<string, DTO_TranDau> danhSachTranDau,
+                                   Dictionary<string, DTO_DoiBong> danhSachDoiBong)
         {
             foreach(var tranDau in danhSachTranDau.Values)
             {
-                if(danhSachDoiBong is not null)
+                if(tranDau.MaDoi1 is not null)
                 {
-                    if(tranDau.MaDoi1 is not null)
-                    {
-                        DTO_DoiBong doiBong;
-                        danhSachDoiBong.TryGetValue(tranDau.MaDoi1, out doiBong);
-                        tranDau.DoiBong1 = doiBong;
-                    }
-                    if (tranDau.MaDoi2 is not null)
-                    {
-                        DTO_DoiBong doiBong;
-                        danhSachDoiBong.TryGetValue(tranDau.MaDoi2, out doiBong);
-                        tranDau.DoiBong2 = doiBong;
-                    }
+                    DTO_DoiBong doiBong;
+                    danhSachDoiBong.TryGetValue(tranDau.MaDoi1, out doiBong);
+                    tranDau.DoiBong1 = doiBong;
                 }
+                if (tranDau.MaDoi2 is not null)
+                {
+                    DTO_DoiBong doiBong;
+                    danhSachDoiBong.TryGetValue(tranDau.MaDoi2, out doiBong);
+                    tranDau.DoiBong2 = doiBong;
+                }
+            }
+        }
 
-                if(danhSachVongDau is not null && tranDau.MaVongDau is not null)
+        internal void DienThongTinVongDau(Dictionary<string, DTO_TranDau> danhSachTranDau,
+                                   Dictionary<string, DTO_VongDau> danhSachVongDau)
+        {
+            foreach (var tranDau in danhSachTranDau.Values)
+            {
+
+                if (tranDau.MaVongDau is not null)
                 {
                     DTO_VongDau vongDau;
                     danhSachVongDau.TryGetValue(tranDau.MaVongDau, out vongDau);
@@ -238,6 +242,22 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             }
 
             return result;
+        }
+
+        internal List<DTO_TranDau> LayDanhSachTranDauXepHang()
+        {
+            var query = _DAL.GetAll()
+                            .Select(entity => new DTO_TranDau
+                            {
+                                MaTranDau = entity.MaTranDau,
+                                MaDoi1 = entity.MaDoi1,
+                                MaDoi2 = entity.MaDoi2,
+                                TiSoDoi1 = entity.TiSoDoi1,
+                                TiSoDoi2 = entity.TiSoDoi2,
+                                NgayGio = entity.NgayGio
+                            });
+
+            return query.AsNoTracking().ToList();
         }
     }
 }

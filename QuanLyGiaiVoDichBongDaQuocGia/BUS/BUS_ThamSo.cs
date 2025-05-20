@@ -26,6 +26,19 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             return query.AsNoTracking().First();
         }
 
+        internal DTO_ThamSo LayThamSoLapBanXepHang()
+        {
+            var query = _DAL.GetAll()
+                            .Select(entity => new DTO_ThamSo
+                            {
+                                DiemThang = entity.DiemThang,
+                                DiemHoa = entity.DiemHoa,
+                                DiemThua = entity.DiemThua
+                            });
+
+            return query.AsNoTracking().First();
+        }
+
         internal DTO_ThamSo LayThamSoTiepNhanDoiBong()
         {
             var query = _DAL.GetAll()

@@ -32,10 +32,14 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
         public bool Deleted { get; set; } = false;
 
         //TranDau is already in database and is tracked in EF Core when loading them, this property for inserting BanThang
+        [InverseProperty("TranDau")]
         public List<DTO_BanThang>? CacBanThang { get; set; }
 
         //For debugging and displaying
+        [NotMapped]
         public string TiSo => $"{TiSoDoi1 ?? 0} - {TiSoDoi2 ?? 0}";
+
+        [NotMapped]
         public string CapDau
         {
             get

@@ -62,28 +62,40 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             return query.AsNoTracking().ToList();
         }
 
-        internal void DienThongTin(Dictionary<string, DTO_BanThang> danhSachBanThang, 
-                                   Dictionary<string, DTO_TranDau>? danhSachTranDau,
-                                   Dictionary<string, DTO_CauThu>? danhSachCauThu,
-                                   Dictionary<string, DTO_LoaiBanThang>? danhSachLoaiBanThang)
+        internal void DienThongTinTranDau(Dictionary<string, DTO_BanThang> danhSachBanThang, 
+                                   Dictionary<string, DTO_TranDau> danhSachTranDau)
         {
             foreach(var banThang in danhSachBanThang.Values)
             {
-                if(danhSachTranDau is not null && banThang.MaTranDau is not null)
+                if(banThang.MaTranDau is not null)
                 {
                     DTO_TranDau tranDau;
                     danhSachTranDau.TryGetValue(banThang.MaTranDau, out tranDau);
                     banThang.TranDau = tranDau;
                 }
+            }
+        }
 
-                if(danhSachCauThu is not null && banThang.MaCauThu is not null)
+        internal void DienThongTinCauThu(Dictionary<string, DTO_BanThang> danhSachBanThang,
+                                   Dictionary<string, DTO_CauThu> danhSachCauThu)
+        {
+            foreach (var banThang in danhSachBanThang.Values)
+            {
+                if (banThang.MaCauThu is not null)
                 {
                     DTO_CauThu cauThu;
                     danhSachCauThu.TryGetValue(banThang.MaCauThu, out cauThu);
                     banThang.CauThu = cauThu;
                 }
+            }
+        }
 
-                if(danhSachLoaiBanThang is not null && banThang.MaLoaiBanThang is not null)
+        internal void DienThongTinLoaiBanThang(Dictionary<string, DTO_BanThang> danhSachBanThang,
+                                   Dictionary<string, DTO_LoaiBanThang> danhSachLoaiBanThang)
+        {
+            foreach (var banThang in danhSachBanThang.Values)
+            {
+                if (banThang.MaLoaiBanThang is not null)
                 {
                     DTO_LoaiBanThang loaiBanThang;
                     danhSachLoaiBanThang.TryGetValue(banThang.MaLoaiBanThang, out loaiBanThang);

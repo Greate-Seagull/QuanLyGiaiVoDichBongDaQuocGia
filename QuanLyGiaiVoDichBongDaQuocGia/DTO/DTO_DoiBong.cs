@@ -16,10 +16,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
         public bool Deleted { get; set; } = false;
 
         [InverseProperty("DoiBong")]
-        public List<DTO_CauThu>? CacCauThu { get; set; }
-        public override string ToString()
-        {
-            return TenDoiBong;
-        }
+        public List<DTO_CauThu>? CacCauThu { get; set; }        
     }
 }

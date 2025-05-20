@@ -226,6 +226,7 @@
             gvcDanhSachCauThu.OptionsView.ShowAutoFilterRow = true;
             gvcDanhSachCauThu.OptionsView.ShowViewCaption = true;
             gvcDanhSachCauThu.ViewCaption = "Danh sách cầu thủ";
+            gvcDanhSachCauThu.CustomDrawRowIndicator += gvcDanhSachCauThu_CustomDrawRowIndicator;
             // 
             // gccTenCauThu
             // 

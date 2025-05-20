@@ -192,28 +192,29 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
             if (startSoBanThang is not null)
             {
-                result = result.Where(entity => entity.CacBanThang.Count >= startSoBanThang);
+                result = result.Where(entity => entity.CacBanThang?.Count >= startSoBanThang);
             }
             if (endSoBanThang is not null)
             {
-                result = result.Where(entity => entity.CacBanThang.Count <= endSoBanThang);
+                result = result.Where(entity => entity.CacBanThang?.Count <= endSoBanThang);
             }
 
             return result;
         }
 
-        internal void DienDanhSach(Dictionary<string, DTO_CauThu> danhSachCauThu, Dictionary<string, DTO_BanThang> danhSachBanThang)
+        internal void DienThongTinBanThang(Dictionary<string, DTO_CauThu> danhSachCauThu, Dictionary<string, DTO_BanThang> danhSachBanThang)
         {
+            foreach(var cauThu in danhSachCauThu.Values)
+            {
+                if (cauThu.CacBanThang is null)
+                    cauThu.CacBanThang = new();
+            }
+
             foreach (var banThang in danhSachBanThang.Values)
             {
                 DTO_CauThu cauThu;
                 if (banThang.MaCauThu is not null && danhSachCauThu.TryGetValue(banThang.MaCauThu, out cauThu))
-                {
-                    if (cauThu.CacBanThang is null)
-                        cauThu.CacBanThang = new();
-
                     cauThu.CacBanThang.Add(banThang);
-                }
             }
         }
     }
