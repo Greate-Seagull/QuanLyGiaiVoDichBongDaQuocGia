@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MySqlX.XDevAPI.Common;
 using QuanLyGiaiVoDichBongDaQuocGia.DAL;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
+using QuanLyGiaiVoDichBongDaQuocGia.ViewModel;
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
@@ -216,6 +217,70 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
                 if (banThang.MaCauThu is not null && danhSachCauThu.TryGetValue(banThang.MaCauThu, out cauThu))
                     cauThu.CacBanThang.Add(banThang);
             }
+        }
+
+        internal List<DTO_CauThu> LayDanhSachCauThuXepHang()
+        {
+            var query = _DAL.GetAll()
+                            .AsNoTracking()
+                            .Select(entity => new DTO_CauThu
+                            {
+                                MaCauThu = entity.MaCauThu,
+                                TenCauThu = entity.TenCauThu,
+                                DoiBong = new DTO_DoiBong
+                                {
+                                    MaDoiBong = entity.DoiBong.MaDoiBong,
+                                    TenDoiBong = entity.DoiBong.TenDoiBong
+                                },
+                                LoaiCauThu = new DTO_LoaiCauThu
+                                {
+                                    MaLoaiCauThu = entity.LoaiCauThu.MaLoaiCauThu,
+                                    TenLoaiCauThu = entity.LoaiCauThu.TenLoaiCauThu
+                                }
+                            });
+
+            return query.ToList();
+        }
+
+        internal List<VM_CauThu> LapBangXepHangCauThuTheoTranDau(List<VM_CauThu> danhSachCauThuHienThi, IEnumerable<DTO_TranDau> ketQuaTimKiemTranDau)
+        {
+            CapNhatThongTinbanThang(danhSachCauThuHienThi, ketQuaTimKiemTranDau);
+            return XepHangCauThu(danhSachCauThuHienThi);
+        }
+
+        private List<VM_CauThu> XepHangCauThu(List<VM_CauThu> danhSachCauThuHienThi)
+        {
+            return danhSachCauThuHienThi.OrderByDescending(entity => entity.SoBanThang)
+                                        .ThenBy(entity => entity.TenCauThu)
+                                        .ToList();            
+        }
+
+        private void CapNhatThongTinbanThang(List<VM_CauThu> danhSachCauThuHienThi, IEnumerable<DTO_TranDau> ketQuaTimKiemTranDau)
+        {
+            danhSachCauThuHienThi.ForEach(entity => entity.SoBanThang = 0);
+            var cauThu = danhSachCauThuHienThi.ToDictionary(entity => entity.MaCauThu);            
+
+            var banThang = ketQuaTimKiemTranDau.SelectMany(entity => entity.CacBanThang).ToList();
+
+            foreach(var bt in banThang)
+            {
+                if(bt.MaCauThu is not null)
+                {
+                    cauThu[bt.MaCauThu].SoBanThang++;
+                }
+            }
+        }
+
+        internal List<VM_CauThu> TaoDanhSachCauThuHienThi(IEnumerable<DTO_CauThu> danhSachCauThu)
+        {
+            return danhSachCauThu.Select(entity => new VM_CauThu
+                                        {
+                                            MaCauThu = entity.MaCauThu,
+                                            TenCauThu = entity.TenCauThu,
+                                            TenDoiBong = entity.DoiBong?.TenDoiBong,
+                                            TenLoaiCauThu = entity.LoaiCauThu?.TenLoaiCauThu
+                                        })
+                                  .ToList();
         }
     }
 }

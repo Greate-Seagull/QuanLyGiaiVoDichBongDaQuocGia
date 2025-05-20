@@ -259,5 +259,23 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
 
             return query.AsNoTracking().ToList();
         }
+
+        internal List<DTO_TranDau> LayDanhSachTranDauXepHangCauThu()
+        {
+            var query = _DAL.GetAll()
+                            .AsNoTracking()
+                            .Select(entity => new DTO_TranDau
+                            {
+                                MaTranDau = entity.MaTranDau,
+                                NgayGio = entity.NgayGio,
+                                CacBanThang = entity.CacBanThang.Select(bt => new DTO_BanThang
+                                {
+                                    MaBanThang = bt.MaBanThang,
+                                    MaCauThu = bt.MaCauThu
+                                }).ToList()
+                            });
+
+            return query.ToList();
+        }
     }
 }
