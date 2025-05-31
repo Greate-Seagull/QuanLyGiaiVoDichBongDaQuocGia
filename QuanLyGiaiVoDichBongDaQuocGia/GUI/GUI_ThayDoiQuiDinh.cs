@@ -1,4 +1,5 @@
-﻿using QuanLyGiaiVoDichBongDaQuocGia.BUS;
+﻿using DevExpress.XtraEditors.Controls;
+using QuanLyGiaiVoDichBongDaQuocGia.BUS;
 using QuanLyGiaiVoDichBongDaQuocGia.DTO;
 using QuanLyGiaiVoDichBongDaQuocGia.Manager;
 using QuanLyGiaiVoDichBongDaQuocGia.ViewModel;
@@ -27,6 +28,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
         //UI
         VM_LoaiBanThang addBanThangOption = new VM_LoaiBanThang { MaLoaiBanThang = null, TenLoaiBanThang = "Thêm loại bàn thắng" };
+        private int dragIndex = -1;
 
         public GUI_ThayDoiQuiDinh(BUS_ThamSo bUS_ThamSo, BUS_LoaiCauThu bUS_LoaiCauThu, BUS_LoaiBanThang bUS_LoaiBanThang)
         {
@@ -75,8 +77,8 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             var item = cb.SelectedItem as VM_LoaiBanThang;
 
             if (item.TenLoaiBanThang.Length > txtTenLoaiBanThang.MaxLength)
-                return;    
-            
+                return;
+
             txtTenLoaiBanThang.Text = item.TenLoaiBanThang;
         }
 
@@ -183,6 +185,15 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             nudDiemThang.Value = (decimal)thamSoThayDoi.DiemThang;
             nudDiemHoa.Value = (decimal)thamSoThayDoi.DiemHoa;
             nudDiemThua.Value = (decimal)thamSoThayDoi.DiemThua;
+
+            lbThuTuXepHang.Items.Clear();
+            for (int order = 1; order <= 4; order++)
+            {
+                if (order == thamSoThayDoi.UuTienDiem) lbThuTuXepHang.Items.Add("Ưu tiên điểm");
+                else if (order == thamSoThayDoi.UuTienHieuSo) lbThuTuXepHang.Items.Add("Ưu tiên hiệu số");
+                else if (order == thamSoThayDoi.UuTienTongBanThang) lbThuTuXepHang.Items.Add("Ưu tiên tổng bàn thắng");
+                else if (order == thamSoThayDoi.UuTienDoiKhang) lbThuTuXepHang.Items.Add("Ưu tiên đối kháng");
+            }
         }
 
         private void btnThoat_Click(object sender, EventArgs e)
@@ -208,7 +219,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
                     MessageBox.Show("Thay đổi qui định thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
-            catch(Exception err)
+            catch (Exception err)
             {
                 MessageBox.Show(err.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
@@ -220,10 +231,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             DTO_LoaiBanThang loaiBanThang;
             var tenLoaiCauThu = txtTenLoaiBanThang.Text;
 
-            foreach(var entity in danhSachLoaiBanThang.Values)
+            foreach (var entity in danhSachLoaiBanThang.Values)
             {
                 entity.Deleted = true;
-            }            
+            }
 
             foreach (var entityView in danhSachLoaiBanThangHienThi)
             {
@@ -231,7 +242,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
                     danhSachLoaiBanThang[entityView.MaLoaiBanThang].Deleted = false;
             }
 
-            if(loaiBanThangView.Equals(addBanThangOption))
+            if (loaiBanThangView.Equals(addBanThangOption))
             {
                 var maLoaiBanThang = maLoaiBanThangQuanLy.GetNewID().ToString();
                 loaiBanThangThayDoi = new DTO_LoaiBanThang
@@ -253,7 +264,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         {
             var loaiCauThuView = cbLoaiCauThu.SelectedItem as VM_LoaiCauThu;
 
-            if(danhSachLoaiCauThu.TryGetValue(loaiCauThuView.MaLoaiCauThu, out loaiCauThuThayDoi))
+            if (danhSachLoaiCauThu.TryGetValue(loaiCauThuView.MaLoaiCauThu, out loaiCauThuThayDoi))
             {
                 loaiCauThuThayDoi.SoLuongCauThuToiDaTheoLoaiCauThu = (int)nudSoLuongCauThuToiDaTheoLoai.Value;
             }
@@ -269,6 +280,36 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             thamSoThayDoi.DiemThang = (int)nudDiemThang.Value;
             thamSoThayDoi.DiemHoa = (int)nudDiemHoa.Value;
             thamSoThayDoi.DiemThua = (int)nudDiemThua.Value;
+            for (int order = 1; order <= lbThuTuXepHang.Items.Count; order++)
+            {
+                if (lbThuTuXepHang.Items[order - 1].ToString() == "Ưu tiên điểm") thamSoThayDoi.UuTienDiem = order;
+                else if (lbThuTuXepHang.Items[order - 1].ToString() == "Ưu tiên hiệu số") thamSoThayDoi.UuTienHieuSo = order;
+                else if (lbThuTuXepHang.Items[order - 1].ToString() == "Ưu tiên tổng bàn thắng") thamSoThayDoi.UuTienTongBanThang = order;
+                else if (lbThuTuXepHang.Items[order - 1].ToString() == "Ưu tiên đối kháng") thamSoThayDoi.UuTienDoiKhang = order;
+            }
+        }
+
+        private void lbThuTuXepHang_MouseDown(object sender, MouseEventArgs e)
+        {
+            dragIndex = lbThuTuXepHang.IndexFromPoint(e.Location);
+            if (dragIndex != ListBox.NoMatches)
+                lbThuTuXepHang.DoDragDrop(lbThuTuXepHang.Items[dragIndex], DragDropEffects.Move);
+        }
+
+        private void lbThuTuXepHang_DragOver(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Move;
+        }
+
+        private void lbThuTuXepHang_DragDrop(object sender, DragEventArgs e)
+        {
+            Point point = lbThuTuXepHang.PointToClient(new Point(e.X, e.Y));
+            int index = lbThuTuXepHang.IndexFromPoint(point);
+            if (index < 0) index = lbThuTuXepHang.Items.Count - 1;
+
+            object data = e.Data.GetData(typeof(string));
+            lbThuTuXepHang.Items.RemoveAt(dragIndex);
+            lbThuTuXepHang.Items.Insert(index, data);
         }
     }
 }

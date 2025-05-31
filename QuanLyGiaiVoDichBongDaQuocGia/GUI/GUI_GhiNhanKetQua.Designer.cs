@@ -85,25 +85,26 @@
             tlpFrame.Location = new Point(0, 0);
             tlpFrame.Margin = new Padding(0);
             tlpFrame.Name = "tlpFrame";
-            tlpFrame.Padding = new Padding(10);
+            tlpFrame.Padding = new Padding(7, 6, 7, 6);
             tlpFrame.RowCount = 4;
             tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
             tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
             tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
             tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            tlpFrame.Size = new Size(1418, 507);
+            tlpFrame.Size = new Size(993, 304);
             tlpFrame.TabIndex = 1;
             // 
             // gcDanhSachBanThang
             // 
             tlpFrame.SetColumnSpan(gcDanhSachBanThang, 8);
             gcDanhSachBanThang.Dock = DockStyle.Fill;
-            gcDanhSachBanThang.Location = new Point(20, 116);
+            gcDanhSachBanThang.EmbeddedNavigator.Margin = new Padding(2);
+            gcDanhSachBanThang.Location = new Point(14, 70);
             gcDanhSachBanThang.MainView = gvcDanhSachBanThang;
-            gcDanhSachBanThang.Margin = new Padding(10);
+            gcDanhSachBanThang.Margin = new Padding(7, 6, 7, 6);
             gcDanhSachBanThang.Name = "gcDanhSachBanThang";
             gcDanhSachBanThang.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] { lkMaCauThu, lkMaLoaiBanThang, spThoiDiemGhiBan });
-            gcDanhSachBanThang.Size = new Size(1378, 320);
+            gcDanhSachBanThang.Size = new Size(965, 192);
             gcDanhSachBanThang.TabIndex = 21;
             gcDanhSachBanThang.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gvcDanhSachBanThang });
             // 
@@ -115,9 +116,11 @@
             gvcDanhSachBanThang.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             gvcDanhSachBanThang.Appearance.HeaderPanel.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
             gvcDanhSachBanThang.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] { gccMaBanThang, gccMaCauThu, gccMaDoiBong, gccMaLoaiBanThang, gccThoiDiemGhiBan });
+            gvcDanhSachBanThang.DetailHeight = 210;
             gvcDanhSachBanThang.GridControl = gcDanhSachBanThang;
             gvcDanhSachBanThang.Name = "gvcDanhSachBanThang";
             gvcDanhSachBanThang.OptionsBehavior.EditorShowMode = DevExpress.Utils.EditorShowMode.MouseDown;
+            gvcDanhSachBanThang.OptionsEditForm.PopupEditFormWidth = 560;
             gvcDanhSachBanThang.OptionsNavigation.AutoFocusNewRow = true;
             gvcDanhSachBanThang.OptionsNavigation.EnterMoveNextColumn = true;
             gvcDanhSachBanThang.OptionsSelection.EnableAppearanceFocusedCell = false;
@@ -136,59 +139,59 @@
             // 
             gccMaBanThang.Caption = "Mã bàn thắng";
             gccMaBanThang.FieldName = "MaBanThang";
-            gccMaBanThang.MinWidth = 30;
+            gccMaBanThang.MinWidth = 21;
             gccMaBanThang.Name = "gccMaBanThang";
             gccMaBanThang.OptionsColumn.ReadOnly = true;
             gccMaBanThang.Visible = true;
             gccMaBanThang.VisibleIndex = 0;
-            gccMaBanThang.Width = 112;
+            gccMaBanThang.Width = 78;
             // 
             // gccMaCauThu
             // 
             gccMaCauThu.Caption = "Cầu thủ";
             gccMaCauThu.ColumnEdit = lkMaCauThu;
             gccMaCauThu.FieldName = "MaCauThu";
-            gccMaCauThu.MinWidth = 30;
+            gccMaCauThu.MinWidth = 21;
             gccMaCauThu.Name = "gccMaCauThu";
             gccMaCauThu.Visible = true;
             gccMaCauThu.VisibleIndex = 1;
-            gccMaCauThu.Width = 112;
+            gccMaCauThu.Width = 78;
             // 
             // lkMaCauThu
             // 
             lkMaCauThu.AutoHeight = false;
             lkMaCauThu.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
-            lkMaCauThu.Columns.AddRange(new DevExpress.XtraEditors.Controls.LookUpColumnInfo[] { new DevExpress.XtraEditors.Controls.LookUpColumnInfo("TenCauThu", "Họ tên") });
+            lkMaCauThu.Columns.AddRange(new DevExpress.XtraEditors.Controls.LookUpColumnInfo[] { new DevExpress.XtraEditors.Controls.LookUpColumnInfo("TenCauThu", "Họ tên", 14, DevExpress.Utils.FormatType.None, "", true, DevExpress.Utils.HorzAlignment.Default, DevExpress.Data.ColumnSortOrder.None, DevExpress.Utils.DefaultBoolean.Default) });
             lkMaCauThu.Name = "lkMaCauThu";
             // 
             // gccMaDoiBong
             // 
             gccMaDoiBong.Caption = "Đội bóng";
             gccMaDoiBong.FieldName = "MaDoiBong";
-            gccMaDoiBong.MinWidth = 30;
+            gccMaDoiBong.MinWidth = 21;
             gccMaDoiBong.Name = "gccMaDoiBong";
             gccMaDoiBong.OptionsColumn.ReadOnly = true;
             gccMaDoiBong.UnboundDataType = typeof(string);
             gccMaDoiBong.Visible = true;
             gccMaDoiBong.VisibleIndex = 2;
-            gccMaDoiBong.Width = 112;
+            gccMaDoiBong.Width = 78;
             // 
             // gccMaLoaiBanThang
             // 
             gccMaLoaiBanThang.Caption = "Loại bàn thắng";
             gccMaLoaiBanThang.ColumnEdit = lkMaLoaiBanThang;
             gccMaLoaiBanThang.FieldName = "MaLoaiBanThang";
-            gccMaLoaiBanThang.MinWidth = 30;
+            gccMaLoaiBanThang.MinWidth = 21;
             gccMaLoaiBanThang.Name = "gccMaLoaiBanThang";
             gccMaLoaiBanThang.Visible = true;
             gccMaLoaiBanThang.VisibleIndex = 3;
-            gccMaLoaiBanThang.Width = 112;
+            gccMaLoaiBanThang.Width = 78;
             // 
             // lkMaLoaiBanThang
             // 
             lkMaLoaiBanThang.AutoHeight = false;
             lkMaLoaiBanThang.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
-            lkMaLoaiBanThang.Columns.AddRange(new DevExpress.XtraEditors.Controls.LookUpColumnInfo[] { new DevExpress.XtraEditors.Controls.LookUpColumnInfo("TenLoaiBanThang", "Loại bàn thắng") });
+            lkMaLoaiBanThang.Columns.AddRange(new DevExpress.XtraEditors.Controls.LookUpColumnInfo[] { new DevExpress.XtraEditors.Controls.LookUpColumnInfo("TenLoaiBanThang", "Loại bàn thắng", 14, DevExpress.Utils.FormatType.None, "", true, DevExpress.Utils.HorzAlignment.Default, DevExpress.Data.ColumnSortOrder.None, DevExpress.Utils.DefaultBoolean.Default) });
             lkMaLoaiBanThang.Name = "lkMaLoaiBanThang";
             // 
             // gccThoiDiemGhiBan
@@ -196,11 +199,11 @@
             gccThoiDiemGhiBan.Caption = "Thời điểm";
             gccThoiDiemGhiBan.ColumnEdit = spThoiDiemGhiBan;
             gccThoiDiemGhiBan.FieldName = "ThoiDiemGhiBan";
-            gccThoiDiemGhiBan.MinWidth = 30;
+            gccThoiDiemGhiBan.MinWidth = 21;
             gccThoiDiemGhiBan.Name = "gccThoiDiemGhiBan";
             gccThoiDiemGhiBan.Visible = true;
             gccThoiDiemGhiBan.VisibleIndex = 4;
-            gccThoiDiemGhiBan.Width = 112;
+            gccThoiDiemGhiBan.Width = 78;
             // 
             // spThoiDiemGhiBan
             // 
@@ -214,10 +217,10 @@
             cbTranDau.Dock = DockStyle.Fill;
             cbTranDau.DropDownStyle = ComboBoxStyle.DropDownList;
             cbTranDau.FormattingEnabled = true;
-            cbTranDau.Location = new Point(20, 68);
-            cbTranDau.Margin = new Padding(10);
+            cbTranDau.Location = new Point(14, 41);
+            cbTranDau.Margin = new Padding(7, 6, 7, 6);
             cbTranDau.Name = "cbTranDau";
-            cbTranDau.Size = new Size(328, 33);
+            cbTranDau.Size = new Size(230, 23);
             cbTranDau.TabIndex = 20;
             cbTranDau.SelectedIndexChanged += cbTranDau_SelectedIndexChanged;
             // 
@@ -225,43 +228,43 @@
             // 
             txtTenSan.BorderStyle = BorderStyle.FixedSingle;
             txtTenSan.Dock = DockStyle.Fill;
-            txtTenSan.Location = new Point(542, 68);
-            txtTenSan.Margin = new Padding(10);
+            txtTenSan.Location = new Point(380, 41);
+            txtTenSan.Margin = new Padding(7, 6, 7, 6);
             txtTenSan.Name = "txtTenSan";
             txtTenSan.ReadOnly = true;
-            txtTenSan.Size = new Size(154, 31);
+            txtTenSan.Size = new Size(108, 23);
             txtTenSan.TabIndex = 19;
             // 
             // txtTiSo
             // 
             txtTiSo.BorderStyle = BorderStyle.FixedSingle;
             txtTiSo.Dock = DockStyle.Fill;
-            txtTiSo.Location = new Point(368, 68);
-            txtTiSo.Margin = new Padding(10);
+            txtTiSo.Location = new Point(258, 41);
+            txtTiSo.Margin = new Padding(7, 6, 7, 6);
             txtTiSo.Name = "txtTiSo";
             txtTiSo.ReadOnly = true;
-            txtTiSo.Size = new Size(154, 31);
+            txtTiSo.Size = new Size(108, 23);
             txtTiSo.TabIndex = 18;
             // 
             // txtNgayGio
             // 
             txtNgayGio.BorderStyle = BorderStyle.FixedSingle;
             txtNgayGio.Dock = DockStyle.Fill;
-            txtNgayGio.Location = new Point(716, 68);
-            txtNgayGio.Margin = new Padding(10);
+            txtNgayGio.Location = new Point(502, 41);
+            txtNgayGio.Margin = new Padding(7, 6, 7, 6);
             txtNgayGio.Name = "txtNgayGio";
             txtNgayGio.ReadOnly = true;
-            txtNgayGio.Size = new Size(154, 31);
+            txtNgayGio.Size = new Size(108, 23);
             txtNgayGio.TabIndex = 17;
             // 
             // lblNgayGio
             // 
             lblNgayGio.AutoSize = true;
             lblNgayGio.Dock = DockStyle.Fill;
-            lblNgayGio.Location = new Point(716, 20);
-            lblNgayGio.Margin = new Padding(10);
+            lblNgayGio.Location = new Point(502, 12);
+            lblNgayGio.Margin = new Padding(7, 6, 7, 6);
             lblNgayGio.Name = "lblNgayGio";
-            lblNgayGio.Size = new Size(154, 28);
+            lblNgayGio.Size = new Size(108, 17);
             lblNgayGio.TabIndex = 16;
             lblNgayGio.Text = "Ngày - Giờ";
             lblNgayGio.TextAlign = ContentAlignment.MiddleLeft;
@@ -270,10 +273,10 @@
             // 
             lblTenSan.AutoSize = true;
             lblTenSan.Dock = DockStyle.Fill;
-            lblTenSan.Location = new Point(542, 20);
-            lblTenSan.Margin = new Padding(10);
+            lblTenSan.Location = new Point(380, 12);
+            lblTenSan.Margin = new Padding(7, 6, 7, 6);
             lblTenSan.Name = "lblTenSan";
-            lblTenSan.Size = new Size(154, 28);
+            lblTenSan.Size = new Size(108, 17);
             lblTenSan.TabIndex = 15;
             lblTenSan.Text = "Tên sân";
             lblTenSan.TextAlign = ContentAlignment.MiddleLeft;
@@ -282,10 +285,10 @@
             // 
             btnThemBanThang.Dock = DockStyle.Fill;
             btnThemBanThang.Font = new Font("Segoe UI", 8F);
-            btnThemBanThang.Location = new Point(194, 456);
-            btnThemBanThang.Margin = new Padding(10, 10, 10, 0);
+            btnThemBanThang.Location = new Point(136, 274);
+            btnThemBanThang.Margin = new Padding(7, 6, 7, 0);
             btnThemBanThang.Name = "btnThemBanThang";
-            btnThemBanThang.Size = new Size(154, 41);
+            btnThemBanThang.Size = new Size(108, 24);
             btnThemBanThang.TabIndex = 14;
             btnThemBanThang.Text = "Thêm bàn thắng";
             btnThemBanThang.UseVisualStyleBackColor = true;
@@ -295,10 +298,10 @@
             // 
             btnThoat.Dock = DockStyle.Fill;
             btnThoat.Font = new Font("Segoe UI", 8F);
-            btnThoat.Location = new Point(1238, 456);
-            btnThoat.Margin = new Padding(10, 10, 10, 0);
+            btnThoat.Location = new Point(868, 274);
+            btnThoat.Margin = new Padding(7, 6, 7, 0);
             btnThoat.Name = "btnThoat";
-            btnThoat.Size = new Size(160, 41);
+            btnThoat.Size = new Size(111, 24);
             btnThoat.TabIndex = 13;
             btnThoat.Text = "Thoát";
             btnThoat.UseVisualStyleBackColor = true;
@@ -308,10 +311,10 @@
             // 
             lblTiSo.AutoSize = true;
             lblTiSo.Dock = DockStyle.Fill;
-            lblTiSo.Location = new Point(368, 20);
-            lblTiSo.Margin = new Padding(10);
+            lblTiSo.Location = new Point(258, 12);
+            lblTiSo.Margin = new Padding(7, 6, 7, 6);
             lblTiSo.Name = "lblTiSo";
-            lblTiSo.Size = new Size(154, 28);
+            lblTiSo.Size = new Size(108, 17);
             lblTiSo.TabIndex = 12;
             lblTiSo.Text = "Tỉ số";
             lblTiSo.TextAlign = ContentAlignment.MiddleLeft;
@@ -321,10 +324,10 @@
             lblTranDau.AutoSize = true;
             tlpFrame.SetColumnSpan(lblTranDau, 2);
             lblTranDau.Dock = DockStyle.Fill;
-            lblTranDau.Location = new Point(20, 20);
-            lblTranDau.Margin = new Padding(10);
+            lblTranDau.Location = new Point(14, 12);
+            lblTranDau.Margin = new Padding(7, 6, 7, 6);
             lblTranDau.Name = "lblTranDau";
-            lblTranDau.Size = new Size(328, 28);
+            lblTranDau.Size = new Size(230, 17);
             lblTranDau.TabIndex = 1;
             lblTranDau.Text = "Trận đấu";
             lblTranDau.TextAlign = ContentAlignment.MiddleLeft;
@@ -333,10 +336,10 @@
             // 
             btnGhiNhanKetQua.Dock = DockStyle.Fill;
             btnGhiNhanKetQua.Font = new Font("Segoe UI", 8F);
-            btnGhiNhanKetQua.Location = new Point(20, 456);
-            btnGhiNhanKetQua.Margin = new Padding(10, 10, 10, 0);
+            btnGhiNhanKetQua.Location = new Point(14, 274);
+            btnGhiNhanKetQua.Margin = new Padding(7, 6, 7, 0);
             btnGhiNhanKetQua.Name = "btnGhiNhanKetQua";
-            btnGhiNhanKetQua.Size = new Size(154, 41);
+            btnGhiNhanKetQua.Size = new Size(108, 24);
             btnGhiNhanKetQua.TabIndex = 11;
             btnGhiNhanKetQua.Text = "Ghi nhận";
             btnGhiNhanKetQua.UseVisualStyleBackColor = true;
@@ -344,10 +347,11 @@
             // 
             // GUI_GhiNhanKetQua
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1418, 507);
+            ClientSize = new Size(993, 304);
             Controls.Add(tlpFrame);
+            Margin = new Padding(2);
             Name = "GUI_GhiNhanKetQua";
             Text = "GUI_GhiNhanKetQua";
             Load += GUI_GhiNhanKetQua_Load;

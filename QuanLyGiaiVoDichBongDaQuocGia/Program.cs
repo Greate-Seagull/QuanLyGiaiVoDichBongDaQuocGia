@@ -43,7 +43,13 @@ namespace QuanLyGiaiVoDichBongDaQuocGia
             BUS_LoaiBanThang _BUS_LoaiBanThang = new(_DAL_LoaiBanThang);
 
             ApplicationConfiguration.Initialize();
-            Application.Run(new GUI_ThayDoiQuiDinh(_BUS_ThamSo, _BUS_LoaiCauThu, _BUS_LoaiBanThang));
+            //Application.Run(new GUI_TiepNhanDoiBong(_BUS_ThamSo, _BUS_DoiBong, _BUS_CauThu, _BUS_LoaiCauThu));
+            //Application.Run(new GUI_LapLichThiDau(_BUS_VongDau, _BUS_TranDau, _BUS_DoiBong));
+            //Application.Run(new GUI_TraCuuCauThu(_BUS_CauThu, _BUS_DoiBong, _BUS_LoaiCauThu, _BUS_VongDau, _BUS_TranDau, _BUS_LoaiBanThang, _BUS_BanThang));
+            //Application.Run(new GUI_GhiNhanKetQua(_BUS_BanThang, _BUS_TranDau, _BUS_CauThu, _BUS_LoaiBanThang, _BUS_ThamSo));
+            //Application.Run(new GUI_LapDanhSachCauThuGhiBan(_BUS_CauThu, _BUS_TranDau));
+            Application.Run(new GUI_LapBangXepHang(_BUS_ThamSo, _BUS_DoiBong, _BUS_TranDau));
+            //Application.Run(new GUI_ThayDoiQuiDinh(_BUS_ThamSo, _BUS_LoaiCauThu, _BUS_LoaiBanThang));
         }
     }
 }
