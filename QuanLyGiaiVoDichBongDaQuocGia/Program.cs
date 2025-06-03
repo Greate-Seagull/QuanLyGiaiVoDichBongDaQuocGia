@@ -4,6 +4,8 @@ using QuanLyGiaiVoDichBongDaQuocGia.DAL;
 using QuanLyGiaiVoDichBongDaQuocGia.DBContext;
 using QuanLyGiaiVoDichBongDaQuocGia.GUI;
 using System.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using QuanLyGiaiVoDichBongDaQuocGia.Manager;
 
 namespace QuanLyGiaiVoDichBongDaQuocGia
 {
@@ -18,38 +20,56 @@ namespace QuanLyGiaiVoDichBongDaQuocGia
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
 
-            var connectionString = ConfigurationManager.ConnectionStrings["MySQlConnection"].ConnectionString;
+            var services = new ServiceCollection();
+            ConfigureServices(services);
 
-            var options = new DbContextOptionsBuilder<MySqlDbContext>().UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)).Options;
-
-            MySqlDbContext dbContext = new(options);
-
-            DAL_ThamSo _DAL_ThamSo = new(dbContext);
-            DAL_CauThu _DAL_CauThu = new(dbContext);
-            DAL_DoiBong _DAL_DoiBong = new(dbContext);
-            DAL_LoaiCauThu _DAL_LoaiCauThu = new(dbContext);
-            DAL_BanThang _DAL_BanThang = new(dbContext);
-            DAL_TranDau _DAL_TranDau = new(dbContext);
-            DAL_VongDau _DAL_VongDau = new(dbContext);
-            DAL_LoaiBanThang _DAL_LoaiBanThang = new(dbContext);
-
-            BUS_ThamSo _BUS_ThamSo = new(_DAL_ThamSo);
-            BUS_CauThu _BUS_CauThu = new(_DAL_CauThu);
-            BUS_DoiBong _BUS_DoiBong = new(_DAL_DoiBong, _BUS_CauThu);
-            BUS_LoaiCauThu _BUS_LoaiCauThu = new(_DAL_LoaiCauThu);
-            BUS_BanThang _BUS_BanThang = new(_DAL_BanThang);
-            BUS_TranDau _BUS_TranDau = new(_DAL_TranDau, _BUS_BanThang);
-            BUS_VongDau _BUS_VongDau = new(_DAL_VongDau, _BUS_TranDau);
-            BUS_LoaiBanThang _BUS_LoaiBanThang = new(_DAL_LoaiBanThang);
+            var provider = services.BuildServiceProvider();
 
             ApplicationConfiguration.Initialize();
-            //Application.Run(new GUI_TiepNhanDoiBong(_BUS_ThamSo, _BUS_DoiBong, _BUS_CauThu, _BUS_LoaiCauThu));
-            //Application.Run(new GUI_LapLichThiDau(_BUS_VongDau, _BUS_TranDau, _BUS_DoiBong));
-            //Application.Run(new GUI_TraCuuCauThu(_BUS_CauThu, _BUS_DoiBong, _BUS_LoaiCauThu, _BUS_VongDau, _BUS_TranDau, _BUS_LoaiBanThang, _BUS_BanThang));
-            //Application.Run(new GUI_GhiNhanKetQua(_BUS_BanThang, _BUS_TranDau, _BUS_CauThu, _BUS_LoaiBanThang, _BUS_ThamSo));
-            //Application.Run(new GUI_LapDanhSachCauThuGhiBan(_BUS_CauThu, _BUS_TranDau));
-            Application.Run(new GUI_LapBangXepHang(_BUS_ThamSo, _BUS_DoiBong, _BUS_TranDau));
-            //Application.Run(new GUI_ThayDoiQuiDinh(_BUS_ThamSo, _BUS_LoaiCauThu, _BUS_LoaiBanThang));
+            Application.Run(provider.GetRequiredService<GUI_Dashboard>());
+        }
+
+        private static void ConfigureServices(ServiceCollection services)
+        {
+            //Read connection string
+            var connectionString = ConfigurationManager.ConnectionStrings["MySQlConnection"].ConnectionString;
+
+            //Register DbContext
+            //var options = new DbContextOptionsBuilder<MySqlDbContext>().UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)).Options;
+            services.AddDbContext<MySqlDbContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+            //Register DALs
+            services.AddScoped<DAL_ThamSo>();
+            services.AddScoped<DAL_CauThu>();
+            services.AddScoped<DAL_DoiBong>();
+            services.AddScoped<DAL_LoaiCauThu>();
+            services.AddScoped<DAL_BanThang>();
+            services.AddScoped<DAL_TranDau>();
+            services.AddScoped<DAL_VongDau>();
+            services.AddScoped<DAL_LoaiBanThang>();
+
+            //Register BUSs
+            services.AddScoped<BUS_ThamSo>();
+            services.AddScoped<BUS_CauThu>();
+            services.AddScoped<BUS_DoiBong>();
+            services.AddScoped<BUS_LoaiCauThu>();
+            services.AddScoped<BUS_BanThang>();
+            services.AddScoped<BUS_TranDau>();
+            services.AddScoped<BUS_VongDau>();
+            services.AddScoped<BUS_LoaiBanThang>();
+
+            //Register Forms
+            services.AddTransient<GUI_TiepNhanDoiBong>();
+            services.AddTransient<GUI_LapLichThiDau>();
+            services.AddTransient<GUI_GhiNhanKetQua>();
+            services.AddTransient<GUI_ThayDoiQuiDinh>();
+            services.AddScoped<GUI_TraCuuCauThu>();
+            services.AddScoped<GUI_LapDanhSachCauThuGhiBan>();
+            services.AddScoped<GUI_LapBangXepHang>();
+            services.AddScoped<GUI_Dashboard>();
+
+            //Register navigator
+            services.AddScoped<FormNavigator>();
         }
     }
 }

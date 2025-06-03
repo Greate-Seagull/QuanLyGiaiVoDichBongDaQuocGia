@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             tlpFrame = new TableLayoutPanel();
-            btnThoat = new Button();
             dtpNgayLap = new DateTimePicker();
             lblNgayLap = new Label();
             gcDanhSachCauThu = new DevExpress.XtraGrid.GridControl();
@@ -54,7 +53,6 @@
             tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
             tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
             tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
-            tlpFrame.Controls.Add(btnThoat, 7, 3);
             tlpFrame.Controls.Add(dtpNgayLap, 3, 1);
             tlpFrame.Controls.Add(lblNgayLap, 3, 0);
             tlpFrame.Controls.Add(gcDanhSachCauThu, 0, 2);
@@ -72,26 +70,13 @@
             tlpFrame.Size = new Size(1418, 507);
             tlpFrame.TabIndex = 5;
             // 
-            // btnThoat
-            // 
-            btnThoat.Dock = DockStyle.Bottom;
-            btnThoat.Font = new Font("Segoe UI", 8F);
-            btnThoat.Location = new Point(1238, 456);
-            btnThoat.Margin = new Padding(10, 10, 10, 0);
-            btnThoat.Name = "btnThoat";
-            btnThoat.Size = new Size(160, 41);
-            btnThoat.TabIndex = 23;
-            btnThoat.Text = "Thoát";
-            btnThoat.UseVisualStyleBackColor = true;
-            btnThoat.Click += btnThoat_Click;
-            // 
             // dtpNgayLap
             // 
             tlpFrame.SetColumnSpan(dtpNgayLap, 2);
             dtpNgayLap.CustomFormat = "dd/MM/yyyy";
             dtpNgayLap.Dock = DockStyle.Fill;
             dtpNgayLap.Format = DateTimePickerFormat.Custom;
-            dtpNgayLap.Location = new Point(542, 68);
+            dtpNgayLap.Location = new Point(542, 74);
             dtpNgayLap.Margin = new Padding(10);
             dtpNgayLap.Name = "dtpNgayLap";
             dtpNgayLap.Size = new Size(328, 31);
@@ -106,7 +91,7 @@
             lblNgayLap.Location = new Point(542, 20);
             lblNgayLap.Margin = new Padding(10);
             lblNgayLap.Name = "lblNgayLap";
-            lblNgayLap.Size = new Size(328, 28);
+            lblNgayLap.Size = new Size(328, 34);
             lblNgayLap.TabIndex = 2;
             lblNgayLap.Text = "Ngày lập";
             lblNgayLap.TextAlign = ContentAlignment.MiddleCenter;
@@ -115,11 +100,11 @@
             // 
             tlpFrame.SetColumnSpan(gcDanhSachCauThu, 8);
             gcDanhSachCauThu.Dock = DockStyle.Fill;
-            gcDanhSachCauThu.Location = new Point(20, 116);
+            gcDanhSachCauThu.Location = new Point(20, 128);
             gcDanhSachCauThu.MainView = gvcDanhSachCauThu;
             gcDanhSachCauThu.Margin = new Padding(10);
             gcDanhSachCauThu.Name = "gcDanhSachCauThu";
-            gcDanhSachCauThu.Size = new Size(1378, 320);
+            gcDanhSachCauThu.Size = new Size(1378, 359);
             gcDanhSachCauThu.TabIndex = 9;
             gcDanhSachCauThu.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gvcDanhSachCauThu });
             // 
@@ -207,7 +192,6 @@
         #endregion
 
         private TableLayoutPanel tlpFrame;
-        private Button btnThoat;
         private DateTimePicker dtpNgayLap;
         private Label lblNgayLap;
         private DevExpress.XtraGrid.GridControl gcDanhSachCauThu;

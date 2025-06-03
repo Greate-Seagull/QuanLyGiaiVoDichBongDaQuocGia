@@ -181,13 +181,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             }
         }
 
-        //Function: Close form
-        private void btnThoat_Click(object sender, EventArgs e)
-        {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
-        }
-
         //Function: multiple rows deleting using key delete
         private void gvcDanhSachCauThu_RowDeleting(object sender, DevExpress.Data.RowDeletingEventArgs e)
         {

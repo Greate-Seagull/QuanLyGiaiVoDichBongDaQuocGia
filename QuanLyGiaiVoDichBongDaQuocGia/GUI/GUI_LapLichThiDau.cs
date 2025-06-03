@@ -143,12 +143,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             }
         }
 
-        private void btnThoat_Click(object sender, EventArgs e)
-        {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
-        }
-
         private void gvcDanhSachTranDau_RowDeleted(object sender, DevExpress.Data.RowDeletedEventArgs e)
         {
             var entity = e.Row as DTO_TranDau;
@@ -306,11 +300,9 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             if (e.Column.FieldName == "NgayGio")
             {
                 var ngayGio = (DateTime)e.Value;
-                if (vongDau.NgayBatDau is null || vongDau.NgayBatDau > ngayGio)
-                    vongDau.NgayBatDau = ngayGio;
-
-                if (vongDau.NgayKetThuc is null || vongDau.NgayKetThuc < ngayGio)
-                    vongDau.NgayKetThuc = ngayGio;
+                var danhSachNgayGio = danhSachTranDauHienThi.Select(entity => entity.NgayGio).ToList();
+                vongDau.NgayBatDau = danhSachNgayGio.Min();
+                vongDau.NgayKetThuc = danhSachNgayGio.Max();
 
                 txtNgayBatDau.Text = vongDau.NgayBatDau?.ToString("G") ?? string.Empty;
                 txtNgayKetThuc.Text = vongDau.NgayKetThuc?.ToString("G") ?? string.Empty;

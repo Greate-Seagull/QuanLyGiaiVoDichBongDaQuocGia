@@ -38,7 +38,6 @@
             txtTenDoiBong = new TextBox();
             txtTenSanNha = new TextBox();
             btnTiepNhanDoiBong = new Button();
-            btnThoat = new Button();
             gcDanhSachCauThu = new DevExpress.XtraGrid.GridControl();
             gvcDanhSachCauThu = new DevExpress.XtraGrid.Views.Grid.GridView();
             gccMaCauThu = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -77,7 +76,6 @@
             tlpFrame.Controls.Add(txtTenDoiBong, 1, 1);
             tlpFrame.Controls.Add(txtTenSanNha, 2, 1);
             tlpFrame.Controls.Add(btnTiepNhanDoiBong, 0, 3);
-            tlpFrame.Controls.Add(btnThoat, 8, 3);
             tlpFrame.Controls.Add(gcDanhSachCauThu, 0, 2);
             tlpFrame.Dock = DockStyle.Fill;
             tlpFrame.Location = new Point(0, 0);
@@ -188,19 +186,6 @@
             btnTiepNhanDoiBong.Text = "Tiếp nhận đội bóng";
             btnTiepNhanDoiBong.UseVisualStyleBackColor = true;
             btnTiepNhanDoiBong.Click += btnTiepNhanDoiBong_Click;
-            // 
-            // btnThoat
-            // 
-            btnThoat.Dock = DockStyle.Bottom;
-            btnThoat.Font = new Font("Segoe UI", 8F);
-            btnThoat.Location = new Point(1238, 456);
-            btnThoat.Margin = new Padding(10, 10, 10, 0);
-            btnThoat.Name = "btnThoat";
-            btnThoat.Size = new Size(160, 41);
-            btnThoat.TabIndex = 7;
-            btnThoat.Text = "Thoát";
-            btnThoat.UseVisualStyleBackColor = true;
-            btnThoat.Click += btnThoat_Click;
             // 
             // gcDanhSachCauThu
             // 
@@ -336,7 +321,6 @@
         private TextBox txtTenDoiBong;
         private TextBox txtTenSanNha;
         private Button btnTiepNhanDoiBong;
-        private Button btnThoat;
         private DevExpress.XtraGrid.GridControl gcDanhSachCauThu;
         private DevExpress.XtraGrid.Views.Grid.GridView gvcDanhSachCauThu;
         private DevExpress.XtraGrid.Columns.GridColumn gccMaCauThu;

@@ -196,12 +196,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             }
         }
 
-        private void btnThoat_Click(object sender, EventArgs e)
-        {
-            this.DialogResult = DialogResult.OK;
-            this.Close();
-        }
-
         private void btnXacNhan_Click(object sender, EventArgs e)
         {
             CapNhatThongTinThamSo();

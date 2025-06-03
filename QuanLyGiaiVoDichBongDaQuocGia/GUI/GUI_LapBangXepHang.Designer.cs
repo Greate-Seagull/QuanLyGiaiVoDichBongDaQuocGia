@@ -32,11 +32,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         private void InitializeComponent()
         {
             tlpFrame = new TableLayoutPanel();
-            btnThoat = new Button();
             dtpNgayLap = new DateTimePicker();
             lblNgayLap = new Label();
             gcDanhSachDoiBong = new DevExpress.XtraGrid.GridControl();
-            gvcDanhSachDoiBong = new DevExpress.XtraGrid.Views.Grid.GridView();
+            gvcDanhSachDoiBong = new GridView();
             gccTenDoiBong = new DevExpress.XtraGrid.Columns.GridColumn();
             gccSoTranThang = new DevExpress.XtraGrid.Columns.GridColumn();
             gccSoTranHoa = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -59,7 +58,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
             tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
             tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
-            tlpFrame.Controls.Add(btnThoat, 7, 3);
             tlpFrame.Controls.Add(dtpNgayLap, 3, 1);
             tlpFrame.Controls.Add(lblNgayLap, 3, 0);
             tlpFrame.Controls.Add(gcDanhSachDoiBong, 0, 2);
@@ -72,23 +70,8 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
             tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
             tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
-            tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            tlpFrame.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tlpFrame.Size = new Size(1418, 507);
             tlpFrame.TabIndex = 4;
-            // 
-            // btnThoat
-            // 
-            btnThoat.Dock = DockStyle.Bottom;
-            btnThoat.Font = new Font("Segoe UI", 8F);
-            btnThoat.Location = new Point(1238, 456);
-            btnThoat.Margin = new Padding(10, 10, 10, 0);
-            btnThoat.Name = "btnThoat";
-            btnThoat.Size = new Size(160, 41);
-            btnThoat.TabIndex = 23;
-            btnThoat.Text = "Thoát";
-            btnThoat.UseVisualStyleBackColor = true;
-            btnThoat.Click += btnThoat_Click;
             // 
             // dtpNgayLap
             // 
@@ -96,7 +79,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             dtpNgayLap.CustomFormat = "dd/MM/yyyy";
             dtpNgayLap.Dock = DockStyle.Fill;
             dtpNgayLap.Format = DateTimePickerFormat.Custom;
-            dtpNgayLap.Location = new Point(542, 68);
+            dtpNgayLap.Location = new Point(542, 74);
             dtpNgayLap.Margin = new Padding(10);
             dtpNgayLap.Name = "dtpNgayLap";
             dtpNgayLap.Size = new Size(328, 31);
@@ -111,7 +94,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             lblNgayLap.Location = new Point(542, 20);
             lblNgayLap.Margin = new Padding(10);
             lblNgayLap.Name = "lblNgayLap";
-            lblNgayLap.Size = new Size(328, 28);
+            lblNgayLap.Size = new Size(328, 34);
             lblNgayLap.TabIndex = 2;
             lblNgayLap.Text = "Ngày lập";
             lblNgayLap.TextAlign = ContentAlignment.MiddleCenter;
@@ -120,11 +103,11 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             // 
             tlpFrame.SetColumnSpan(gcDanhSachDoiBong, 8);
             gcDanhSachDoiBong.Dock = DockStyle.Fill;
-            gcDanhSachDoiBong.Location = new Point(20, 116);
+            gcDanhSachDoiBong.Location = new Point(20, 128);
             gcDanhSachDoiBong.MainView = gvcDanhSachDoiBong;
             gcDanhSachDoiBong.Margin = new Padding(10);
             gcDanhSachDoiBong.Name = "gcDanhSachDoiBong";
-            gcDanhSachDoiBong.Size = new Size(1378, 320);
+            gcDanhSachDoiBong.Size = new Size(1378, 359);
             gcDanhSachDoiBong.TabIndex = 9;
             gcDanhSachDoiBong.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gvcDanhSachDoiBong });
             // 
@@ -147,7 +130,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             gvcDanhSachDoiBong.OptionsView.ShowAutoFilterRow = true;
             gvcDanhSachDoiBong.OptionsView.ShowViewCaption = true;
             gvcDanhSachDoiBong.ViewCaption = "Bảng xếp hạng";
-            gvcDanhSachDoiBong.CustomDrawRowIndicator += this.gvcDanhSachDoiBong_CustomDrawRowIndicator;
+            gvcDanhSachDoiBong.CustomDrawRowIndicator += gvcDanhSachDoiBong_CustomDrawRowIndicator;
             // 
             // gccTenDoiBong
             // 
@@ -229,7 +212,7 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             ((System.ComponentModel.ISupportInitialize)gcDanhSachDoiBong).EndInit();
             ((System.ComponentModel.ISupportInitialize)gvcDanhSachDoiBong).EndInit();
             ResumeLayout(false);
-        }        
+        }
 
         #endregion
 
@@ -244,6 +227,5 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
         private DevExpress.XtraGrid.Columns.GridColumn gccHieuSo;
         private DateTimePicker dtpNgayLap;
         private DevExpress.XtraGrid.Columns.GridColumn gccHang;
-        private Button btnThoat;
     }
 }

@@ -41,6 +41,13 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             LayThamSo();
             LayDanhSachDoiBong();
             LayDanhSachTranDau();
+
+            UILoad();
+        }
+
+        private void UILoad()
+        {
+            dtpNgayLap_ValueChanged(dtpNgayLap, EventArgs.Empty);
         }
 
         private void LayDanhSachTranDau()
@@ -70,12 +77,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             _BUS_DoiBong.DienThongTinHienThi(bangXepHang, danhSachDoiBong);
 
             gcDanhSachDoiBong.DataSource = bangXepHang;
-        }
-
-        private void btnThoat_Click(object sender, EventArgs e)
-        {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
         }
 
         private void gvcDanhSachDoiBong_CustomDrawRowIndicator(object sender, RowIndicatorCustomDrawEventArgs e)

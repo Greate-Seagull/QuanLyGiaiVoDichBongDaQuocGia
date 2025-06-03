@@ -40,6 +40,13 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
             LayDanhSachTranDau();
 
             TaoDanhSachCauThuHienThi();
+
+            UILoad();
+        }
+
+        private void UILoad()
+        {
+            dtpNgayLap_ValueChanged(dtpNgayLap, EventArgs.Empty);
         }
 
         private void TaoDanhSachCauThuHienThi()
@@ -64,12 +71,6 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.GUI
 
             var ketQuaTimKiemTranDau = _BUS_TranDau.TraCuuTranDauTheoNgay(danhSachTranDau.Values, null, ngayLap);
             gcDanhSachCauThu.DataSource = _BUS_CauThu.LapBangXepHangCauThuTheoTranDau(danhSachCauThuHienThi, ketQuaTimKiemTranDau); ;
-        }
-
-        private void btnThoat_Click(object sender, EventArgs e)
-        {
-            this.DialogResult = DialogResult.OK;
-            this.Close();
         }
 
         private void gvcDanhSachCauThu_CustomDrawRowIndicator(object sender, DevExpress.XtraGrid.Views.Grid.RowIndicatorCustomDrawEventArgs e)

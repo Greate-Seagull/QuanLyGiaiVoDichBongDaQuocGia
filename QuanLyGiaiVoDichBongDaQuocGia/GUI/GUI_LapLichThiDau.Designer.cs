@@ -44,7 +44,6 @@
             lblNgayKetThuc = new Label();
             lblNgayBatDau = new Label();
             btnThemTranDau = new Button();
-            btnThoat = new Button();
             lblVongThiDau = new Label();
             lblMaVongDau = new Label();
             txtMaVongDau = new TextBox();
@@ -76,7 +75,6 @@
             tlpFrame.Controls.Add(lblNgayKetThuc, 3, 0);
             tlpFrame.Controls.Add(lblNgayBatDau, 2, 0);
             tlpFrame.Controls.Add(btnThemTranDau, 1, 3);
-            tlpFrame.Controls.Add(btnThoat, 7, 3);
             tlpFrame.Controls.Add(lblVongThiDau, 1, 0);
             tlpFrame.Controls.Add(lblMaVongDau, 0, 0);
             tlpFrame.Controls.Add(txtMaVongDau, 0, 1);
@@ -268,7 +266,7 @@
             // 
             // btnThemTranDau
             // 
-            btnThemTranDau.Dock = DockStyle.Fill;
+            btnThemTranDau.Dock = DockStyle.Bottom;
             btnThemTranDau.Font = new Font("Segoe UI", 8F);
             btnThemTranDau.Location = new Point(194, 456);
             btnThemTranDau.Margin = new Padding(10, 10, 10, 0);
@@ -278,19 +276,6 @@
             btnThemTranDau.Text = "Thêm trận đấu";
             btnThemTranDau.UseVisualStyleBackColor = true;
             btnThemTranDau.Click += btnThemTranDau_Click;
-            // 
-            // btnThoat
-            // 
-            btnThoat.Dock = DockStyle.Fill;
-            btnThoat.Font = new Font("Segoe UI", 8F);
-            btnThoat.Location = new Point(1238, 456);
-            btnThoat.Margin = new Padding(10, 10, 10, 0);
-            btnThoat.Name = "btnThoat";
-            btnThoat.Size = new Size(160, 41);
-            btnThoat.TabIndex = 13;
-            btnThoat.Text = "Thoát";
-            btnThoat.UseVisualStyleBackColor = true;
-            btnThoat.Click += btnThoat_Click;
             // 
             // lblVongThiDau
             // 
@@ -340,7 +325,7 @@
             // 
             // btnLapLichThiDau
             // 
-            btnLapLichThiDau.Dock = DockStyle.Fill;
+            btnLapLichThiDau.Dock = DockStyle.Bottom;
             btnLapLichThiDau.Font = new Font("Segoe UI", 8F);
             btnLapLichThiDau.Location = new Point(20, 456);
             btnLapLichThiDau.Margin = new Padding(10, 10, 10, 0);
@@ -379,7 +364,6 @@
         private TextBox txtVongThiDau;
         private Button btnLapLichThiDau;
         private Label lblVongThiDau;
-        private Button btnThoat;
         private Button btnThemTranDau;
         private TextBox txtNgayKetThuc;
         private TextBox txtNgayBatDau;
