@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             tlpFrame = new TableLayoutPanel();
+            label1 = new Label();
             btnXoaLoaiBanThang = new Button();
             btnReset = new Button();
             nudDiemThua = new NumericUpDown();
@@ -63,6 +64,8 @@
             lblHeaderCauThu = new Label();
             btnXacNhan = new Button();
             btnThoat = new Button();
+            label2 = new Label();
+            lbThuTuXepHang = new ListBox();
             tlpFrame.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)nudDiemThua).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nudDiemHoa).BeginInit();
@@ -86,8 +89,9 @@
             tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
             tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
             tlpFrame.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
+            tlpFrame.Controls.Add(label1, 0, 14);
             tlpFrame.Controls.Add(btnXoaLoaiBanThang, 4, 9);
-            tlpFrame.Controls.Add(btnReset, 2, 15);
+            tlpFrame.Controls.Add(btnReset, 2, 16);
             tlpFrame.Controls.Add(nudDiemThua, 3, 13);
             tlpFrame.Controls.Add(lblDiemThua, 0, 13);
             tlpFrame.Controls.Add(nudDiemHoa, 7, 12);
@@ -118,14 +122,16 @@
             tlpFrame.Controls.Add(nudTuoiToiThieu, 3, 1);
             tlpFrame.Controls.Add(lblTuoiToiDa, 4, 1);
             tlpFrame.Controls.Add(lblHeaderCauThu, 0, 0);
-            tlpFrame.Controls.Add(btnXacNhan, 0, 15);
-            tlpFrame.Controls.Add(btnThoat, 6, 15);
+            tlpFrame.Controls.Add(btnXacNhan, 0, 16);
+            tlpFrame.Controls.Add(btnThoat, 6, 16);
+            tlpFrame.Controls.Add(label2, 0, 15);
+            tlpFrame.Controls.Add(lbThuTuXepHang, 2, 15);
             tlpFrame.Dock = DockStyle.Fill;
             tlpFrame.Location = new Point(0, 0);
             tlpFrame.Margin = new Padding(0);
             tlpFrame.Name = "tlpFrame";
-            tlpFrame.Padding = new Padding(10);
-            tlpFrame.RowCount = 16;
+            tlpFrame.Padding = new Padding(7, 6, 7, 6);
+            tlpFrame.RowCount = 17;
             tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 6.25F));
             tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 6.25F));
             tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 6.25F));
@@ -140,20 +146,35 @@
             tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 6.25F));
             tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 6.25F));
             tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 6.25F));
-            tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 6.25F));
-            tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 6.25F));
-            tlpFrame.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tlpFrame.Size = new Size(838, 804);
+            tlpFrame.RowStyles.Add(new RowStyle(SizeType.Absolute, 43F));
+            tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 13.188406F));
+            tlpFrame.RowStyles.Add(new RowStyle(SizeType.Percent, 3.6231885F));
+            tlpFrame.RowStyles.Add(new RowStyle(SizeType.Absolute, 12F));
+            tlpFrame.Size = new Size(587, 747);
             tlpFrame.TabIndex = 4;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            tlpFrame.SetColumnSpan(label1, 8);
+            label1.Dock = DockStyle.Fill;
+            label1.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label1.Location = new Point(14, 586);
+            label1.Margin = new Padding(7, 6, 7, 6);
+            label1.Name = "label1";
+            label1.Size = new Size(559, 31);
+            label1.TabIndex = 59;
+            label1.Text = "BẢNG XẾP HẠNG";
+            label1.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // btnXoaLoaiBanThang
             // 
             btnXoaLoaiBanThang.Dock = DockStyle.Fill;
             btnXoaLoaiBanThang.Font = new Font("Segoe UI", 8F);
-            btnXoaLoaiBanThang.Location = new Point(428, 461);
-            btnXoaLoaiBanThang.Margin = new Padding(10);
+            btnXoaLoaiBanThang.Location = new Point(298, 381);
+            btnXoaLoaiBanThang.Margin = new Padding(7, 6, 7, 6);
             btnXoaLoaiBanThang.Name = "btnXoaLoaiBanThang";
-            btnXoaLoaiBanThang.Size = new Size(82, 29);
+            btnXoaLoaiBanThang.Size = new Size(57, 29);
             btnXoaLoaiBanThang.TabIndex = 58;
             btnXoaLoaiBanThang.Text = "Xoá";
             btnXoaLoaiBanThang.UseVisualStyleBackColor = true;
@@ -164,10 +185,10 @@
             tlpFrame.SetColumnSpan(btnReset, 2);
             btnReset.Dock = DockStyle.Bottom;
             btnReset.Font = new Font("Segoe UI", 8F);
-            btnReset.Location = new Point(224, 755);
-            btnReset.Margin = new Padding(10, 10, 10, 0);
+            btnReset.Location = new Point(156, 718);
+            btnReset.Margin = new Padding(7, 6, 7, 0);
             btnReset.Name = "btnReset";
-            btnReset.Size = new Size(184, 39);
+            btnReset.Size = new Size(128, 23);
             btnReset.TabIndex = 57;
             btnReset.Text = "Đặt lại";
             btnReset.UseVisualStyleBackColor = true;
@@ -176,10 +197,10 @@
             // nudDiemThua
             // 
             nudDiemThua.Dock = DockStyle.Fill;
-            nudDiemThua.Location = new Point(326, 657);
-            nudDiemThua.Margin = new Padding(10);
+            nudDiemThua.Location = new Point(227, 545);
+            nudDiemThua.Margin = new Padding(7, 6, 7, 6);
             nudDiemThua.Name = "nudDiemThua";
-            nudDiemThua.Size = new Size(82, 31);
+            nudDiemThua.Size = new Size(57, 23);
             nudDiemThua.TabIndex = 56;
             // 
             // lblDiemThua
@@ -188,10 +209,10 @@
             tlpFrame.SetColumnSpan(lblDiemThua, 2);
             lblDiemThua.Dock = DockStyle.Fill;
             lblDiemThua.Font = new Font("Segoe UI", 9F);
-            lblDiemThua.Location = new Point(20, 657);
-            lblDiemThua.Margin = new Padding(10);
+            lblDiemThua.Location = new Point(14, 545);
+            lblDiemThua.Margin = new Padding(7, 6, 7, 6);
             lblDiemThua.Name = "lblDiemThua";
-            lblDiemThua.Size = new Size(184, 29);
+            lblDiemThua.Size = new Size(128, 29);
             lblDiemThua.TabIndex = 55;
             lblDiemThua.Text = "Điểm thua";
             lblDiemThua.TextAlign = ContentAlignment.MiddleLeft;
@@ -199,10 +220,10 @@
             // nudDiemHoa
             // 
             nudDiemHoa.Dock = DockStyle.Fill;
-            nudDiemHoa.Location = new Point(734, 608);
-            nudDiemHoa.Margin = new Padding(10);
+            nudDiemHoa.Location = new Point(511, 504);
+            nudDiemHoa.Margin = new Padding(7, 6, 7, 6);
             nudDiemHoa.Name = "nudDiemHoa";
-            nudDiemHoa.Size = new Size(84, 31);
+            nudDiemHoa.Size = new Size(62, 23);
             nudDiemHoa.TabIndex = 54;
             nudDiemHoa.ValueChanged += nudDiemHoa_ValueChanged;
             // 
@@ -212,10 +233,10 @@
             tlpFrame.SetColumnSpan(lblDiemHoa, 2);
             lblDiemHoa.Dock = DockStyle.Fill;
             lblDiemHoa.Font = new Font("Segoe UI", 9F);
-            lblDiemHoa.Location = new Point(428, 608);
-            lblDiemHoa.Margin = new Padding(10);
+            lblDiemHoa.Location = new Point(298, 504);
+            lblDiemHoa.Margin = new Padding(7, 6, 7, 6);
             lblDiemHoa.Name = "lblDiemHoa";
-            lblDiemHoa.Size = new Size(184, 29);
+            lblDiemHoa.Size = new Size(128, 29);
             lblDiemHoa.TabIndex = 53;
             lblDiemHoa.Text = "Điểm hòa";
             lblDiemHoa.TextAlign = ContentAlignment.MiddleLeft;
@@ -223,10 +244,10 @@
             // nudDiemThang
             // 
             nudDiemThang.Dock = DockStyle.Fill;
-            nudDiemThang.Location = new Point(326, 608);
-            nudDiemThang.Margin = new Padding(10);
+            nudDiemThang.Location = new Point(227, 504);
+            nudDiemThang.Margin = new Padding(7, 6, 7, 6);
             nudDiemThang.Name = "nudDiemThang";
-            nudDiemThang.Size = new Size(82, 31);
+            nudDiemThang.Size = new Size(57, 23);
             nudDiemThang.TabIndex = 52;
             nudDiemThang.ValueChanged += nudDiemThang_ValueChanged;
             // 
@@ -236,10 +257,10 @@
             tlpFrame.SetColumnSpan(lblDiemThang, 2);
             lblDiemThang.Dock = DockStyle.Fill;
             lblDiemThang.Font = new Font("Segoe UI", 9F);
-            lblDiemThang.Location = new Point(20, 608);
-            lblDiemThang.Margin = new Padding(10);
+            lblDiemThang.Location = new Point(14, 504);
+            lblDiemThang.Margin = new Padding(7, 6, 7, 6);
             lblDiemThang.Name = "lblDiemThang";
-            lblDiemThang.Size = new Size(184, 29);
+            lblDiemThang.Size = new Size(128, 29);
             lblDiemThang.TabIndex = 51;
             lblDiemThang.Text = "Điểm thắng";
             lblDiemThang.TextAlign = ContentAlignment.MiddleLeft;
@@ -250,10 +271,10 @@
             tlpFrame.SetColumnSpan(lblHeaderTranDau, 8);
             lblHeaderTranDau.Dock = DockStyle.Fill;
             lblHeaderTranDau.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblHeaderTranDau.Location = new Point(20, 559);
-            lblHeaderTranDau.Margin = new Padding(10);
+            lblHeaderTranDau.Location = new Point(14, 463);
+            lblHeaderTranDau.Margin = new Padding(7, 6, 7, 6);
             lblHeaderTranDau.Name = "lblHeaderTranDau";
-            lblHeaderTranDau.Size = new Size(798, 29);
+            lblHeaderTranDau.Size = new Size(559, 29);
             lblHeaderTranDau.TabIndex = 50;
             lblHeaderTranDau.Text = "TRẬN ĐẤU";
             lblHeaderTranDau.TextAlign = ContentAlignment.MiddleCenter;
@@ -263,11 +284,11 @@
             txtTenLoaiBanThang.BorderStyle = BorderStyle.FixedSingle;
             tlpFrame.SetColumnSpan(txtTenLoaiBanThang, 2);
             txtTenLoaiBanThang.Dock = DockStyle.Fill;
-            txtTenLoaiBanThang.Location = new Point(224, 510);
-            txtTenLoaiBanThang.Margin = new Padding(10);
+            txtTenLoaiBanThang.Location = new Point(156, 422);
+            txtTenLoaiBanThang.Margin = new Padding(7, 6, 7, 6);
             txtTenLoaiBanThang.MaxLength = 5;
             txtTenLoaiBanThang.Name = "txtTenLoaiBanThang";
-            txtTenLoaiBanThang.Size = new Size(184, 31);
+            txtTenLoaiBanThang.Size = new Size(128, 23);
             txtTenLoaiBanThang.TabIndex = 49;
             // 
             // lblTenBanThang
@@ -276,10 +297,10 @@
             tlpFrame.SetColumnSpan(lblTenBanThang, 2);
             lblTenBanThang.Dock = DockStyle.Fill;
             lblTenBanThang.Font = new Font("Segoe UI", 9F);
-            lblTenBanThang.Location = new Point(20, 510);
-            lblTenBanThang.Margin = new Padding(10);
+            lblTenBanThang.Location = new Point(14, 422);
+            lblTenBanThang.Margin = new Padding(7, 6, 7, 6);
             lblTenBanThang.Name = "lblTenBanThang";
-            lblTenBanThang.Size = new Size(184, 29);
+            lblTenBanThang.Size = new Size(128, 29);
             lblTenBanThang.TabIndex = 48;
             lblTenBanThang.Text = "Tên loại bàn thắng";
             lblTenBanThang.TextAlign = ContentAlignment.MiddleLeft;
@@ -290,10 +311,10 @@
             cbLoaiBanThang.Dock = DockStyle.Fill;
             cbLoaiBanThang.DropDownStyle = ComboBoxStyle.DropDownList;
             cbLoaiBanThang.FormattingEnabled = true;
-            cbLoaiBanThang.Location = new Point(224, 461);
-            cbLoaiBanThang.Margin = new Padding(10);
+            cbLoaiBanThang.Location = new Point(156, 381);
+            cbLoaiBanThang.Margin = new Padding(7, 6, 7, 6);
             cbLoaiBanThang.Name = "cbLoaiBanThang";
-            cbLoaiBanThang.Size = new Size(184, 33);
+            cbLoaiBanThang.Size = new Size(128, 23);
             cbLoaiBanThang.TabIndex = 47;
             cbLoaiBanThang.SelectedIndexChanged += cbLoaiBanThang_SelectedIndexChanged;
             // 
@@ -303,10 +324,10 @@
             tlpFrame.SetColumnSpan(lblLoaiBanThang, 2);
             lblLoaiBanThang.Dock = DockStyle.Fill;
             lblLoaiBanThang.Font = new Font("Segoe UI", 9F);
-            lblLoaiBanThang.Location = new Point(20, 461);
-            lblLoaiBanThang.Margin = new Padding(10);
+            lblLoaiBanThang.Location = new Point(14, 381);
+            lblLoaiBanThang.Margin = new Padding(7, 6, 7, 6);
             lblLoaiBanThang.Name = "lblLoaiBanThang";
-            lblLoaiBanThang.Size = new Size(184, 29);
+            lblLoaiBanThang.Size = new Size(128, 29);
             lblLoaiBanThang.TabIndex = 46;
             lblLoaiBanThang.Text = "Loại bàn thắng";
             lblLoaiBanThang.TextAlign = ContentAlignment.MiddleLeft;
@@ -317,10 +338,10 @@
             tlpFrame.SetColumnSpan(lblHeaderLoaiBanThang, 8);
             lblHeaderLoaiBanThang.Dock = DockStyle.Fill;
             lblHeaderLoaiBanThang.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblHeaderLoaiBanThang.Location = new Point(20, 412);
-            lblHeaderLoaiBanThang.Margin = new Padding(10);
+            lblHeaderLoaiBanThang.Location = new Point(14, 340);
+            lblHeaderLoaiBanThang.Margin = new Padding(7, 6, 7, 6);
             lblHeaderLoaiBanThang.Name = "lblHeaderLoaiBanThang";
-            lblHeaderLoaiBanThang.Size = new Size(798, 29);
+            lblHeaderLoaiBanThang.Size = new Size(559, 29);
             lblHeaderLoaiBanThang.TabIndex = 45;
             lblHeaderLoaiBanThang.Text = "LOẠI BÀN THẮNG";
             lblHeaderLoaiBanThang.TextAlign = ContentAlignment.MiddleCenter;
@@ -328,10 +349,10 @@
             // nudThoiDiemGhiBanToiDa
             // 
             nudThoiDiemGhiBanToiDa.Dock = DockStyle.Fill;
-            nudThoiDiemGhiBanToiDa.Location = new Point(326, 363);
-            nudThoiDiemGhiBanToiDa.Margin = new Padding(10);
+            nudThoiDiemGhiBanToiDa.Location = new Point(227, 299);
+            nudThoiDiemGhiBanToiDa.Margin = new Padding(7, 6, 7, 6);
             nudThoiDiemGhiBanToiDa.Name = "nudThoiDiemGhiBanToiDa";
-            nudThoiDiemGhiBanToiDa.Size = new Size(82, 31);
+            nudThoiDiemGhiBanToiDa.Size = new Size(57, 23);
             nudThoiDiemGhiBanToiDa.TabIndex = 44;
             // 
             // lblThoiDiemGhiBanToiDa
@@ -340,10 +361,10 @@
             tlpFrame.SetColumnSpan(lblThoiDiemGhiBanToiDa, 3);
             lblThoiDiemGhiBanToiDa.Dock = DockStyle.Fill;
             lblThoiDiemGhiBanToiDa.Font = new Font("Segoe UI", 9F);
-            lblThoiDiemGhiBanToiDa.Location = new Point(20, 363);
-            lblThoiDiemGhiBanToiDa.Margin = new Padding(10);
+            lblThoiDiemGhiBanToiDa.Location = new Point(14, 299);
+            lblThoiDiemGhiBanToiDa.Margin = new Padding(7, 6, 7, 6);
             lblThoiDiemGhiBanToiDa.Name = "lblThoiDiemGhiBanToiDa";
-            lblThoiDiemGhiBanToiDa.Size = new Size(286, 29);
+            lblThoiDiemGhiBanToiDa.Size = new Size(199, 29);
             lblThoiDiemGhiBanToiDa.TabIndex = 43;
             lblThoiDiemGhiBanToiDa.Text = "Thời điểm ghi bàn tối đa";
             lblThoiDiemGhiBanToiDa.TextAlign = ContentAlignment.MiddleLeft;
@@ -354,10 +375,10 @@
             tlpFrame.SetColumnSpan(lblHeaderBanThang, 8);
             lblHeaderBanThang.Dock = DockStyle.Fill;
             lblHeaderBanThang.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblHeaderBanThang.Location = new Point(20, 314);
-            lblHeaderBanThang.Margin = new Padding(10);
+            lblHeaderBanThang.Location = new Point(14, 258);
+            lblHeaderBanThang.Margin = new Padding(7, 6, 7, 6);
             lblHeaderBanThang.Name = "lblHeaderBanThang";
-            lblHeaderBanThang.Size = new Size(798, 29);
+            lblHeaderBanThang.Size = new Size(559, 29);
             lblHeaderBanThang.TabIndex = 42;
             lblHeaderBanThang.Text = "BÀN THẮNG";
             lblHeaderBanThang.TextAlign = ContentAlignment.MiddleCenter;
@@ -365,10 +386,10 @@
             // nudSoLuongCauThuToiDaTheoLoai
             // 
             nudSoLuongCauThuToiDaTheoLoai.Dock = DockStyle.Fill;
-            nudSoLuongCauThuToiDaTheoLoai.Location = new Point(734, 265);
-            nudSoLuongCauThuToiDaTheoLoai.Margin = new Padding(10);
+            nudSoLuongCauThuToiDaTheoLoai.Location = new Point(511, 217);
+            nudSoLuongCauThuToiDaTheoLoai.Margin = new Padding(7, 6, 7, 6);
             nudSoLuongCauThuToiDaTheoLoai.Name = "nudSoLuongCauThuToiDaTheoLoai";
-            nudSoLuongCauThuToiDaTheoLoai.Size = new Size(84, 31);
+            nudSoLuongCauThuToiDaTheoLoai.Size = new Size(62, 23);
             nudSoLuongCauThuToiDaTheoLoai.TabIndex = 41;
             // 
             // lblLoaiCauThu
@@ -377,10 +398,10 @@
             tlpFrame.SetColumnSpan(lblLoaiCauThu, 2);
             lblLoaiCauThu.Dock = DockStyle.Fill;
             lblLoaiCauThu.Font = new Font("Segoe UI", 9F);
-            lblLoaiCauThu.Location = new Point(20, 265);
-            lblLoaiCauThu.Margin = new Padding(10);
+            lblLoaiCauThu.Location = new Point(14, 217);
+            lblLoaiCauThu.Margin = new Padding(7, 6, 7, 6);
             lblLoaiCauThu.Name = "lblLoaiCauThu";
-            lblLoaiCauThu.Size = new Size(184, 29);
+            lblLoaiCauThu.Size = new Size(128, 29);
             lblLoaiCauThu.TabIndex = 40;
             lblLoaiCauThu.Text = "Loại cầu thủ";
             lblLoaiCauThu.TextAlign = ContentAlignment.MiddleLeft;
@@ -391,10 +412,10 @@
             tlpFrame.SetColumnSpan(lblSoLuongCauThuToiDaTheoLoai, 3);
             lblSoLuongCauThuToiDaTheoLoai.Dock = DockStyle.Fill;
             lblSoLuongCauThuToiDaTheoLoai.Font = new Font("Segoe UI", 9F);
-            lblSoLuongCauThuToiDaTheoLoai.Location = new Point(428, 265);
-            lblSoLuongCauThuToiDaTheoLoai.Margin = new Padding(10);
+            lblSoLuongCauThuToiDaTheoLoai.Location = new Point(298, 217);
+            lblSoLuongCauThuToiDaTheoLoai.Margin = new Padding(7, 6, 7, 6);
             lblSoLuongCauThuToiDaTheoLoai.Name = "lblSoLuongCauThuToiDaTheoLoai";
-            lblSoLuongCauThuToiDaTheoLoai.Size = new Size(286, 29);
+            lblSoLuongCauThuToiDaTheoLoai.Size = new Size(199, 29);
             lblSoLuongCauThuToiDaTheoLoai.TabIndex = 39;
             lblSoLuongCauThuToiDaTheoLoai.Text = "Số lượng cầu thủ tối đa theo loại";
             lblSoLuongCauThuToiDaTheoLoai.TextAlign = ContentAlignment.MiddleLeft;
@@ -405,10 +426,10 @@
             cbLoaiCauThu.Dock = DockStyle.Fill;
             cbLoaiCauThu.DropDownStyle = ComboBoxStyle.DropDownList;
             cbLoaiCauThu.FormattingEnabled = true;
-            cbLoaiCauThu.Location = new Point(224, 265);
-            cbLoaiCauThu.Margin = new Padding(10);
+            cbLoaiCauThu.Location = new Point(156, 217);
+            cbLoaiCauThu.Margin = new Padding(7, 6, 7, 6);
             cbLoaiCauThu.Name = "cbLoaiCauThu";
-            cbLoaiCauThu.Size = new Size(184, 33);
+            cbLoaiCauThu.Size = new Size(128, 23);
             cbLoaiCauThu.TabIndex = 38;
             cbLoaiCauThu.SelectedIndexChanged += cbLoaiCauThu_SelectedIndexChanged;
             // 
@@ -418,10 +439,10 @@
             tlpFrame.SetColumnSpan(lblHeaderLoaiCauThu, 8);
             lblHeaderLoaiCauThu.Dock = DockStyle.Fill;
             lblHeaderLoaiCauThu.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblHeaderLoaiCauThu.Location = new Point(20, 216);
-            lblHeaderLoaiCauThu.Margin = new Padding(10);
+            lblHeaderLoaiCauThu.Location = new Point(14, 176);
+            lblHeaderLoaiCauThu.Margin = new Padding(7, 6, 7, 6);
             lblHeaderLoaiCauThu.Name = "lblHeaderLoaiCauThu";
-            lblHeaderLoaiCauThu.Size = new Size(798, 29);
+            lblHeaderLoaiCauThu.Size = new Size(559, 29);
             lblHeaderLoaiCauThu.TabIndex = 37;
             lblHeaderLoaiCauThu.Text = "LOẠI CẦU THỦ";
             lblHeaderLoaiCauThu.TextAlign = ContentAlignment.MiddleCenter;
@@ -429,10 +450,10 @@
             // nudSoLuongCauThuToiDa
             // 
             nudSoLuongCauThuToiDa.Dock = DockStyle.Fill;
-            nudSoLuongCauThuToiDa.Location = new Point(734, 167);
-            nudSoLuongCauThuToiDa.Margin = new Padding(10);
+            nudSoLuongCauThuToiDa.Location = new Point(511, 135);
+            nudSoLuongCauThuToiDa.Margin = new Padding(7, 6, 7, 6);
             nudSoLuongCauThuToiDa.Name = "nudSoLuongCauThuToiDa";
-            nudSoLuongCauThuToiDa.Size = new Size(84, 31);
+            nudSoLuongCauThuToiDa.Size = new Size(62, 23);
             nudSoLuongCauThuToiDa.TabIndex = 36;
             nudSoLuongCauThuToiDa.ValueChanged += nudSoLuongCauThuToiDa_ValueChanged;
             // 
@@ -442,10 +463,10 @@
             tlpFrame.SetColumnSpan(lblSoLuongCauThuToiDa, 3);
             lblSoLuongCauThuToiDa.Dock = DockStyle.Fill;
             lblSoLuongCauThuToiDa.Font = new Font("Segoe UI", 9F);
-            lblSoLuongCauThuToiDa.Location = new Point(428, 167);
-            lblSoLuongCauThuToiDa.Margin = new Padding(10);
+            lblSoLuongCauThuToiDa.Location = new Point(298, 135);
+            lblSoLuongCauThuToiDa.Margin = new Padding(7, 6, 7, 6);
             lblSoLuongCauThuToiDa.Name = "lblSoLuongCauThuToiDa";
-            lblSoLuongCauThuToiDa.Size = new Size(286, 29);
+            lblSoLuongCauThuToiDa.Size = new Size(199, 29);
             lblSoLuongCauThuToiDa.TabIndex = 35;
             lblSoLuongCauThuToiDa.Text = "Số lượng cầu thủ tối đa";
             lblSoLuongCauThuToiDa.TextAlign = ContentAlignment.MiddleLeft;
@@ -453,10 +474,10 @@
             // nudSoLuongCauThuToiThieu
             // 
             nudSoLuongCauThuToiThieu.Dock = DockStyle.Fill;
-            nudSoLuongCauThuToiThieu.Location = new Point(326, 167);
-            nudSoLuongCauThuToiThieu.Margin = new Padding(10);
+            nudSoLuongCauThuToiThieu.Location = new Point(227, 135);
+            nudSoLuongCauThuToiThieu.Margin = new Padding(7, 6, 7, 6);
             nudSoLuongCauThuToiThieu.Name = "nudSoLuongCauThuToiThieu";
-            nudSoLuongCauThuToiThieu.Size = new Size(82, 31);
+            nudSoLuongCauThuToiThieu.Size = new Size(57, 23);
             nudSoLuongCauThuToiThieu.TabIndex = 34;
             nudSoLuongCauThuToiThieu.ValueChanged += nudSoLuongCauThuToiThieu_ValueChanged;
             // 
@@ -466,10 +487,10 @@
             tlpFrame.SetColumnSpan(lblSoLuongCauThuToiThieu, 3);
             lblSoLuongCauThuToiThieu.Dock = DockStyle.Fill;
             lblSoLuongCauThuToiThieu.Font = new Font("Segoe UI", 9F);
-            lblSoLuongCauThuToiThieu.Location = new Point(20, 167);
-            lblSoLuongCauThuToiThieu.Margin = new Padding(10);
+            lblSoLuongCauThuToiThieu.Location = new Point(14, 135);
+            lblSoLuongCauThuToiThieu.Margin = new Padding(7, 6, 7, 6);
             lblSoLuongCauThuToiThieu.Name = "lblSoLuongCauThuToiThieu";
-            lblSoLuongCauThuToiThieu.Size = new Size(286, 29);
+            lblSoLuongCauThuToiThieu.Size = new Size(199, 29);
             lblSoLuongCauThuToiThieu.TabIndex = 33;
             lblSoLuongCauThuToiThieu.Text = "Số lượng cầu thủ tối thiểu";
             lblSoLuongCauThuToiThieu.TextAlign = ContentAlignment.MiddleLeft;
@@ -480,10 +501,10 @@
             tlpFrame.SetColumnSpan(lblHeaderDoiBong, 8);
             lblHeaderDoiBong.Dock = DockStyle.Fill;
             lblHeaderDoiBong.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblHeaderDoiBong.Location = new Point(20, 118);
-            lblHeaderDoiBong.Margin = new Padding(10);
+            lblHeaderDoiBong.Location = new Point(14, 94);
+            lblHeaderDoiBong.Margin = new Padding(7, 6, 7, 6);
             lblHeaderDoiBong.Name = "lblHeaderDoiBong";
-            lblHeaderDoiBong.Size = new Size(798, 29);
+            lblHeaderDoiBong.Size = new Size(559, 29);
             lblHeaderDoiBong.TabIndex = 32;
             lblHeaderDoiBong.Text = "ĐỘI BÓNG";
             lblHeaderDoiBong.TextAlign = ContentAlignment.MiddleCenter;
@@ -491,10 +512,10 @@
             // nudTuoiToiDa
             // 
             nudTuoiToiDa.Dock = DockStyle.Fill;
-            nudTuoiToiDa.Location = new Point(734, 69);
-            nudTuoiToiDa.Margin = new Padding(10);
+            nudTuoiToiDa.Location = new Point(511, 53);
+            nudTuoiToiDa.Margin = new Padding(7, 6, 7, 6);
             nudTuoiToiDa.Name = "nudTuoiToiDa";
-            nudTuoiToiDa.Size = new Size(84, 31);
+            nudTuoiToiDa.Size = new Size(62, 23);
             nudTuoiToiDa.TabIndex = 31;
             nudTuoiToiDa.ValueChanged += nudTuoiToiDa_ValueChanged;
             // 
@@ -504,10 +525,10 @@
             tlpFrame.SetColumnSpan(lblTuoiToiThieu, 2);
             lblTuoiToiThieu.Dock = DockStyle.Fill;
             lblTuoiToiThieu.Font = new Font("Segoe UI", 9F);
-            lblTuoiToiThieu.Location = new Point(20, 69);
-            lblTuoiToiThieu.Margin = new Padding(10);
+            lblTuoiToiThieu.Location = new Point(14, 53);
+            lblTuoiToiThieu.Margin = new Padding(7, 6, 7, 6);
             lblTuoiToiThieu.Name = "lblTuoiToiThieu";
-            lblTuoiToiThieu.Size = new Size(184, 29);
+            lblTuoiToiThieu.Size = new Size(128, 29);
             lblTuoiToiThieu.TabIndex = 30;
             lblTuoiToiThieu.Text = "Tuổi tối thiểu";
             lblTuoiToiThieu.TextAlign = ContentAlignment.MiddleLeft;
@@ -515,10 +536,10 @@
             // nudTuoiToiThieu
             // 
             nudTuoiToiThieu.Dock = DockStyle.Fill;
-            nudTuoiToiThieu.Location = new Point(326, 69);
-            nudTuoiToiThieu.Margin = new Padding(10);
+            nudTuoiToiThieu.Location = new Point(227, 53);
+            nudTuoiToiThieu.Margin = new Padding(7, 6, 7, 6);
             nudTuoiToiThieu.Name = "nudTuoiToiThieu";
-            nudTuoiToiThieu.Size = new Size(82, 31);
+            nudTuoiToiThieu.Size = new Size(57, 23);
             nudTuoiToiThieu.TabIndex = 29;
             nudTuoiToiThieu.ValueChanged += nudTuoiToiThieu_ValueChanged;
             // 
@@ -528,10 +549,10 @@
             tlpFrame.SetColumnSpan(lblTuoiToiDa, 2);
             lblTuoiToiDa.Dock = DockStyle.Fill;
             lblTuoiToiDa.Font = new Font("Segoe UI", 9F);
-            lblTuoiToiDa.Location = new Point(428, 69);
-            lblTuoiToiDa.Margin = new Padding(10);
+            lblTuoiToiDa.Location = new Point(298, 53);
+            lblTuoiToiDa.Margin = new Padding(7, 6, 7, 6);
             lblTuoiToiDa.Name = "lblTuoiToiDa";
-            lblTuoiToiDa.Size = new Size(184, 29);
+            lblTuoiToiDa.Size = new Size(128, 29);
             lblTuoiToiDa.TabIndex = 9;
             lblTuoiToiDa.Text = "Tuổi tối đa";
             lblTuoiToiDa.TextAlign = ContentAlignment.MiddleLeft;
@@ -542,10 +563,10 @@
             tlpFrame.SetColumnSpan(lblHeaderCauThu, 8);
             lblHeaderCauThu.Dock = DockStyle.Fill;
             lblHeaderCauThu.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblHeaderCauThu.Location = new Point(20, 20);
-            lblHeaderCauThu.Margin = new Padding(10);
+            lblHeaderCauThu.Location = new Point(14, 12);
+            lblHeaderCauThu.Margin = new Padding(7, 6, 7, 6);
             lblHeaderCauThu.Name = "lblHeaderCauThu";
-            lblHeaderCauThu.Size = new Size(798, 29);
+            lblHeaderCauThu.Size = new Size(559, 29);
             lblHeaderCauThu.TabIndex = 8;
             lblHeaderCauThu.Text = "CẦU THỦ";
             lblHeaderCauThu.TextAlign = ContentAlignment.MiddleCenter;
@@ -555,10 +576,10 @@
             tlpFrame.SetColumnSpan(btnXacNhan, 2);
             btnXacNhan.Dock = DockStyle.Bottom;
             btnXacNhan.Font = new Font("Segoe UI", 8F);
-            btnXacNhan.Location = new Point(20, 755);
-            btnXacNhan.Margin = new Padding(10, 10, 10, 0);
+            btnXacNhan.Location = new Point(14, 718);
+            btnXacNhan.Margin = new Padding(7, 6, 7, 0);
             btnXacNhan.Name = "btnXacNhan";
-            btnXacNhan.Size = new Size(184, 39);
+            btnXacNhan.Size = new Size(128, 23);
             btnXacNhan.TabIndex = 6;
             btnXacNhan.Text = "Xác nhận";
             btnXacNhan.UseVisualStyleBackColor = true;
@@ -569,21 +590,47 @@
             tlpFrame.SetColumnSpan(btnThoat, 2);
             btnThoat.Dock = DockStyle.Bottom;
             btnThoat.Font = new Font("Segoe UI", 8F);
-            btnThoat.Location = new Point(632, 755);
-            btnThoat.Margin = new Padding(10, 10, 10, 0);
+            btnThoat.Location = new Point(440, 718);
+            btnThoat.Margin = new Padding(7, 6, 7, 0);
             btnThoat.Name = "btnThoat";
-            btnThoat.Size = new Size(186, 39);
+            btnThoat.Size = new Size(133, 23);
             btnThoat.TabIndex = 7;
             btnThoat.Text = "Thoát";
             btnThoat.UseVisualStyleBackColor = true;
             btnThoat.Click += btnThoat_Click;
             // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            tlpFrame.SetColumnSpan(label2, 2);
+            label2.Location = new Point(14, 629);
+            label2.Margin = new Padding(7, 6, 7, 6);
+            label2.Name = "label2";
+            label2.Size = new Size(93, 15);
+            label2.TabIndex = 60;
+            label2.Text = "Thứ tự xếp hạng";
+            // 
+            // lbThuTuXepHang
+            // 
+            lbThuTuXepHang.AllowDrop = true;
+            tlpFrame.SetColumnSpan(lbThuTuXepHang, 2);
+            lbThuTuXepHang.FormattingEnabled = true;
+            lbThuTuXepHang.ItemHeight = 15;
+            lbThuTuXepHang.Location = new Point(152, 626);
+            lbThuTuXepHang.Name = "lbThuTuXepHang";
+            lbThuTuXepHang.Size = new Size(132, 79);
+            lbThuTuXepHang.TabIndex = 61;
+            lbThuTuXepHang.DragDrop += lbThuTuXepHang_DragDrop;
+            lbThuTuXepHang.DragOver += lbThuTuXepHang_DragOver;
+            lbThuTuXepHang.MouseDown += lbThuTuXepHang_MouseDown;
+            // 
             // GUI_ThayDoiQuiDinh
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(838, 804);
+            ClientSize = new Size(587, 747);
             Controls.Add(tlpFrame);
+            Margin = new Padding(2);
             Name = "GUI_ThayDoiQuiDinh";
             Text = "Thay đổi qui định";
             Load += GUI_ThayDoiQuiDinh_Load;
@@ -638,5 +685,8 @@
         private Label lblHeaderTranDau;
         private Button btnReset;
         private Button btnXoaLoaiBanThang;
+        private Label label1;
+        private Label label2;
+        private ListBox lbThuTuXepHang;
     }
 }

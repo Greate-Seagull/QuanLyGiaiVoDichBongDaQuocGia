@@ -184,24 +184,32 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             var danhSachDoiBong = TaoBangXepHang(ketQuaTimKiemTranDau);
             CapNhatThongSoTranDau(danhSachDoiBong, ketQuaTimKiemTranDau);
             TinhDiem(danhSachDoiBong, thamSo);
-            return XepHangDoiBong(danhSachDoiBong);
+            return XepHangDoiBong(danhSachDoiBong, thamSo);
         }
 
-        private List<VM_DoiBong> XepHangDoiBong(Dictionary<string, VM_DoiBong> danhSachDoiBong)
+        private List<VM_DoiBong> XepHangDoiBong(Dictionary<string, VM_DoiBong> danhSachDoiBong, DTO_ThamSo thamSo)
         {
-            var bangXepHang = danhSachDoiBong.Values
-                                             .OrderByDescending(entity => entity.Diem)
-                                             .ThenByDescending(entity => entity.HieuSo)
-                                             .ThenByDescending(entity => entity.SoBanThang)
-                                             .ThenBy(entity => entity.MaDoiBong)
-                                             .ToList();
+            var bangXepHang = danhSachDoiBong.Values;
 
-            for(int i = 0; i < bangXepHang.Count; i++)
+            var sortingOrder = new Dictionary<int, Func<VM_DoiBong, object>>
             {
-                bangXepHang[i].Hang = i + 1;
+                { thamSo.UuTienDiem, entity => entity.Diem },
+                { thamSo.UuTienHieuSo, entity => entity.HieuSo },
+                { thamSo.UuTienTongBanThang, entity => entity.SoBanThang },
+                { thamSo.UuTienDoiKhang, entity => entity.MaDoiBong }
+            };
+
+            var bangXepHang_FINAL = bangXepHang.OrderByDescending(sortingOrder[1])
+                                               .ThenByDescending(sortingOrder[2])
+                                               .ThenByDescending(sortingOrder[3])
+                                               .ThenByDescending(sortingOrder[4]).ToList();
+
+            for (int i = 0; i < bangXepHang_FINAL.Count; i++)
+            {
+                bangXepHang_FINAL[i].Hang = i + 1;
             }
 
-            return bangXepHang;
+            return bangXepHang_FINAL;
         }
 
         private void TinhDiem(Dictionary<string, VM_DoiBong> bangXepHang, DTO_ThamSo thamSo)

@@ -17,5 +17,9 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.ViewModel
         public int DiemThang { get; set; } = 0;
         public int DiemHoa { get; set; } = 0;
         public int DiemThua { get; set; } = 0;
+        public int UuTienDiem { get; set; } = 0;
+        public int UuTienHieuSo { get; set; } = 0;
+        public int UuTienTongBanThang { get; set; } = 0;
+        public int UuTienDoiKhang { get; set; } = 0;
     }
 }

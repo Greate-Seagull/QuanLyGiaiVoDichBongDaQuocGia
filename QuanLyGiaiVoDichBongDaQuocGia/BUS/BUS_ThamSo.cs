@@ -33,7 +33,11 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
                             {
                                 DiemThang = entity.DiemThang,
                                 DiemHoa = entity.DiemHoa,
-                                DiemThua = entity.DiemThua
+                                DiemThua = entity.DiemThua,
+                                UuTienDiem = entity.UuTienDiem,
+                                UuTienHieuSo = entity.UuTienHieuSo,
+                                UuTienTongBanThang = entity.UuTienTongBanThang,
+                                UuTienDoiKhang = entity.UuTienDoiKhang
                             });
 
             return query.AsNoTracking().First();
@@ -52,7 +56,11 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
                                 ThoiDiemGhiBanToiThieu = entity.ThoiDiemGhiBanToiThieu,
                                 DiemThang = entity.DiemThang,
                                 DiemHoa = entity.DiemHoa,
-                                DiemThua = entity.DiemThua
+                                DiemThua = entity.DiemThua,
+                                UuTienDiem = entity.UuTienDiem,
+                                UuTienHieuSo = entity.UuTienHieuSo,
+                                UuTienTongBanThang = entity.UuTienTongBanThang,
+                                UuTienDoiKhang = entity.UuTienDoiKhang
                             });
 
             return query.AsNoTracking().First();
@@ -87,6 +95,10 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.BUS
             trackedEntity.DiemThang = thamSo.DiemThang;
             trackedEntity.DiemHoa = thamSo.DiemHoa;
             trackedEntity.DiemThua = thamSo.DiemThua;
+            trackedEntity.UuTienDiem = thamSo.UuTienDiem;
+            trackedEntity.UuTienHieuSo = thamSo.UuTienHieuSo;
+            trackedEntity.UuTienTongBanThang = thamSo.UuTienTongBanThang;
+            trackedEntity.UuTienDoiKhang = thamSo.UuTienDoiKhang;
 
             _DAL.SaveChanges();
             _DAL.Context.ChangeTracker.Clear();

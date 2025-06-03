@@ -15,5 +15,9 @@ namespace QuanLyGiaiVoDichBongDaQuocGia.DTO
         public int DiemThang { get; set; }
         public int DiemHoa { get; set; }
         public int DiemThua { get; set; }
+        public int UuTienDiem { get; set; }
+        public int UuTienHieuSo { get; set; }
+        public int UuTienTongBanThang { get; set; }
+        public int UuTienDoiKhang { get; set; }
     }
 }
